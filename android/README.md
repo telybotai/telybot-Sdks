@@ -28,7 +28,7 @@ dependencyResolutionManagement {
 }
 
 // app/build.gradle.kts
-implementation("com.github.Gleegl:Telybot-Sdks:v0.2.0")
+implementation("com.github.telybotai:telybot-Sdks:v0.2.0")
 ```
 
 To build against an unreleased commit instead, publish it locally from a clone:

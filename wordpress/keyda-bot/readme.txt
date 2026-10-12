@@ -203,7 +203,7 @@ are removed, on every site of a network install. Nothing else is stored.
 
 = 0.2.0 =
 * Points at telybot.com: Keyda Business is now Telybot, at its own home. The widget loads from https://telybot.com by default; the old address forwards there for at least twelve months.
-* The plugin's source moved to https://github.com/Gleegl/Telybot-Sdks.
+* The plugin's source moved to https://github.com/telybotai/telybot-Sdks.
 * Version aligned with the rest of the Telybot SDKs. The plugin itself only
   gains a note for WordPress's Plugin Check, which now reports no errors and
   no warnings: the chat script is hosted and versioned by Telybot, so it is

@@ -8,7 +8,7 @@
   serves the chat page, so the full-screen chat of a build on the old default cannot open
   (the embedded widget still loads: keyda.in forwards the widget script). Package names and
   the `KeydaBot` names are unchanged in this release; they move in the next major.
-* The source moved to `github.com/Gleegl/Telybot-Sdks`. The npm package and the install
+* The source moved to `github.com/telybotai/telybot-Sdks`. The npm package and the install
   command are unchanged.
 * **Open with a question:** `KeydaBot.open({ clientId, question })` puts it in
   the message box, unsent (in the URL's #fragment, never in a server log).

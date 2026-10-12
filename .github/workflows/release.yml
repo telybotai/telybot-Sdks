@@ -14,8 +14,9 @@
 # Both registries compare the repository's name EXACTLY, case included, with
 # the one GitHub puts in the run's identity — and so does npm's provenance
 # with each package.json's repository.url. Every file here says
-# Gleegl/Telybot-Sdks, spelled exactly as GitHub spells it (moved there from
-# KeydaAI/keyda-business-sdks on 2026-10-12; the old URL redirects).
+# telybotai/telybot-Sdks, spelled exactly as GitHub spells it (moved there on
+# 2026-10-12 from KeydaAI/keyda-business-sdks by way of Gleegl/Telybot-Sdks;
+# both old URLs redirect).
 #
 # Nothing goes to npm or pub.dev unless the tag matches every package
 # (tools/release.mjs) and the whole CI workflow passes on the tagged commit.
@@ -175,7 +176,7 @@ jobs:
       - name: JitPack builds the tag, and the AAR says this version
         if: ${{ !cancelled() }}
         run: |
-          base="https://jitpack.io/com/github/Gleegl/Telybot-Sdks/v$VERSION/Telybot-Sdks-v$VERSION"
+          base="https://jitpack.io/com/github/telybotai/telybot-Sdks/v$VERSION/telybot-Sdks-v$VERSION"
           # The first request starts the build; it can take several minutes.
           for _ in $(seq 1 30); do
             curl -fsS --max-time 120 -o pom.xml "$base.pom" && break
@@ -206,11 +207,11 @@ jobs:
           let package = Package(
               name: "Consumer",
               platforms: [.iOS(.v15)],
-              dependencies: [.package(url: "https://github.com/Gleegl/Telybot-Sdks", exact: "$VERSION")],
+              dependencies: [.package(url: "https://github.com/telybotai/telybot-Sdks", exact: "$VERSION")],
               targets: [.target(name: "Consumer", dependencies: [.product(name: "KeydaBot", package: "telybot-sdks")])]
           )
           EOF
           mkdir -p Sources/Consumer && echo 'import KeydaBot' > Sources/Consumer/Consumer.swift
           swift package resolve
           grep -q "\"version\" : \"$VERSION\"" Package.resolved
-          echo "SPM: Telybot-Sdks $VERSION"
+          echo "SPM: telybot-Sdks $VERSION"

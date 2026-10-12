@@ -7,10 +7,10 @@
   serves the chat page (it forwards only the widget script and the API), so a build on the
   old default cannot open the chat. Package names, classes and the `KeydaBot` bridge names
   are unchanged in this release; they move in the next major.
-* **New repository URL:** `https://github.com/Gleegl/Telybot-Sdks` (GitHub redirects the old
+* **New repository URL:** `https://github.com/telybotai/telybot-Sdks` (GitHub redirects the old
   one). With the new URL, Swift Package Manager names the package `telybot-sdks`:
   `.product(name: "KeydaBot", package: "telybot-sdks")`. CocoaPods users point `:podspec` at
-  `https://raw.githubusercontent.com/Gleegl/Telybot-Sdks/v0.2.0/KeydaBot.podspec`.
+  `https://raw.githubusercontent.com/telybotai/telybot-Sdks/v0.2.0/KeydaBot.podspec`.
 * **The chat inside one of your own screens:**
   `KeydaBot.makeChatViewController(question:)` for UIKit (push it or add it as a
   child) and `KeydaBotView(question:)` for SwiftUI, plus

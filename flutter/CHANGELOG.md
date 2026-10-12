@@ -8,7 +8,7 @@
   serves the chat page (it forwards only the widget script and the API), so a build on the
   old default cannot open the chat. Package names, classes and the `KeydaBot` bridge names
   are unchanged in this release; they move in the next major.
-* The source moved to `github.com/Gleegl/Telybot-Sdks`. From pub.dev nothing changes; a
+* The source moved to `github.com/telybotai/telybot-Sdks`. From pub.dev nothing changes; a
   `git:` dependency should use the new URL (GitHub redirects the old one).
 - **`KeydaBotChat`: the chat inside one of your own screens.** A widget with no
   close bar; lay it out in a `SafeArea` like any other. With a sheet open in the

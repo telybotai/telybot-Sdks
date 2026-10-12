@@ -8,8 +8,8 @@
   serves the chat page (it forwards only the widget script and the API), so a build on the
   old default cannot open the chat. Package names, classes and the `KeydaBot` bridge names
   are unchanged in this release; they move in the next major.
-* **New coordinate.** The repository moved to `github.com/Gleegl/Telybot-Sdks`, so JitPack
-  serves this release as `com.github.Gleegl:Telybot-Sdks:v0.2.0` (it was
+* **New coordinate.** The repository moved to `github.com/telybotai/telybot-Sdks`, so JitPack
+  serves this release as `com.github.telybotai:telybot-Sdks:v0.2.0` (it was
   `com.github.KeydaAI:keyda-business-sdks`). Change that one line in your `build.gradle.kts`;
   0.1.x stays available under the old coordinate.
 * **The chat inside one of your own screens: `KeydaBotView`.** A plain Android

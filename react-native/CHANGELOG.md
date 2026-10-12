@@ -7,7 +7,7 @@
   serves the chat page (it forwards only the widget script and the API), so a build on the
   old default cannot open the chat. Package names, classes and the `KeydaBot` bridge names
   are unchanged in this release; they move in the next major.
-* The source moved to `github.com/Gleegl/Telybot-Sdks`. The npm package and the install
+* The source moved to `github.com/telybotai/telybot-Sdks`. The npm package and the install
   command are unchanged.
 * **`<KeydaBotChat />`: the chat inside one of your own screens.** A view, not
   a modal — no close button, keyboard handled from where it sits on screen. On

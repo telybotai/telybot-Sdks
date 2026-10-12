@@ -4,7 +4,7 @@ Drop the Telybot bot into your app. One key, every platform.
 
 | Platform | Package | Status |
 |---|---|---|
-| Android | `in.keyda:keyda-bot` | JitPack `com.github.Gleegl:Telybot-Sdks:v0.2.0` |
+| Android | `in.keyda:keyda-bot` | JitPack `com.github.telybotai:telybot-Sdks:v0.2.0` |
 | iOS | `KeydaBot` (SPM / CocoaPods) | SPM from this repository at tag `v0.2.0` |
 | React Native | `@keyda/bot-react-native` | npm `@keyda/bot-react-native@0.2.0` |
 | Flutter | `keyda_bot` | pub.dev `keyda_bot ^0.2.0` |

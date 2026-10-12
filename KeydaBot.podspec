@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
   s.homepage         = 'https://telybot.com'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Telybot' => 'support@telybot.com' }
-  s.source           = { :git => 'https://github.com/Gleegl/Telybot-Sdks.git',
+  s.source           = { :git => 'https://github.com/telybotai/telybot-Sdks.git',
                          :tag => "v#{s.version}" }
   # Matches Package.swift, which points its target at the same directory —
   # the two must agree or a CocoaPods consumer gets a different set of files

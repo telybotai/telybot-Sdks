@@ -25,14 +25,14 @@ SwiftPM requires `Package.swift` at the root of a repository, so this monorepo k
 manifest there — the repository URL resolves directly.
 
 In Xcode: **File → Add Package Dependencies…** and enter
-`https://github.com/Gleegl/Telybot-Sdks`
+`https://github.com/telybotai/telybot-Sdks`
 
 Or in a `Package.swift` (the package identity is the repository name in lowercase,
 `telybot-sdks`):
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/Gleegl/Telybot-Sdks", from: "0.2.0")
+    .package(url: "https://github.com/telybotai/telybot-Sdks", from: "0.2.0")
 ],
 targets: [
     .target(name: "YourApp", dependencies: [.product(name: "KeydaBot", package: "telybot-sdks")])
@@ -40,12 +40,12 @@ targets: [
 ```
 
 Working inside this monorepo, point at the repo root (that is where the manifest lives —
-`ios/` has none): `.package(path: "../Telybot-Sdks")`
+`ios/` has none): `.package(path: "../telybot-Sdks")`
 
 ### CocoaPods
 
 ```ruby
-pod 'KeydaBot', :podspec => 'https://raw.githubusercontent.com/Gleegl/Telybot-Sdks/v0.2.0/KeydaBot.podspec'
+pod 'KeydaBot', :podspec => 'https://raw.githubusercontent.com/telybotai/telybot-Sdks/v0.2.0/KeydaBot.podspec'
 ```
 
 Pointing at the podspec by URL works whether or not the pod is on CocoaPods trunk. Pin it to a

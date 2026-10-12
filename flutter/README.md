@@ -33,7 +33,7 @@ package is its `flutter/` directory:
 dependencies:
   keyda_bot:
     git:
-      url: https://github.com/Gleegl/Telybot-Sdks.git
+      url: https://github.com/telybotai/telybot-Sdks.git
       path: flutter
 ```
 

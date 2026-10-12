@@ -6,11 +6,11 @@
   "homepage": "https://telybot.com",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Gleegl/Telybot-Sdks.git",
+    "url": "git+https://github.com/telybotai/telybot-Sdks.git",
     "directory": "ionic"
   },
   "bugs": {
-    "url": "https://github.com/Gleegl/Telybot-Sdks/issues"
+    "url": "https://github.com/telybotai/telybot-Sdks/issues"
   },
   "keywords": [
     "keyda",
