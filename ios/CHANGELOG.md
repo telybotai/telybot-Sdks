@@ -1,6 +1,6 @@
 # Changelog — KeydaBot (iOS)
 
-## 0.2.0 — unreleased
+## 0.2.0 — 2026-10-13
 
 * **Points at telybot.com.** Keyda Business is now Telybot, at its own home: the default
   `baseUrl` is `https://telybot.com`. **Update now:** since 2026-10-12 keyda.in no longer
