@@ -1,5 +1,5 @@
 /**
- * The `visitor` prop's rules — the chat page's own, and every TelyBot SDK's — so
+ * The `visitor` prop's rules — the chat page's own, and every Telybot SDK's — so
  * a value the page would drop never leaves the app.
  *
  * A value that does not look like what it claims is dropped whole, never cut:

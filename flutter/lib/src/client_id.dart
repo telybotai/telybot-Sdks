@@ -1,4 +1,4 @@
-/// Configuration parsing for the TelyBot chat.
+/// Configuration parsing for the Telybot chat.
 ///
 /// Deliberately free of any `dart:ui` or Flutter import: every rule that
 /// decides which URL a customer is shown lives here, so it can be tested on
@@ -6,7 +6,7 @@
 library;
 
 /// Where the hosted chat lives unless the integrator says otherwise.
-const String kKeydaDefaultBaseUrl = 'https://telybot.com/business';
+const String kKeydaDefaultBaseUrl = 'https://telybot.com';
 
 /// `kb_live_` followed by 8-48 lowercase hex characters.
 ///
@@ -45,9 +45,9 @@ String validateClientId(String clientId) {
     return clientId;
   }
   throw KeydaBotConfigError(
-    'Not a TelyBot client id: "$clientId". Expected kb_live_ followed by 8-48 '
-    'lowercase hex characters, exactly as shown under Install in the TelyBot '
-    'Business dashboard (watch for a copied space, newline or capital letter).',
+    'Not a Telybot client id: "$clientId". Expected kb_live_ followed by 8-48 '
+    'lowercase hex characters, exactly as shown under Install in the Telybot '
+    'dashboard (watch for a copied space, newline or capital letter).',
   );
 }
 
@@ -110,13 +110,13 @@ Uri buildChatUrl({
 /// Whether [candidate] is still the chat page itself.
 ///
 /// Compared by PATH, not merely by origin, and the reason is specific. The
-/// chat page carries a real "Powered by TelyBot" link, and the widget builds it
+/// chat page carries a real "Powered by Telybot" link, and the widget builds it
 /// from its own script origin:
 ///
 ///     a.href = apiBase.replace('/api/business/v1', '') + '/business/';
 ///
-/// which on the default deployment is `https://telybot.com/business/` —
-/// the SAME origin as `https://telybot.com/business/chat/{clientId}`. An origin
+/// which on the default deployment is `https://telybot.com/` —
+/// the SAME origin as `https://telybot.com/chat/{clientId}`. An origin
 /// comparison therefore answers "yes, that is ours", the WebView navigates in
 /// place, and the customer's conversation is replaced by a marketing site with
 /// no route back. It does not recover: the widget re-greets on mount and

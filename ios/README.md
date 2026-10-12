@@ -1,7 +1,7 @@
 # KeydaBot — iOS
 
 **This is a WebView wrapper.** `KeydaBot` presents a sheet containing a `WKWebView`
-pointed at `https://telybot.com/business/chat/<your client id>`. The transcript, the
+pointed at `https://telybot.com/chat/<your client id>`. The transcript, the
 composer, the welcome message and the accent colour are all the hosted chat page — the
 same one that runs on your website. There is no native chat UI in this package, and
 saying so up front is the point: an integrator who finds that out after shipping has
@@ -25,26 +25,27 @@ SwiftPM requires `Package.swift` at the root of a repository, so this monorepo k
 manifest there — the repository URL resolves directly.
 
 In Xcode: **File → Add Package Dependencies…** and enter
-`https://github.com/KeydaAI/keyda-business-sdks`
+`https://github.com/Gleegl/Telybot-Sdks`
 
-Or in a `Package.swift`:
+Or in a `Package.swift` (the package identity is the repository name in lowercase,
+`telybot-sdks`):
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/KeydaAI/keyda-business-sdks", from: "0.2.0")
+    .package(url: "https://github.com/Gleegl/Telybot-Sdks", from: "0.2.0")
 ],
 targets: [
-    .target(name: "YourApp", dependencies: [.product(name: "KeydaBot", package: "keyda-business-sdks")])
+    .target(name: "YourApp", dependencies: [.product(name: "KeydaBot", package: "telybot-sdks")])
 ]
 ```
 
 Working inside this monorepo, point at the repo root (that is where the manifest lives —
-`ios/` has none): `.package(path: "../keyda-business-sdks")`
+`ios/` has none): `.package(path: "../Telybot-Sdks")`
 
 ### CocoaPods
 
 ```ruby
-pod 'KeydaBot', :podspec => 'https://raw.githubusercontent.com/KeydaAI/keyda-business-sdks/v0.2.0/KeydaBot.podspec'
+pod 'KeydaBot', :podspec => 'https://raw.githubusercontent.com/Gleegl/Telybot-Sdks/v0.2.0/KeydaBot.podspec'
 ```
 
 Pointing at the podspec by URL works whether or not the pod is on CocoaPods trunk. Pin it to a
@@ -65,15 +66,15 @@ the active window; pass one explicitly if you would rather choose:
 
 | Call | What it does |
 |---|---|
-| `initialize(clientId:baseUrl:)` | Stores the configuration and validates the client id. `baseUrl` defaults to `https://telybot.com/business`. |
+| `initialize(clientId:baseUrl:)` | Stores the configuration and validates the client id. `baseUrl` defaults to `https://telybot.com`. |
 | `show(from:question:)` | Presents the chat as a sheet; `question` goes in its message box, unsent. A second call while it is up only puts its question in the box. |
 | `dismiss()` | Closes it. Safe to call when nothing is showing. |
 | `isShowing` | Whether the chat is on screen right now, including after a swipe-down. |
 | `onShow`, `onDismiss` | Optional closures, called on the main thread when the sheet appears and when it has gone. |
 | `makeChatViewController(question:)` | The chat as a view controller for one of your own screens (below). |
 
-Your client id is under **Install** in the [TelyBot
-dashboard](https://telybot.com/business/app/).
+Your client id is under **Install** in the [Telybot
+dashboard](https://telybot.com/app/).
 
 ### Open with a question
 
@@ -213,7 +214,7 @@ not make this SDK use the camera, and it still reads no device identifier.
 
 ## What it does that you would otherwise have to get right yourself
 
-* **Links leave the chat.** The page carries a real "Powered by TelyBot" link. Any
+* **Links leave the chat.** The page carries a real "Powered by Telybot" link. Any
   navigation to another host, any `target="_blank"`, and any `tel:`/`mailto:`/`sms:`
   goes to the system browser, so the conversation is still there when the customer
   comes back. A WebView that follows such a link in place loses the conversation with
@@ -234,7 +235,7 @@ not make this SDK use the camera, and it still reads no device identifier.
   sheet.
 * **A privacy manifest ships with it** (`PrivacyInfo.xcprivacy`, from 0.2.0): no
   tracking, no tracking domains, no required-reason API. It lists what the chat sends
-  to TelyBot for the business — the conversation, attached photos and documents, and the
+  to Telybot for the business — the conversation, attached photos and documents, and the
   name, email, phone and address an order, a booking or the contact form asks for — all
   for app functionality. Xcode's privacy report for your app includes it; your App Store
   privacy label should say the same.

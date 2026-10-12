@@ -1,7 +1,7 @@
 {
   "name": "@keyda/bot-react-native",
   "version": "0.2.0",
-  "description": "Open your TelyBot bot in a React Native app: a Modal + WebView around the hosted chat page.",
+  "description": "Open your Telybot bot in a React Native app: a Modal + WebView around the hosted chat page.",
   "license": "MIT",
   "main": "src/index.tsx",
   "types": "src/index.tsx",
@@ -15,19 +15,20 @@
   ],
   "keywords": [
     "keyda",
+    "telybot",
     "chatbot",
     "support",
     "react-native",
     "webview"
   ],
-  "homepage": "https://telybot.com/business",
+  "homepage": "https://telybot.com",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/KeydaAI/keyda-business-sdks.git",
+    "url": "git+https://github.com/Gleegl/Telybot-Sdks.git",
     "directory": "react-native"
   },
   "bugs": {
-    "url": "https://github.com/KeydaAI/keyda-business-sdks/issues"
+    "url": "https://github.com/Gleegl/Telybot-Sdks/issues"
   },
   "peerDependencies": {
     "react": ">=18.0.0",

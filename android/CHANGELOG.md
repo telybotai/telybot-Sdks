@@ -3,11 +3,15 @@
 
 ## 0.2.0 — unreleased
 
-* **Points at telybot.com.** Keyda Business is now TelyBot, at its own home: the default
-  `baseUrl` is `https://telybot.com/business`. A build on the old default keeps working —
-  `keyda.in/business` forwards there for at least twelve months — but the chat is one hop
-  closer from here on. Package names, classes and the `KeydaBot` bridge names are unchanged
-  in this release; they move in the next major.
+* **Points at telybot.com.** Keyda Business is now Telybot, at its own home: the default
+  `baseUrl` is `https://telybot.com`. **Update now:** since 2026-10-12 keyda.in no longer
+  serves the chat page (it forwards only the widget script and the API), so a build on the
+  old default cannot open the chat. Package names, classes and the `KeydaBot` bridge names
+  are unchanged in this release; they move in the next major.
+* **New coordinate.** The repository moved to `github.com/Gleegl/Telybot-Sdks`, so JitPack
+  serves this release as `com.github.Gleegl:Telybot-Sdks:v0.2.0` (it was
+  `com.github.KeydaAI:keyda-business-sdks`). Change that one line in your `build.gradle.kts`;
+  0.1.x stays available under the old coordinate.
 * **The chat inside one of your own screens: `KeydaBotView`.** A plain Android
   View — from Compose through `AndroidView` — for a Help tab or a support
   screen. Set `question` before it is shown or call `prefill()` later; with a
@@ -138,7 +142,7 @@
 
 ## 0.1.2 — 2026-08-26
 
-Versions across every TelyBot SDK aligned on 0.1.2. Default `baseUrl` moved
+Versions across every Telybot SDK aligned on 0.1.2. Default `baseUrl` moved
 from the retired `business.keyda.in` host to `https://keyda.in/business`.
 
 ## 0.1.0 — 2026-08-25

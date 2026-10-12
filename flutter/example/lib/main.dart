@@ -1,7 +1,7 @@
 // The whole integration: init once at startup, then show it from anywhere.
 //
 // Replace the client id with your own from the dashboard's Install screen
-// (TelyBot → Install → Client ID). Nothing else is required — the chat
+// (Telybot → Install → Client ID). Nothing else is required — the chat
 // itself is a hosted page, so there is no UI to build and no state to manage.
 //
 // The example's own widgets are not a public API, so the package-wide doc-comment
@@ -24,7 +24,7 @@ class ExampleApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'TelyBot example',
+      title: 'Telybot example',
       theme: ThemeData(colorSchemeSeed: const Color(0xFF3B4EE0), useMaterial3: true),
       home: const HomeScreen(),
     );

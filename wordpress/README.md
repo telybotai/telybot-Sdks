@@ -1,19 +1,19 @@
-# TelyBot for WordPress
+# Telybot for WordPress
 
 This plugin is a thin wrapper around a hosted chat page. It renders no chat UI
-of its own: it enqueues one script, `widget.js`, served by TelyBot, with your
+of its own: it enqueues one script, `widget.js`, served by Telybot, with your
 client id attached to it, and that script draws the chat inside a shadow root
 on your visitor's page. Nothing else.
 
 That is deliberate, and it is the same decision every SDK in this repo makes
 (see [CONTRACT.md](../CONTRACT.md)). There is exactly one chat interface. An
-owner who changes their welcome message or their accent colour in the TelyBot
-Business dashboard expects it live on their site immediately — which is only
+owner who changes their welcome message or their accent colour in the Telybot
+dashboard expects it live on their site immediately — which is only
 true if the site is loading the one renderer rather than a copy of it frozen
 into a plugin release. It also means a fix ships once instead of seven times.
 
 The trade you are making by installing it: the chat is a hosted page, so it is
-not offline-capable, and your visitors' questions are answered by TelyBot's API.
+not offline-capable, and your visitors' questions are answered by Telybot's API.
 If that is not acceptable for your site, this plugin is the wrong tool and no
 setting in it will change that.
 
@@ -32,7 +32,7 @@ renderer, and a browser does not need the page in the middle.
 ```
 keyda-bot/
   keyda-bot.php          plugin header, front-end enqueue, the data-key tag filter
-  includes/settings.php  Settings -> TelyBot, one validated field
+  includes/settings.php  Settings -> Telybot, one validated field
   readme.txt             WordPress.org listing (this file is not the listing)
   uninstall.php          deletes the one option when the plugin is deleted
 ```
@@ -57,8 +57,8 @@ cp -R keyda-bot /path/to/wp-content/plugins/
 wp plugin activate keyda-bot
 ```
 
-Then: **Settings → TelyBot**, paste the client id from the Install page of
-your dashboard at <https://telybot.com/business/app/>, save, and open the site in
+Then: **Settings → Telybot**, paste the client id from the Install page of
+your dashboard at <https://telybot.com/app/>, save, and open the site in
 a new tab. An id must match `kb_live_` followed by 8–48 hex characters; anything
 else is rejected inline and never overwrites the id already saved, so a typo
 cannot take a live bot off a live site.
@@ -68,7 +68,7 @@ key is byte-for-byte the site it was before activation.
 
 ## Pointing it at another host
 
-The default is `https://telybot.com/business`. Staging and self-hosted installs
+The default is `https://telybot.com`. Staging and self-hosted installs
 override it, either in `wp-config.php`:
 
 ```php
@@ -163,5 +163,5 @@ Steps:
    `== Screenshots ==` section today because there are no screenshot files; add
    the section in the same commit as the files, not before.
 
-MIT licensed, like the rest of this repo — MIT is GPL-compatible, which is what
-the WordPress.org guidelines require.
+GPLv2 or later — the plugin header, `readme.txt` and `keyda-bot/LICENSE` all say so,
+as the WordPress.org guidelines require. The rest of this repo is MIT.

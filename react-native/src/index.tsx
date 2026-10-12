@@ -3,7 +3,7 @@
  *
  * A Modal + WebView around the hosted chat page at {baseUrl}/chat/{clientId}.
  * There is one chat renderer — the web widget the platform serves — and every
- * TelyBot SDK loads it, so an owner's dashboard change (welcome message, accent,
+ * Telybot SDK loads it, so an owner's dashboard change (welcome message, accent,
  * knowledge) reaches this app with no app release. See CONTRACT.md in the repo.
  */
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
@@ -35,7 +35,7 @@ import type {KeydaBotVisitor} from './visitor';
 
 export type {KeydaBotReplies, KeydaBotRepliesOptions, KeydaBotStorage, KeydaBotVisitor};
 
-const DEFAULT_BASE_URL = 'https://telybot.com/business';
+const DEFAULT_BASE_URL = 'https://telybot.com';
 
 /** This package's version — `version` in package.json, which the suite holds it to. */
 const SDK_VERSION = '0.2.0';
@@ -47,7 +47,7 @@ const CLIENT_ID = /^kb_live_[0-9a-f]{8,48}$/;
  * Schemes that belong to another app rather than to this WebView, and the only
  * ones this SDK will hand to the OS. `upi` is on the list because the chat
  * page does emit payment links, and dropping them here would break a pay-us
- * link that works on every other TelyBot surface. (The iOS and Flutter SDKs take
+ * link that works on every other Telybot surface. (The iOS and Flutter SDKs take
  * the opposite approach — they name the schemes the WebView uses to talk to
  * ITSELF and pass everything else out — because on those platforms the system
  * refuses an unhandled scheme quietly. On Android an `intent://` names an
@@ -90,7 +90,7 @@ export function buildChatUrl(clientId: string, baseUrl: string = DEFAULT_BASE_UR
     throw new Error(
       '[KeydaBot] Invalid clientId ' +
         JSON.stringify(clientId) +
-        '. Expected kb_live_ followed by 8-48 hex characters — copy it from Install in the TelyBot dashboard.',
+        '. Expected kb_live_ followed by 8-48 hex characters — copy it from Install in the Telybot dashboard.',
     );
   }
   // Trailing slashes are the common paste artefact; left in place they produce
@@ -117,7 +117,7 @@ export function buildChatUrl(clientId: string, baseUrl: string = DEFAULT_BASE_UR
 /**
  * Is this navigation the bot's own chat page, or somewhere else?
  *
- * The chat carries a real "Powered by TelyBot" link, and it points at the SAME
+ * The chat carries a real "Powered by Telybot" link, and it points at the SAME
  * origin as the chat itself — so an origin comparison would happily let it load
  * in place, replacing the customer's conversation with a marketing page inside
  * a Modal that has no back button. Only the chat URL (and its query, fragment
@@ -160,9 +160,9 @@ function openExternally(url: string): void {
 }
 
 export interface KeydaBotProps {
-  /** From Install in the TelyBot dashboard: kb_live_ + 8-48 hex chars. */
+  /** From Install in the Telybot dashboard: kb_live_ + 8-48 hex chars. */
   clientId: string;
-  /** Override for self-hosting or staging. Defaults to https://telybot.com/business */
+  /** Override for self-hosting or staging. Defaults to https://telybot.com */
   baseUrl?: string;
   /** Present the chat over the app. */
   visible: boolean;
@@ -392,7 +392,7 @@ function initialNavInset(): number {
  * Modal under BOTH system bars whatever statusBarTranslucent says, and the
  * window stops resizing for the keyboard. Core SafeAreaView pads on iOS only.
  * Without this, on Android 16 the close button sat in the status bar,
- * "Powered by TelyBot" under the gesture bar, and the keyboard covered the
+ * "Powered by Telybot" under the gesture bar, and the keyboard covered the
  * message box.
  *
  * Measured rather than assumed: the container counts as edge-to-edge only
@@ -614,7 +614,7 @@ function ChatSurface({chatUrl, startUrl, colors, status, setStatus, attempt, onR
         onShouldStartLoadWithRequest={handleRequest}
         // Android: while multiple windows are supported, a
         // target="_blank" link — which is exactly what "Powered by
-        // TelyBot" is — never reaches onShouldStartLoadWithRequest and
+        // Telybot" is — never reaches onShouldStartLoadWithRequest and
         // does nothing at all when tapped.
         setSupportMultipleWindows={false}
         onOpenWindow={handleOpenWindow}
@@ -970,9 +970,9 @@ export function KeydaBot({clientId, baseUrl, visible, onClose, question, questio
 }
 
 export interface KeydaBotChatProps {
-  /** From Install in the TelyBot dashboard: kb_live_ + 8-48 hex chars. */
+  /** From Install in the Telybot dashboard: kb_live_ + 8-48 hex chars. */
   clientId: string;
-  /** Override for self-hosting or staging. Defaults to https://telybot.com/business */
+  /** Override for self-hosting or staging. Defaults to https://telybot.com */
   baseUrl?: string;
   /** Optional: as on `<KeydaBot />`. */
   question?: string;

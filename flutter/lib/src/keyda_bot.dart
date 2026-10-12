@@ -6,7 +6,7 @@ import 'client_id.dart';
 import 'replies.dart';
 import 'visitor.dart';
 
-/// The whole public surface of the TelyBot SDK for Flutter.
+/// The whole public surface of the Telybot SDK for Flutter.
 ///
 /// Configure once, present when the customer asks for help, close it again:
 ///
@@ -40,7 +40,7 @@ class KeydaBot {
 
   /// Stores the configuration and validates it immediately.
   ///
-  /// [clientId] is the `kb_live_...` id from **Install** in the TelyBot
+  /// [clientId] is the `kb_live_...` id from **Install** in the Telybot
   /// dashboard. [baseUrl] only changes for staging or a self-hosted install —
   /// give it as an origin (`https://staging.example.com`), optionally with a
   /// path prefix.
@@ -106,7 +106,7 @@ class KeydaBot {
   /// The returned future completes when the chat is closed — by [dismiss], by
   /// the close button, or by the system back gesture. Awaiting it is optional.
   ///
-  /// Links that leave the chat's own origin (the "Powered by TelyBot" link,
+  /// Links that leave the chat's own origin (the "Powered by Telybot" link,
   /// `mailto:`, `tel:`, WhatsApp or UPI deep links) are never followed inside
   /// the WebView — that would replace the customer's conversation with a page
   /// they have no way back from. By default they are opened in the system

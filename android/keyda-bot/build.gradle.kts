@@ -116,9 +116,9 @@ publishing {
             afterEvaluate { from(components["release"]) }
 
             pom {
-                name.set("TelyBot")
-                description.set("Opens a TelyBot chat page in a full-screen WebView.")
-                url.set("https://telybot.com/business")
+                name.set("Telybot")
+                description.set("Opens a Telybot chat page in a full-screen WebView.")
+                url.set("https://telybot.com")
                 licenses {
                     license {
                         name.set("MIT")

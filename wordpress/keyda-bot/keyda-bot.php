@@ -1,12 +1,12 @@
 <?php
 /**
- * Plugin Name:       TelyBot
- * Plugin URI:        https://telybot.com/business/
- * Description:       Adds your TelyBot chat assistant to your site. Paste your client id under Settings &rarr; TelyBot; the greeting, colours and answers all come from your TelyBot dashboard.
+ * Plugin Name:       Telybot
+ * Plugin URI:        https://telybot.com/
+ * Description:       Adds your Telybot chat assistant to your site. Paste your client id under Settings &rarr; Telybot; the greeting, colours and answers all come from your Telybot dashboard.
  * Version:           0.2.0
  * Requires at least: 5.6
  * Requires PHP:      7.4
- * Author:            TelyBot
+ * Author:            Telybot
  * Author URI:        https://telybot.com/
  * License:           GPLv2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
@@ -31,7 +31,7 @@ defined( 'ABSPATH' ) || exit;
 define( 'KEYDA_BOT_OPTION', 'keyda_bot_client_id' );
 
 /**
- * Whether to show the "Powered by TelyBot" credit in the chat panel.
+ * Whether to show the "Powered by Telybot" credit in the chat panel.
  *
  * Off unless the site owner turns it on, and that default is the point: the
  * plugin directory forbids a plugin from putting an external link on somebody's
@@ -44,7 +44,7 @@ define( 'KEYDA_BOT_OPTION_BRANDING', 'keyda_bot_branding' );
 define( 'KEYDA_BOT_HANDLE', 'keyda-bot' );
 
 /** Where the widget is served from unless the site overrides it. */
-define( 'KEYDA_BOT_DEFAULT_BASE_URL', 'https://telybot.com/business' );
+define( 'KEYDA_BOT_DEFAULT_BASE_URL', 'https://telybot.com' );
 
 /**
  * Is this string a client id we would be willing to put on a live page?
@@ -99,9 +99,9 @@ function keyda_bot_base_url() {
 	}
 
 	/**
-	 * Filters the host the TelyBot widget is loaded from.
+	 * Filters the host the Telybot widget is loaded from.
 	 *
-	 * @param string $base Base URL, no trailing slash. Default https://telybot.com/business.
+	 * @param string $base Base URL, no trailing slash. Default https://telybot.com.
 	 */
 	$base = (string) apply_filters( 'keyda_bot_base_url', $base );
 	$base = untrailingslashit( trim( $base ) );
@@ -156,7 +156,7 @@ function keyda_bot_enqueue_widget() {
 add_action( 'wp_enqueue_scripts', 'keyda_bot_enqueue_widget' );
 
 /**
- * Has the site owner asked for the "Powered by TelyBot" credit?
+ * Has the site owner asked for the "Powered by Telybot" credit?
  *
  * @return bool
  */
@@ -285,7 +285,7 @@ function keyda_bot_admin_notice_unconfigured() {
 		'<div class="notice notice-warning"><p>%s</p></div>',
 		sprintf(
 			/* translators: %s: link to the plugin settings page. */
-			esc_html__( 'TelyBot has no client id yet, so nothing is added to your site. %s', 'keyda-bot' ),
+			esc_html__( 'Telybot has no client id yet, so nothing is added to your site. %s', 'keyda-bot' ),
 			sprintf(
 				'<a href="%s">%s</a>',
 				esc_url( admin_url( 'options-general.php?page=keyda-bot' ) ),

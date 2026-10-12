@@ -3,11 +3,13 @@
 
 ## 0.2.0 — unreleased
 
-* **Points at telybot.com.** Keyda Business is now TelyBot, at its own home: the default
-  `baseUrl` is `https://telybot.com/business`. A build on the old default keeps working —
-  `keyda.in/business` forwards there for at least twelve months — but the chat is one hop
-  closer from here on. Package names, classes and the `KeydaBot` bridge names are unchanged
-  in this release; they move in the next major.
+* **Points at telybot.com.** Keyda Business is now Telybot, at its own home: the default
+  `baseUrl` is `https://telybot.com`. **Update now:** since 2026-10-12 keyda.in no longer
+  serves the chat page (it forwards only the widget script and the API), so a build on the
+  old default cannot open the chat. Package names, classes and the `KeydaBot` bridge names
+  are unchanged in this release; they move in the next major.
+* The source moved to `github.com/Gleegl/Telybot-Sdks`. From pub.dev nothing changes; a
+  `git:` dependency should use the new URL (GitHub redirects the old one).
 - **`KeydaBotChat`: the chat inside one of your own screens.** A widget with no
   close bar; lay it out in a `SafeArea` like any other. With a sheet open in the
   chat (an item, the cart, a booking) back closes the sheet; otherwise it is
@@ -102,7 +104,7 @@
 
 ## 0.1.2
 
-- Version alignment across every TelyBot SDK; no code changes.
+- Version alignment across every Telybot SDK; no code changes.
 - All chat features ship server-side (rendered answers with working links,
   the in-thread "Talk to a person" form, the improved greeting) and reach
   this package without an update — this release aligns versions and docs.
@@ -113,7 +115,7 @@ First release.
 
 - `KeydaBot.init`, `show`, `dismiss`, `isShowing`.
 - Opens `{baseUrl}/chat/{clientId}` full-screen in a WebView; `baseUrl`
-  defaults to `https://telybot.com/business` and is overridable.
+  defaults to `https://telybot.com` and is overridable.
 - Client ids are validated at `init` and a malformed one throws there.
 - Navigation off the chat's origin never happens inside the WebView; the URL
   is opened in the system browser instead. `onExternalLink` replaces that

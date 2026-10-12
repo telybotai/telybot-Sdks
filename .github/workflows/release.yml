@@ -14,7 +14,8 @@
 # Both registries compare the repository's name EXACTLY, case included, with
 # the one GitHub puts in the run's identity — and so does npm's provenance
 # with each package.json's repository.url. Every file here says
-# KeydaAI/keyda-business-sdks.
+# Gleegl/Telybot-Sdks, spelled exactly as GitHub spells it (moved there from
+# KeydaAI/keyda-business-sdks on 2026-10-12; the old URL redirects).
 #
 # Nothing goes to npm or pub.dev unless the tag matches every package
 # (tools/release.mjs) and the whole CI workflow passes on the tagged commit.
@@ -174,7 +175,7 @@ jobs:
       - name: JitPack builds the tag, and the AAR says this version
         if: ${{ !cancelled() }}
         run: |
-          base="https://jitpack.io/com/github/KeydaAI/keyda-business-sdks/v$VERSION/keyda-business-sdks-v$VERSION"
+          base="https://jitpack.io/com/github/Gleegl/Telybot-Sdks/v$VERSION/Telybot-Sdks-v$VERSION"
           # The first request starts the build; it can take several minutes.
           for _ in $(seq 1 30); do
             curl -fsS --max-time 120 -o pom.xml "$base.pom" && break
@@ -186,7 +187,7 @@ jobs:
           unzip -o -q classes.jar -d classes
           # The version (BuildConfig keeps it as a constant) and the default server.
           grep -qaF "$VERSION" classes/in/keyda/bot/BuildConfig.class
-          grep -rqaF "https://telybot.com/business" classes/in/keyda/bot/
+          grep -rqaF "https://telybot.com" classes/in/keyda/bot/
           echo "JitPack: v$VERSION, version and base URL in the classes"
 
   spm:
@@ -205,11 +206,11 @@ jobs:
           let package = Package(
               name: "Consumer",
               platforms: [.iOS(.v15)],
-              dependencies: [.package(url: "https://github.com/KeydaAI/keyda-business-sdks", exact: "$VERSION")],
-              targets: [.target(name: "Consumer", dependencies: [.product(name: "KeydaBot", package: "keyda-business-sdks")])]
+              dependencies: [.package(url: "https://github.com/Gleegl/Telybot-Sdks", exact: "$VERSION")],
+              targets: [.target(name: "Consumer", dependencies: [.product(name: "KeydaBot", package: "telybot-sdks")])]
           )
           EOF
           mkdir -p Sources/Consumer && echo 'import KeydaBot' > Sources/Consumer/Consumer.swift
           swift package resolve
           grep -q "\"version\" : \"$VERSION\"" Package.resolved
-          echo "SPM: keyda-business-sdks $VERSION"
+          echo "SPM: Telybot-Sdks $VERSION"

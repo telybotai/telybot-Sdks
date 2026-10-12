@@ -127,7 +127,7 @@ if [ -n "$TSC" ]; then
 else skip "React Native / Ionic" "no tsc on PATH"; fi
 
 echo "== the rule that keeps a conversation alive =="
-# Compared by PATH, never by origin alone. The chat's own "Powered by Keyda"
+# Compared by PATH, never by origin alone. The chat's own "Powered by Telybot"
 # link is built from the widget's script origin, so on the default deployment
 # it is the SAME ORIGIN as the chat page. An origin check calls it "ours", the
 # WebView navigates in place, and the customer's conversation is replaced by a

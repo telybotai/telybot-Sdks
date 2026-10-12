@@ -15,7 +15,7 @@ import 'sdk_version.dart';
 import 'visitor.dart';
 
 /// Called when the chat page tries to leave its own origin — a "Powered by
-/// TelyBot" tap, a `mailto:`, a `tel:`, a WhatsApp or UPI deep link.
+/// Telybot" tap, a `mailto:`, a `tel:`, a WhatsApp or UPI deep link.
 ///
 /// The navigation is always blocked inside the chat first. By default the SDK
 /// then hands [url] to the system browser; supplying a handler REPLACES that,
@@ -234,7 +234,7 @@ class KeydaChatPageState extends State<KeydaChatPage> {
       // "already_active" when a second tap lands while a picker is up, or a
       // device with no picker app at all. Reported the way Flutter reports
       // any other failure; the page gets a cancel.
-      _report(error, stack, 'picking a file for the TelyBot chat');
+      _report(error, stack, 'picking a file for the Telybot chat');
     }
     // The Android implementation parses each entry with Uri.parse and the
     // WebView reads the file from the app's own cache, where both pickers put
@@ -589,7 +589,7 @@ class KeydaChatPageState extends State<KeydaChatPage> {
     if (target == null) {
       return NavigationDecision.prevent;
     }
-    // Path-aware, not origin-aware: the chat's own "Powered by TelyBot" link is
+    // Path-aware, not origin-aware: the chat's own "Powered by Telybot" link is
     // on the same origin as the chat, and an origin check would let it load in
     // place and take the conversation with it. See staysInChat.
     if (staysInChat(target, widget.chatUrl)) {
@@ -617,7 +617,7 @@ class KeydaChatPageState extends State<KeydaChatPage> {
         // The handler is the host app's code. If it throws, the customer still
         // has a live conversation on screen and is owed it; report the failure
         // the way Flutter reports any other, and carry on.
-        _report(error, stack, 'opening a link from the TelyBot chat');
+        _report(error, stack, 'opening a link from the Telybot chat');
       }
       return;
     }
@@ -634,7 +634,7 @@ class KeydaChatPageState extends State<KeydaChatPage> {
       // No dialer for a `tel:`, no mail app for a `mailto:`, no browser at
       // all: a link that cannot open is not a reason to take the conversation
       // down with it.
-      _report(error, stack, 'opening a link from the TelyBot chat');
+      _report(error, stack, 'opening a link from the Telybot chat');
     }
     if (opened || !mounted) {
       return;

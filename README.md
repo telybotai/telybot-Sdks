@@ -1,16 +1,16 @@
-# TelyBot SDKs
+# Telybot SDKs
 
-Drop the TelyBot bot into your app. One key, every platform.
+Drop the Telybot bot into your app. One key, every platform.
 
 | Platform | Package | Status |
 |---|---|---|
-| Android | `in.keyda:keyda-bot` | JitPack `com.github.KeydaAI:keyda-business-sdks:v0.2.0` |
+| Android | `in.keyda:keyda-bot` | JitPack `com.github.Gleegl:Telybot-Sdks:v0.2.0` |
 | iOS | `KeydaBot` (SPM / CocoaPods) | SPM from this repository at tag `v0.2.0` |
 | React Native | `@keyda/bot-react-native` | npm `@keyda/bot-react-native@0.2.0` |
 | Flutter | `keyda_bot` | pub.dev `keyda_bot ^0.2.0` |
 | Ionic / Capacitor | `@keyda/bot-capacitor` | npm `@keyda/bot-capacitor@0.2.0` |
 | WordPress | `keyda-bot` plugin | source here (`wordpress/keyda-bot/`, 0.2.0) |
-| Any website | `<script src="https://telybot.com/business/widget.js">` | shipped |
+| Any website | `<script src="https://telybot.com/widget.js">` | shipped |
 
 Every one of these opens the same hosted chat page, so a change an owner makes
 in their dashboard is live everywhere at once — including its theme: light,
@@ -19,8 +19,8 @@ the native SDKs match their status bar and close control to it (no theme
 option on any SDK). See [CONTRACT.md](CONTRACT.md) for what that means and
 what it costs.
 
-Get your client id from **Install** in the [TelyBot
-dashboard](https://telybot.com/business/app/).
+Get your client id from **Install** in the [Telybot
+dashboard](https://telybot.com/app/).
 
 ## Licence
 

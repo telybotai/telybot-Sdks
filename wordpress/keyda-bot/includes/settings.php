@@ -1,9 +1,9 @@
 <?php
 /**
- * Settings screen: Settings -> TelyBot.
+ * Settings screen: Settings -> Telybot.
  *
  * One field, one option. The rest of the bot's configuration — greeting,
- * accent colour, languages, what it knows — lives in the TelyBot
+ * accent colour, languages, what it knows — lives in the Telybot
  * dashboard, on purpose: a setting duplicated here would be a second place to
  * change it and a second place to be wrong.
  *
@@ -36,8 +36,8 @@ define( 'KEYDA_BOT_NOTICES', 'keyda_bot_messages' );
  */
 function keyda_bot_add_settings_page() {
 	add_options_page(
-		__( 'TelyBot', 'keyda-bot' ),
-		__( 'TelyBot', 'keyda-bot' ),
+		__( 'Telybot', 'keyda-bot' ),
+		__( 'Telybot', 'keyda-bot' ),
 		// Capability check number one: WordPress hides the menu entry and
 		// refuses the screen for anyone without it.
 		'manage_options',
@@ -133,7 +133,7 @@ function keyda_bot_render_branding_field() {
 			value="1"
 			<?php checked( $on ); ?>
 		/>
-		<?php esc_html_e( 'Show a "Powered by TelyBot" link at the bottom of the chat', 'keyda-bot' ); ?>
+		<?php esc_html_e( 'Show a "Powered by Telybot" link at the bottom of the chat', 'keyda-bot' ); ?>
 	</label>
 	<p class="description">
 		<?php esc_html_e( 'Off by default. Tick it only if you are happy for the chat to link to telybot.com from your public site.', 'keyda-bot' ); ?>
@@ -183,7 +183,7 @@ function keyda_bot_sanitize_client_id( $value ) {
 		add_settings_error(
 			KEYDA_BOT_NOTICES,
 			'keyda_bot_client_id_invalid',
-			esc_html__( 'That does not look like a TelyBot client id, so it was not saved. A client id starts with kb_live_ and is followed by 8 to 48 characters from 0-9 and a-f.', 'keyda-bot' ),
+			esc_html__( 'That does not look like a Telybot client id, so it was not saved. A client id starts with kb_live_ and is followed by 8 to 48 characters from 0-9 and a-f.', 'keyda-bot' ),
 			'error'
 		);
 
@@ -204,8 +204,8 @@ function keyda_bot_render_section_intro() {
 	printf(
 		'<p>%s</p>',
 		sprintf(
-			/* translators: %s: link to the Install page of the TelyBot dashboard. */
-			esc_html__( 'Your client id is on the Install page of your TelyBot dashboard. %s', 'keyda-bot' ),
+			/* translators: %s: link to the Install page of the Telybot dashboard. */
+			esc_html__( 'Your client id is on the Install page of your Telybot dashboard. %s', 'keyda-bot' ),
 			sprintf(
 				'<a href="%s" target="_blank" rel="noopener noreferrer">%s</a>',
 				esc_url( keyda_bot_base_url() . '/app/' ),
@@ -283,10 +283,10 @@ function keyda_bot_render_settings_page() {
 	}
 	?>
 	<div class="wrap">
-		<h1><?php esc_html_e( 'TelyBot', 'keyda-bot' ); ?></h1>
+		<h1><?php esc_html_e( 'Telybot', 'keyda-bot' ); ?></h1>
 
 		<p>
-			<?php esc_html_e( 'This plugin loads the TelyBot chat widget on your site. The greeting, colours, languages and answers are all set in your TelyBot dashboard and change on your site immediately — there is nothing else to configure here.', 'keyda-bot' ); ?>
+			<?php esc_html_e( 'This plugin loads the Telybot chat widget on your site. The greeting, colours, languages and answers are all set in your Telybot dashboard and change on your site immediately — there is nothing else to configure here.', 'keyda-bot' ); ?>
 		</p>
 
 		<?php

@@ -1,19 +1,20 @@
 {
   "name": "@keyda/bot-capacitor",
   "version": "0.2.0",
-  "description": "Open your TelyBot bot in an Ionic/Capacitor app: the plain widget script tag, or the hosted chat page as a full-screen surface.",
+  "description": "Open your Telybot bot in an Ionic/Capacitor app: the plain widget script tag, or the hosted chat page as a full-screen surface.",
   "license": "MIT",
-  "homepage": "https://telybot.com/business",
+  "homepage": "https://telybot.com",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/KeydaAI/keyda-business-sdks.git",
+    "url": "git+https://github.com/Gleegl/Telybot-Sdks.git",
     "directory": "ionic"
   },
   "bugs": {
-    "url": "https://github.com/KeydaAI/keyda-business-sdks/issues"
+    "url": "https://github.com/Gleegl/Telybot-Sdks/issues"
   },
   "keywords": [
     "keyda",
+    "telybot",
     "capacitor",
     "ionic",
     "cordova",

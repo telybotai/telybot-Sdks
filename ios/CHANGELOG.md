@@ -2,11 +2,15 @@
 
 ## 0.2.0 — unreleased
 
-* **Points at telybot.com.** Keyda Business is now TelyBot, at its own home: the default
-  `baseUrl` is `https://telybot.com/business`. A build on the old default keeps working —
-  `keyda.in/business` forwards there for at least twelve months — but the chat is one hop
-  closer from here on. Package names, classes and the `KeydaBot` bridge names are unchanged
-  in this release; they move in the next major.
+* **Points at telybot.com.** Keyda Business is now Telybot, at its own home: the default
+  `baseUrl` is `https://telybot.com`. **Update now:** since 2026-10-12 keyda.in no longer
+  serves the chat page (it forwards only the widget script and the API), so a build on the
+  old default cannot open the chat. Package names, classes and the `KeydaBot` bridge names
+  are unchanged in this release; they move in the next major.
+* **New repository URL:** `https://github.com/Gleegl/Telybot-Sdks` (GitHub redirects the old
+  one). With the new URL, Swift Package Manager names the package `telybot-sdks`:
+  `.product(name: "KeydaBot", package: "telybot-sdks")`. CocoaPods users point `:podspec` at
+  `https://raw.githubusercontent.com/Gleegl/Telybot-Sdks/v0.2.0/KeydaBot.podspec`.
 * **The chat inside one of your own screens:**
   `KeydaBot.makeChatViewController(question:)` for UIKit (push it or add it as a
   child) and `KeydaBotView(question:)` for SwiftUI, plus
@@ -59,7 +63,7 @@
   top edge; the box sits right above the keys, the header stays put.
 * **A privacy manifest** (`PrivacyInfo.xcprivacy`), in the Swift package and
   the podspec. No tracking, no tracking domains, no required-reason API. It
-  lists what the chat sends to TelyBot for the business: the conversation,
+  lists what the chat sends to Telybot for the business: the conversation,
   attached photos and documents, and the name, email, phone number and address
   an order, a booking or the contact form asks for — all for app functionality,
   none for tracking — so the app's privacy report, and its App Store label,
@@ -76,7 +80,7 @@
 
 ## 0.1.4 — 2026-09-03
 
-* No code change. Version aligned with the rest of the TelyBot SDKs, which grew
+* No code change. Version aligned with the rest of the Telybot SDKs, which grew
   file-chooser support this release (CONTRACT rule 9); WebKit has always
   presented its own picker for the chat's attach button, so this SDK needed
   none.
@@ -107,6 +111,6 @@
 
 ## 0.1.2 — 2026-08-26
 
-Versions across every TelyBot SDK aligned on 0.1.2. Default `baseUrl` moved from
+Versions across every Telybot SDK aligned on 0.1.2. Default `baseUrl` moved from
 the retired `business.keyda.in` host to `https://keyda.in/business`; CocoaPods
 podspec added alongside SPM.

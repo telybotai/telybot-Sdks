@@ -16,7 +16,7 @@ struct KeydaBotConfiguration: Equatable {
     /// `KeydaBot.initialize(clientId:baseUrl:)` — a public function's default value
     /// cannot reference an internal constant, so the literal appears in both places.
     /// `KeydaBotConfigurationTests` pins this one.
-    static let defaultBaseUrl = "https://telybot.com/business"
+    static let defaultBaseUrl = "https://telybot.com"
 
     let clientId: String
     let chatURL: URL
@@ -104,9 +104,9 @@ struct KeydaBotConfiguration: Equatable {
     /// Is this navigation still the chat page itself?
     ///
     /// Host comparison is not enough, and the reason is specific: the chat
-    /// page carries a real "Powered by TelyBot" link, and on the default
-    /// deployment it points at `https://telybot.com/business/` — the
-    /// SAME host as `https://telybot.com/business/chat/{clientId}`. A same-host
+    /// page carries a real "Powered by Telybot" link, and on the default
+    /// deployment it points at `https://telybot.com/` — the
+    /// SAME host as `https://telybot.com/chat/{clientId}`. A same-host
     /// check therefore lets the marketing site load in place and replaces the
     /// customer's conversation with no way back; the widget re-greets on
     /// mount and persists nothing but a session id, so every message on
@@ -143,12 +143,12 @@ enum KeydaBotConfigurationError: Error, CustomStringConvertible {
     var description: String {
         switch self {
         case .invalidClientId(let value):
-            return "\"\(value)\" is not a TelyBot client id. Expected kb_live_ followed by 8 to 48 "
+            return "\"\(value)\" is not a Telybot client id. Expected kb_live_ followed by 8 to 48 "
                 + "lowercase hex characters, for example kb_live_3f9a2c81. Copy it from Install in "
-                + "the TelyBot dashboard (https://telybot.com/business/app/)."
+                + "the Telybot dashboard (https://telybot.com/app/)."
         case .invalidBaseUrl(let value):
             return "\"\(value)\" is not a usable baseUrl. It must be an absolute http or https URL "
-                + "with a host, for example https://telybot.com/business."
+                + "with a host, for example https://telybot.com."
         }
     }
 }
