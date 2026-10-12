@@ -8,7 +8,7 @@
  */
 
 /** Where the hosted chat page and `widget.js` are served from. */
-export const DEFAULT_BASE_URL = 'https://keyda.in/business';
+export const DEFAULT_BASE_URL = 'https://telybot.com/business';
 
 /**
  * `kb_live_` followed by 8-48 hex characters, per CONTRACT.md.
@@ -33,9 +33,9 @@ const CLIENT_ID_PATTERN = /^kb_live_[0-9a-f]{8,48}$/;
 export function assertClientId(clientId: string): string {
   if (typeof clientId !== 'string' || !CLIENT_ID_PATTERN.test(clientId)) {
     throw new Error(
-      `[KeydaBot] "${String(clientId)}" is not a Keyda client id. Expected ` +
+      `[KeydaBot] "${String(clientId)}" is not a TelyBot client id. Expected ` +
         `kb_live_ followed by 8-48 hex characters. Copy it from Install in ` +
-        `the Keyda Business dashboard: https://keyda.in/business/app/`,
+        `the TelyBot dashboard: https://telybot.com/business/app/`,
     );
   }
   return clientId;
@@ -60,7 +60,7 @@ export function normaliseBaseUrl(baseUrl?: string): string {
   } catch {
     throw new Error(
       `[KeydaBot] baseUrl "${raw}" is not an absolute URL. Pass something ` +
-        `like "https://keyda.in/business", or omit it to use the default.`,
+        `like "https://telybot.com/business", or omit it to use the default.`,
     );
   }
   if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') {
@@ -75,7 +75,7 @@ export function normaliseBaseUrl(baseUrl?: string): string {
     throw new Error(
       `[KeydaBot] baseUrl "${raw}" must not carry a query string or a ` +
         `#fragment: the chat path is appended to it. Pass an origin, ` +
-        `optionally with a path prefix, such as "https://keyda.in/business".`,
+        `optionally with a path prefix, such as "https://telybot.com/business".`,
     );
   }
   // Keep the path: a self-host may sit under a prefix such as
@@ -83,7 +83,7 @@ export function normaliseBaseUrl(baseUrl?: string): string {
   return raw.replace(/\/+$/, '');
 }
 
-/** The hosted chat page for a bot — the single URL every Keyda SDK opens. */
+/** The hosted chat page for a bot — the single URL every TelyBot SDK opens. */
 export function chatUrl(clientId: string, baseUrl?: string): string {
   return `${normaliseBaseUrl(baseUrl)}/chat/${assertClientId(clientId)}`;
 }

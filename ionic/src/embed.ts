@@ -1,5 +1,5 @@
 /**
- * The embedded surface: the same `widget.js` script tag a Keyda customer
+ * The embedded surface: the same `widget.js` script tag a TelyBot customer
  * pastes into a website, injected into the Capacitor WebView's document.
  *
  * An Ionic or Capacitor app already IS a web view, so the plain script tag
@@ -11,9 +11,9 @@
 import { assertClientId, warn, widgetScriptUrl } from './config.js';
 
 export interface EmbedOptions {
-  /** From Install in the Keyda Business dashboard: `kb_live_…`. */
+  /** From Install in the TelyBot dashboard: `kb_live_…`. */
   clientId: string;
-  /** Defaults to `https://keyda.in/business`. Set it for staging or a self-host. */
+  /** Defaults to `https://telybot.com/business`. Set it for staging or a self-host. */
   baseUrl?: string;
 }
 

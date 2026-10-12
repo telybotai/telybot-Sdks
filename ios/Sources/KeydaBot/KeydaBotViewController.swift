@@ -404,7 +404,7 @@ final class KeydaBotViewController: UIViewController {
         activityIndicator.stopAnimating()
 
         let nsError = error as NSError
-        // Every time the visitor taps "Powered by Keyda" the navigation policy below
+        // Every time the visitor taps "Powered by TelyBot" the navigation policy below
         // cancels the load, and WebKit reports that cancellation here as -999. Showing
         // a retry screen for it would throw an error over a conversation that is
         // perfectly fine and has just opened a link in Safari.
@@ -657,7 +657,7 @@ extension KeydaBotViewController: WKNavigationDelegate {
 
     /// Decides what stays in the chat and what leaves for Safari.
     ///
-    /// The chat page carries at least one real link ("Powered by Keyda"). If it
+    /// The chat page carries at least one real link ("Powered by TelyBot"). If it
     /// navigated here, the conversation would be replaced by a marketing site with no
     /// back button and no way to return to it — the visitor's messages are simply gone.
     /// So anything bound for another host, and anything asking for a new window, is
@@ -709,7 +709,7 @@ extension KeydaBotViewController: WKNavigationDelegate {
         // `targetFrame == nil` is target="_blank" or window.open(): a new window, which
         // this sheet does not have.
         let isNewWindow = navigationAction.targetFrame == nil
-        // Compared by PATH, not just host. The chat's "Powered by Keyda" link points at
+        // Compared by PATH, not just host. The chat's "Powered by TelyBot" link points at
         // the same host as the chat itself, so a host-only check would let the marketing
         // site load in place and take the customer's conversation with it. That link
         // happens to carry target="_blank" and so escapes through the branch above — but
@@ -739,7 +739,7 @@ extension KeydaBotViewController: WKNavigationDelegate {
         if navigationResponse.isForMainFrame,
            let http = navigationResponse.response as? HTTPURLResponse,
            http.statusCode >= 400 {
-            KeydaBotLog.fault("KeydaBot: \(botConfiguration.chatURL.absoluteString) returned HTTP \(http.statusCode). Check the client id in Install in the Keyda Business dashboard.")
+            KeydaBotLog.fault("KeydaBot: \(botConfiguration.chatURL.absoluteString) returned HTTP \(http.statusCode). Check the client id in Install in the TelyBot dashboard.")
         }
         decisionHandler(.allow)
     }

@@ -35,7 +35,7 @@ import java.lang.ref.WeakReference
 object KeydaBot {
 
     /** Where the chat is served from. Override in [init] for self-hosting or staging. */
-    const val DEFAULT_BASE_URL = "https://keyda.in/business"
+    const val DEFAULT_BASE_URL = "https://telybot.com/business"
 
     // Deliberately not `const`: a const is compiled into a public static field that Java callers
     // can see, and the public surface of this SDK is four calls and nothing else.
@@ -197,7 +197,7 @@ object KeydaBot {
      * place, because a chat Activity restored after process death needs the configuration to be
      * there before any of your own screens run.
      *
-     * @param clientId from **Install** in the Keyda Business dashboard.
+     * @param clientId from **Install** in the TelyBot dashboard.
      * @param baseUrl override only for self-hosting or staging.
      * @throws IllegalArgumentException if the client id or base URL is malformed. This is a
      *         mistake in your integration, it is the same on every device and every launch, and it
@@ -207,8 +207,8 @@ object KeydaBot {
     @JvmOverloads
     fun init(context: Context, clientId: String, baseUrl: String = DEFAULT_BASE_URL) {
         require(CLIENT_ID_SHAPE.matches(clientId)) {
-            "KeydaBot: \"$clientId\" is not a Keyda client id. Expected kb_live_ followed by " +
-                "8 to 48 hex characters, copied exactly from Install in the Keyda Business dashboard."
+            "KeydaBot: \"$clientId\" is not a TelyBot client id. Expected kb_live_ followed by " +
+                "8 to 48 hex characters, copied exactly from Install in the TelyBot dashboard."
         }
 
         // Trailing slashes are the common paste error; "https://host//chat/kb_live_x" 404s.
@@ -244,7 +244,7 @@ object KeydaBot {
     fun show(activity: Activity, question: String? = null) {
         val url = chatUrl ?: throw IllegalStateException(
             "KeydaBot.show() was called before KeydaBot.init(). Call init() once, with the client " +
-                "id from Install in the Keyda Business dashboard."
+                "id from Install in the TelyBot dashboard."
         )
 
         // A double tap on a support button, or a tap during the open animation, would otherwise

@@ -1,6 +1,6 @@
-# Keyda Business SDKs
+# TelyBot SDKs
 
-Drop the Keyda bot into your app. One key, every platform.
+Drop the TelyBot bot into your app. One key, every platform.
 
 | Platform | Package | Status |
 |---|---|---|
@@ -10,7 +10,7 @@ Drop the Keyda bot into your app. One key, every platform.
 | Flutter | `keyda_bot` | pub.dev `keyda_bot ^0.2.0` |
 | Ionic / Capacitor | `@keyda/bot-capacitor` | npm `@keyda/bot-capacitor@0.2.0` |
 | WordPress | `keyda-bot` plugin | source here (`wordpress/keyda-bot/`, 0.2.0) |
-| Any website | `<script src="https://keyda.in/business/widget.js">` | shipped |
+| Any website | `<script src="https://telybot.com/business/widget.js">` | shipped |
 
 Every one of these opens the same hosted chat page, so a change an owner makes
 in their dashboard is live everywhere at once — including its theme: light,
@@ -19,8 +19,8 @@ the native SDKs match their status bar and close control to it (no theme
 option on any SDK). See [CONTRACT.md](CONTRACT.md) for what that means and
 what it costs.
 
-Get your client id from **Install** in the [Keyda Business
-dashboard](https://keyda.in/business/app/).
+Get your client id from **Install** in the [TelyBot
+dashboard](https://telybot.com/business/app/).
 
 ## Licence
 

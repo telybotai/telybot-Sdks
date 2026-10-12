@@ -67,7 +67,7 @@ void main() {
     test('defaults to the hosted platform', () {
       expect(
         buildChatUrl(clientId: 'kb_live_0123abcd').toString(),
-        'https://keyda.in/business/chat/kb_live_0123abcd',
+        'https://telybot.com/business/chat/kb_live_0123abcd',
       );
     });
 
@@ -75,16 +75,16 @@ void main() {
       expect(
         buildChatUrl(
           clientId: 'kb_live_0123abcd',
-          baseUrl: 'https://keyda.in/business/',
+          baseUrl: 'https://telybot.com/business/',
         ).toString(),
-        'https://keyda.in/business/chat/kb_live_0123abcd',
+        'https://telybot.com/business/chat/kb_live_0123abcd',
       );
       expect(
         buildChatUrl(
           clientId: 'kb_live_0123abcd',
-          baseUrl: 'https://keyda.in/business//',
+          baseUrl: 'https://telybot.com/business//',
         ).toString(),
-        'https://keyda.in/business/chat/kb_live_0123abcd',
+        'https://telybot.com/business/chat/kb_live_0123abcd',
       );
     });
 
@@ -113,9 +113,9 @@ void main() {
       expect(
         buildChatUrl(
           clientId: 'kb_live_0123abcd',
-          baseUrl: '  https://keyda.in/business  ',
+          baseUrl: '  https://telybot.com/business  ',
         ).toString(),
-        'https://keyda.in/business/chat/kb_live_0123abcd',
+        'https://telybot.com/business/chat/kb_live_0123abcd',
       );
     });
 
@@ -128,8 +128,8 @@ void main() {
 
     test('rejects a baseUrl no WebView could load', () {
       for (final String bad in <String>[
-        'keyda.in/business', // no scheme
-        'ftp://keyda.in/business',
+        'telybot.com/business', // no scheme
+        'ftp://telybot.com/business',
         'file:///tmp/chat.html',
         'https://',
         '',
@@ -146,14 +146,14 @@ void main() {
       expect(
         () => buildChatUrl(
           clientId: 'kb_live_0123abcd',
-          baseUrl: 'https://keyda.in/business?env=staging',
+          baseUrl: 'https://telybot.com/business?env=staging',
         ),
         throwsA(isA<KeydaBotConfigError>()),
       );
       expect(
         () => buildChatUrl(
           clientId: 'kb_live_0123abcd',
-          baseUrl: 'https://keyda.in/business#top',
+          baseUrl: 'https://telybot.com/business#top',
         ),
         throwsA(isA<KeydaBotConfigError>()),
       );
@@ -164,16 +164,16 @@ void main() {
     final Uri chat = buildChatUrl(clientId: 'kb_live_0123abcd');
 
     test('the chat page itself, and its query or fragment, stay', () {
-      expect(staysInChat(Uri.parse('https://keyda.in/business/chat/kb_live_0123abcd'), chat), isTrue);
-      expect(staysInChat(Uri.parse('https://keyda.in/business/chat/kb_live_0123abcd?preview=a.b'), chat), isTrue);
-      expect(staysInChat(Uri.parse('https://keyda.in/business/chat/kb_live_0123abcd#top'), chat), isTrue);
+      expect(staysInChat(Uri.parse('https://telybot.com/business/chat/kb_live_0123abcd'), chat), isTrue);
+      expect(staysInChat(Uri.parse('https://telybot.com/business/chat/kb_live_0123abcd?preview=a.b'), chat), isTrue);
+      expect(staysInChat(Uri.parse('https://telybot.com/business/chat/kb_live_0123abcd#top'), chat), isTrue);
       // An explicit default port is still the same place.
-      expect(staysInChat(Uri.parse('https://keyda.in:443/business/chat/kb_live_0123abcd'), chat), isTrue);
+      expect(staysInChat(Uri.parse('https://telybot.com:443/business/chat/kb_live_0123abcd'), chat), isTrue);
       // Host case is not part of the identity of a host.
-      expect(staysInChat(Uri.parse('https://KEYDA.IN/business/chat/kb_live_0123abcd'), chat), isTrue);
+      expect(staysInChat(Uri.parse('https://TELYBOT.COM/business/chat/kb_live_0123abcd'), chat), isTrue);
     });
 
-    test('the real Powered by Keyda link leaves', () {
+    test('the real Powered by TelyBot link leaves', () {
       // The whole reason this check compares PATHS. The widget builds this
       // link from its own script origin, so on the default deployment it is
       // the SAME ORIGIN as the chat — an origin comparison says "ours", the
@@ -182,23 +182,23 @@ void main() {
       // The earlier version of this test asserted against https://keyda.in/,
       // which is not the link the widget renders. It passed while the bug was
       // live.
-      expect(staysInChat(Uri.parse('https://keyda.in/business/'), chat), isFalse);
-      expect(staysInChat(Uri.parse('https://keyda.in/business/pricing'), chat), isFalse);
-      expect(staysInChat(Uri.parse('https://keyda.in/business/docs/quickstart'), chat), isFalse);
+      expect(staysInChat(Uri.parse('https://telybot.com/business/'), chat), isFalse);
+      expect(staysInChat(Uri.parse('https://telybot.com/business/pricing'), chat), isFalse);
+      expect(staysInChat(Uri.parse('https://telybot.com/business/docs/quickstart'), chat), isFalse);
     });
 
     test('another bot on the same host leaves', () {
-      expect(staysInChat(Uri.parse('https://keyda.in/business/chat/kb_live_ffffffff'), chat), isFalse);
+      expect(staysInChat(Uri.parse('https://telybot.com/business/chat/kb_live_ffffffff'), chat), isFalse);
     });
 
     test('a path that merely starts with the chat path leaves', () {
-      expect(staysInChat(Uri.parse('https://keyda.in/business/chat/kb_live_0123abcdEXTRA'), chat), isFalse);
+      expect(staysInChat(Uri.parse('https://telybot.com/business/chat/kb_live_0123abcdEXTRA'), chat), isFalse);
     });
 
     test('look-alike origins leave', () {
-      expect(staysInChat(Uri.parse('http://keyda.in/business/chat/kb_live_0123abcd'), chat), isFalse);
-      expect(staysInChat(Uri.parse('https://keyda.in/business.evil.example/chat/kb_live_0123abcd'), chat), isFalse);
-      expect(staysInChat(Uri.parse('https://keyda.in/business:8443/chat/kb_live_0123abcd'), chat), isFalse);
+      expect(staysInChat(Uri.parse('http://telybot.com/business/chat/kb_live_0123abcd'), chat), isFalse);
+      expect(staysInChat(Uri.parse('https://telybot.com/business.evil.example/chat/kb_live_0123abcd'), chat), isFalse);
+      expect(staysInChat(Uri.parse('https://telybot.com/business:8443/chat/kb_live_0123abcd'), chat), isFalse);
     });
 
     test('non-web and relative targets leave', () {
@@ -214,7 +214,7 @@ void main() {
       );
       expect(staysInChat(Uri.parse('http://10.0.2.2:8080/chat/kb_live_0123abcd'), staging), isTrue);
       expect(staysInChat(Uri.parse('http://10.0.2.2:8080/marketing'), staging), isFalse);
-      expect(staysInChat(Uri.parse('https://keyda.in/business/chat/kb_live_0123abcd'), staging), isFalse);
+      expect(staysInChat(Uri.parse('https://telybot.com/business/chat/kb_live_0123abcd'), staging), isFalse);
     });
   });
 

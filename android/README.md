@@ -1,9 +1,9 @@
-# Keyda Bot for Android
+# TelyBot for Android
 
-`in.keyda:keyda-bot` opens `https://keyda.in/business/chat/<your client id>` in a full-screen
+`in.keyda:keyda-bot` opens `https://telybot.com/business/chat/<your client id>` in a full-screen
 WebView. That is the whole library, and this page is not going to pretend otherwise.
 
-There is exactly one Keyda chat interface, served by the platform, and every Keyda SDK loads that
+There is exactly one TelyBot chat interface, served by the platform, and every TelyBot SDK loads that
 same page. It is why the welcome message, the accent colour or the business hours an owner changes
 in their dashboard are live inside your app the moment they save, with no release on your side.
 The cost is the honest one: it is a web page in a WebView. It needs a connection, and it will
@@ -57,7 +57,7 @@ KeydaBot.init(this, "kb_live_9f4c2a10");
 supportButton.setOnClickListener(v -> KeydaBot.show(this));
 ```
 
-Get the client id from **Install** in the [Keyda Business dashboard](https://keyda.in/business/app/).
+Get the client id from **Install** in the [TelyBot dashboard](https://telybot.com/business/app/).
 
 ### `in` is a Kotlin keyword
 
@@ -69,7 +69,7 @@ writes the backticks for you when it auto-imports.
 
 | Call | Does |
 |---|---|
-| `KeydaBot.init(context, clientId, baseUrl = "https://keyda.in/business")` | stores and validates the configuration |
+| `KeydaBot.init(context, clientId, baseUrl = "https://telybot.com/business")` | stores and validates the configuration |
 | `KeydaBot.show(activity, question = null)` | opens the chat over your app; `question` goes in its message box, unsent |
 | `KeydaBot.dismiss()` | closes it; safe when it is not open, safe from any thread |
 | `KeydaBot.isShowing` | whether the chat is on screen right now |
@@ -222,7 +222,7 @@ permission and reaches the gallery and the documents providers without one.
 
 * **JavaScript and DOM storage are on.** DOM storage is what keeps a visitor's conversation
   attached to them across an app restart.
-* **Links leave the chat.** Any navigation away from the chat page — the "Powered by Keyda" link
+* **Links leave the chat.** Any navigation away from the chat page — the "Powered by TelyBot" link
   included — opens in the system browser via `ACTION_VIEW`. It never replaces the conversation
   with a page that has no way back. That link lives on the *same host* as the chat, so the check
   is the page's path and not just its origin; an origin-only check would keep it in the WebView.
@@ -331,7 +331,7 @@ Build it on a **JDK 17** (`JAVA_HOME=/opt/homebrew/opt/openjdk@17`, or Android S
 JDK). On a JDK 25 `JAVA_HOME`, Gradle 8.13 fails with nothing but the string `25.0.2` for an error
 message, which tells you nothing about what is wrong.
 
-The one contract every Keyda SDK implements is in [CONTRACT.md](../CONTRACT.md).
+The one contract every TelyBot SDK implements is in [CONTRACT.md](../CONTRACT.md).
 
 ## Licence
 

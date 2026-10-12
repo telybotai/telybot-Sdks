@@ -1,7 +1,7 @@
 /**
  * @keyda/bot-capacitor — the full-screen surface.
  *
- * Opens `{baseUrl}/chat/{clientId}`, the same hosted chat page every Keyda
+ * Opens `{baseUrl}/chat/{clientId}`, the same hosted chat page every TelyBot
  * SDK loads, as a screen over your app. See CONTRACT.md in this repository
  * for why there is one hosted page rather than a native chat per platform.
  *
@@ -12,7 +12,7 @@
  * WebView gets wrong: JavaScript and DOM storage on, the keyboard never
  * covering the input, safe areas respected, and — the one that costs a
  * customer their conversation — a way back. The chat page carries a real
- * "Powered by Keyda" link; in a bare WebView, tapping it replaces the
+ * "Powered by TelyBot" link; in a bare WebView, tapping it replaces the
  * conversation with a marketing site and there is no Back button to return.
  * In a system browser view there is one, plus the address bar showing which
  * site they are on.
@@ -32,12 +32,12 @@ export * from './embed.js';
 
 export interface KeydaBotOptions {
   /**
-   * From Install in the Keyda Business dashboard: `kb_live_…`. Optional once
+   * From Install in the TelyBot dashboard: `kb_live_…`. Optional once
    * `init()` has been called; given here, it replaces that one.
    */
   clientId?: string;
   /**
-   * Defaults to the one given to `init()`, else `https://keyda.in/business`.
+   * Defaults to the one given to `init()`, else `https://telybot.com/business`.
    * Set it for staging or a self-host.
    */
   baseUrl?: string;
@@ -412,7 +412,7 @@ function close(): Promise<boolean> {
 
 /**
  * The public surface. `show`/`dismiss`/`isShowing` are the names CONTRACT.md
- * uses across every Keyda SDK; `open`/`close`/`isOpen` are the same three
+ * uses across every TelyBot SDK; `open`/`close`/`isOpen` are the same three
  * operations under the names a JavaScript caller expects — and the names
  * `widget.js` already uses on `window.KeydaBot`. They are the same functions,
  * not variants.

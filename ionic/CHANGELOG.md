@@ -3,6 +3,11 @@
 
 ## 0.2.0 — unreleased
 
+* **Points at telybot.com.** Keyda Business is now TelyBot, at its own home: the default
+  `baseUrl` is `https://telybot.com/business`. A build on the old default keeps working —
+  `keyda.in/business` forwards there for at least twelve months — but the chat is one hop
+  closer from here on. Package names, classes and the `KeydaBot` bridge names are unchanged
+  in this release; they move in the next major.
 * **Open with a question:** `KeydaBot.open({ clientId, question })` puts it in
   the message box, unsent (in the URL's #fragment, never in a server log).
 * The embedded widget's controls (`getEmbeddedWidget()`) are typed with its
@@ -43,7 +48,7 @@
 
 ## 0.1.4 — 2026-09-03
 
-* No code change. Version aligned with the rest of the Keyda SDKs, which grew
+* No code change. Version aligned with the rest of the TelyBot SDKs, which grew
   file-chooser support this release (CONTRACT rule 9). Both paths already
   answer the chat's attach button: the embedded one through Capacitor's own
   `BridgeWebChromeClient` on Android and WKWebView on iOS, the full-screen one
@@ -75,7 +80,7 @@
 
 ## 0.1.2 — 2026-08-26
 
-First release on npm. Versions across every Keyda SDK aligned on 0.1.2.
+First release on npm. Versions across every TelyBot SDK aligned on 0.1.2.
 
 * Default `baseUrl` moved from the retired `business.keyda.in` host to
   `https://keyda.in/business`. Integrators on 0.1.0 source get a dead URL.

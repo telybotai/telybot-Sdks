@@ -1,4 +1,4 @@
-# The one contract every Keyda Business SDK implements
+# The one contract every TelyBot SDK implements
 
 Read this before writing or changing any package in this repo. Every SDK here
 is a thin wrapper around ONE hosted chat page. That is the whole design.
@@ -20,7 +20,7 @@ WebView" after shipping has been misled; one who is told up front can decide.
 
     {baseUrl}/chat/{clientId}
 
-* `baseUrl` defaults to `https://keyda.in/business`
+* `baseUrl` defaults to `https://telybot.com/business`
 * it is overridable — self-hosting and staging both need it
 * `clientId` looks like `kb_live_` followed by 8–48 hex characters
 * an id that does not match that shape must fail loudly at init, not open a
@@ -92,7 +92,7 @@ than a missing one.
 1. **JavaScript on, DOM storage on.** The chat is a web app, and DOM storage
    is what keeps a visitor's conversation attached across an app restart.
 2. **Links open OUTSIDE the chat.** The chat page contains at least one real
-   link ("Powered by Keyda"). If it navigates the WebView, the customer's
+   link ("Powered by TelyBot"). If it navigates the WebView, the customer's
    conversation is replaced by a marketing site with no way back. Every
    navigation to a different origin goes to the system browser.
 3. **The keyboard must not cover the input.** This is the single most common

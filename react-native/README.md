@@ -1,6 +1,6 @@
 # @keyda/bot-react-native
 
-This package opens your Keyda bot's **hosted chat page** — `https://keyda.in/business/chat/<clientId>` — inside a React Native `Modal` and `WebView`. It is a wrapper. There is no native chat UI in here, and there is not going to be one.
+This package opens your TelyBot bot's **hosted chat page** — `https://telybot.com/business/chat/<clientId>` — inside a React Native `Modal` and `WebView`. It is a wrapper. There is no native chat UI in here, and there is not going to be one.
 
 That is the deliberate trade. One chat renderer exists (the web widget the platform serves), so when you change your bot's welcome message, accent colour or knowledge in the dashboard, it is live in your app the next time someone opens the chat — no app release, no store review. What you give up is real, and it is listed under [Limitations](#limitations). Read that section before you ship.
 
@@ -13,7 +13,7 @@ cd ios && pod install
 
 `react-native-webview` is a **peer dependency — your app installs it, this package does not bundle it.** React Native has no built-in WebView, and vendoring a second copy would fight with the one your app very likely already has. That peer is the only dependency of any kind: no analytics SDK, no device identifiers, nothing that phones home.
 
-The peer floor is **`react-native-webview` 13.3.0**, the first release with `onOpenWindow`. This SDK relies on it: on iOS a `target="_blank"` link (which "Powered by Keyda" is) is delivered through `onOpenWindow` before `onShouldStartLoadWithRequest` ever runs. On 13.0–13.2 the prop does not exist, the link falls back to loading inside the WebView, and the navigation handler catches it — it still opens in the browser, but by a route this package does not test.
+The peer floor is **`react-native-webview` 13.3.0**, the first release with `onOpenWindow`. This SDK relies on it: on iOS a `target="_blank"` link (which "Powered by TelyBot" is) is delivered through `onOpenWindow` before `onShouldStartLoadWithRequest` ever runs. On 13.0–13.2 the prop does not exist, the link falls back to loading inside the WebView, and the navigation handler catches it — it still opens in the browser, but by a route this package does not test.
 
 Tested with React Native 0.87 on the New Architecture, and in Expo (SDK 57): in Expo Go — nothing
 native to add, `react-native-webview` is part of Expo Go — and in a development build
@@ -57,8 +57,8 @@ That is the whole surface. There is no message API and no user-identity call. Th
 
 | Prop | Type | |
 |---|---|---|
-| `clientId` | `string` | Required. From **Install** in the [dashboard](https://keyda.in/business/app/). |
-| `baseUrl` | `string?` | Defaults to `https://keyda.in/business`. |
+| `clientId` | `string` | Required. From **Install** in the [dashboard](https://telybot.com/business/app/). |
+| `baseUrl` | `string?` | Defaults to `https://telybot.com/business`. |
 | `visible` | `boolean` | Required. Presents the chat over your app. |
 | `onClose` | `() => void` | Required. Fired by the ✕, and by Android's back when the chat has no sheet open (see below). |
 | `question` | `string?` | Put in the chat's message box, unsent, when it opens; a new value while it is open replaces the text. It travels in the URL's #fragment, never in a server log. Up to 500 characters, as one line: the chat joins lines and collapses runs of spaces. |
@@ -127,13 +127,13 @@ The URL the WebView loads: `{baseUrl}/chat/{clientId}`. Useful if you would rath
 
 ## Your client id
 
-Copy it from **Install** in the Keyda Business dashboard. It looks like `kb_live_2f9c81ba77d04e6a`, and it is the same id your website widget uses.
+Copy it from **Install** in the TelyBot dashboard. It looks like `kb_live_2f9c81ba77d04e6a`, and it is the same id your website widget uses.
 
 An id of any other shape **throws** as soon as the component or the hook renders:
 
 ```
 [KeydaBot] Invalid clientId "kb_live_YOUR_ID_HERE". Expected kb_live_ followed by
-8-48 hex characters — copy it from Install in the Keyda Business dashboard.
+8-48 hex characters — copy it from Install in the TelyBot dashboard.
 ```
 
 That is on purpose, and it is the one place this SDK raises. A wrong id can only be a mistake in your integration, and it is deterministic — you hit it the first time you run the screen. The alternative is silence at build time and a "This chat link is not valid" page in front of a paying customer. Runtime failures — no network, a dead server — never throw; see below.
@@ -152,7 +152,7 @@ Point it at a host that redirects somewhere else and the redirect is treated as 
 
 Nothing to configure on either platform, and in particular **`android:windowSoftInputMode` on your activity is not what governs this.** The chat is presented in a React Native `Modal`, which on Android is a `Dialog` with its own window, and React Native sets `SOFT_INPUT_ADJUST_RESIZE` on that window itself — your manifest setting does not reach it either way. On iOS the SDK resizes the WebView with a `KeyboardAvoidingView`, which shrinks the page's viewport and lifts the message box clear of the keys.
 
-Safe areas: on iOS the chat is wrapped in React Native's core `SafeAreaView`, so it never draws under a notch or the home indicator. On Android, an app that targets Android 15 or later is edge-to-edge (every app Google Play accepts now targets 16, and React Native 0.81+ draws its `Modal` under both system bars), so this package keeps the close button below the status bar, "Powered by Keyda" above the navigation bar and the message box above the keyboard itself — measured, so an app that is not edge-to-edge keeps the window's own insets and nothing is counted twice. It reads the navigation bar's height from `react-native-safe-area-context` when your app has it (React Navigation and Expo apps do) and otherwise learns it the first time the keyboard opens; no dependency is added.
+Safe areas: on iOS the chat is wrapped in React Native's core `SafeAreaView`, so it never draws under a notch or the home indicator. On Android, an app that targets Android 15 or later is edge-to-edge (every app Google Play accepts now targets 16, and React Native 0.81+ draws its `Modal` under both system bars), so this package keeps the close button below the status bar, "Powered by TelyBot" above the navigation bar and the message box above the keyboard itself — measured, so an app that is not edge-to-edge keeps the window's own insets and nothing is counted twice. It reads the navigation bar's height from `react-native-safe-area-context` when your app has it (React Navigation and Expo apps do) and otherwise learns it the first time the keyboard opens; no dependency is added.
 
 When the chat closes, an Android app that never set a status-bar style of its own gets its own look back (dark icons on a light app): React Native's default would otherwise have left the time and battery white on white.
 
@@ -162,7 +162,7 @@ The chat opens sheets over the conversation — an item over the menu, the cart,
 
 ## Links open outside the chat
 
-The chat page carries a real "Powered by Keyda" link. Every navigation that is not the bot's own chat URL — including that one, which happens to sit on the same origin — is handed to `Linking.openURL` and opens in the system browser. The WebView itself never leaves the chat, so a stray tap cannot replace a customer's conversation with a web page they have no way back from.
+The chat page carries a real "Powered by TelyBot" link. Every navigation that is not the bot's own chat URL — including that one, which happens to sit on the same origin — is handed to `Linking.openURL` and opens in the system browser. The WebView itself never leaves the chat, so a stray tap cannot replace a customer's conversation with a web page they have no way back from.
 
 What gets handed to the OS is an allowlist, not everything the page might emit: `http`, `https`, `mailto`, `tel`, `sms`, `whatsapp`, `upi`, `geo`, `maps`. Anything else — an `intent://`, a `javascript:`, a private scheme — is blocked and nothing happens. On Android an `intent://` URL names an arbitrary component to launch, and a chat answer is not a source this SDK is willing to launch components from.
 
@@ -172,7 +172,7 @@ Never with an exception. A failed load, an HTTP error on the chat document, or a
 
 ## Theme
 
-Set the theme in the Keyda Business dashboard — Match the visitor, Always light or Always dark — and the accent alongside it. The hosted page resolves that setting and announces it to this container as it loads, so the status-bar text, the close button, the loading cover and the retry screen match the chat rather than contradicting it; a Match-the-visitor bot re-announces when the OS scheme flips while the chat is open. Until the page has reported (the first frames of a load, or a self-hosted backend that predates the announcement) the container follows the device scheme, which is what Match the visitor means anyway. There is no theme prop on `<KeydaBot />` and there is not going to be one: the theme is the owner's, and it is set in one place.
+Set the theme in the TelyBot dashboard — Match the visitor, Always light or Always dark — and the accent alongside it. The hosted page resolves that setting and announces it to this container as it loads, so the status-bar text, the close button, the loading cover and the retry screen match the chat rather than contradicting it; a Match-the-visitor bot re-announces when the OS scheme flips while the chat is open. Until the page has reported (the first frames of a load, or a self-hosted backend that predates the announcement) the container follows the device scheme, which is what Match the visitor means anyway. There is no theme prop on `<KeydaBot />` and there is not going to be one: the theme is the owner's, and it is set in one place.
 
 ## Attachments
 
@@ -236,7 +236,7 @@ Stated plainly, because finding these out after shipping is worse.
 
 ## Privacy
 
-The SDK itself collects nothing. It loads the chat page; the chat page talks to Keyda's API to answer questions, and stores a conversation id in the WebView's DOM storage so a visitor's thread survives closing the app. If you use `useKeydaBotReplies`, the SDK itself also asks your `baseUrl`'s server for new rows in the chats the page is waiting on (`/api/business/v1/widget/{clientId}/messages`, with the conversation id and a time — no cookie, no identifier), and writes that list — chat ids and times — to the `storage` you pass. `visitor` stays on the phone until the customer submits a form. No device identifier is read, generated or transmitted by this package.
+The SDK itself collects nothing. It loads the chat page; the chat page talks to TelyBot's API to answer questions, and stores a conversation id in the WebView's DOM storage so a visitor's thread survives closing the app. If you use `useKeydaBotReplies`, the SDK itself also asks your `baseUrl`'s server for new rows in the chats the page is waiting on (`/api/business/v1/widget/{clientId}/messages`, with the conversation id and a time — no cookie, no identifier), and writes that list — chat ids and times — to the `storage` you pass. `visitor` stays on the phone until the customer submits a form. No device identifier is read, generated or transmitted by this package.
 
 ## Licence
 

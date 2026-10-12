@@ -2,6 +2,11 @@
 
 ## 0.2.0 — unreleased
 
+* **Points at telybot.com.** Keyda Business is now TelyBot, at its own home: the default
+  `baseUrl` is `https://telybot.com/business`. A build on the old default keeps working —
+  `keyda.in/business` forwards there for at least twelve months — but the chat is one hop
+  closer from here on. Package names, classes and the `KeydaBot` bridge names are unchanged
+  in this release; they move in the next major.
 * **`<KeydaBotChat />`: the chat inside one of your own screens.** A view, not
   a modal — no close button, keyboard handled from where it sits on screen. On
   Android, back closes a sheet the chat has open before your app's own back
@@ -50,7 +55,7 @@
   bars in an app that targets Android 15 or later — every app Google Play
   accepts now targets 16 — and the window stops resizing for the keyboard. On
   an Android 16 phone the close button sat in the status bar, "Powered by
-  Keyda" under the gesture bar, and the keyboard covered the message box. The
+  TelyBot" under the gesture bar, and the keyboard covered the message box. The
   container now pads for all three; measured, so an app that is not
   edge-to-edge is unchanged. No dependency added.
 * **Android back closes what the customer is looking at first** — the sheet
@@ -82,7 +87,7 @@
 
 ## 0.1.4 — 2026-09-03
 
-* No code change. Version aligned with the rest of the Keyda SDKs, which grew
+* No code change. Version aligned with the rest of the TelyBot SDKs, which grew
   file-chooser support this release (CONTRACT rule 9); `react-native-webview`
   has implemented Android's `onShowFileChooser` for years and WebKit answers
   on iOS, so the chat's attach button already opens a picker here.
@@ -120,7 +125,7 @@
 
 ## 0.1.2 — 2026-08-26
 
-First release on npm. Versions across every Keyda SDK aligned on 0.1.2.
+First release on npm. Versions across every TelyBot SDK aligned on 0.1.2.
 
 * Default `baseUrl` moved from the retired `business.keyda.in` host to
   `https://keyda.in/business`. Integrators on 0.1.0 source get a dead URL.

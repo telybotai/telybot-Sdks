@@ -6,7 +6,7 @@ package, no plugin, no native build step:
 
 ```html
 <!-- src/index.html, before </body> -->
-<script src="https://keyda.in/business/widget.js"
+<script src="https://telybot.com/business/widget.js"
         data-key="kb_live_YOUR_CLIENT_ID" async></script>
 ```
 
@@ -21,16 +21,16 @@ above, because that is still the right answer for most apps.
 
 ## What this actually is
 
-Every Keyda SDK is a thin wrapper around one hosted chat page:
+Every TelyBot SDK is a thin wrapper around one hosted chat page:
 
 ```
-{baseUrl}/chat/{clientId}      baseUrl defaults to https://keyda.in/business
+{baseUrl}/chat/{clientId}      baseUrl defaults to https://telybot.com/business
 ```
 
 There is no chat UI in this package. There is no native code in it either. The
 full-screen surface hands that URL to the system browser view
 (SFSafariViewController on iOS, Custom Tabs on Android) and the embedded surface
-injects the same `widget.js` a Keyda customer pastes into a website. Both render
+injects the same `widget.js` a TelyBot customer pastes into a website. Both render
 the one hosted chat page, which is why a change an owner makes in their
 dashboard is live in your app immediately, with no release from you.
 
@@ -60,7 +60,7 @@ your own code imports `@capacitor/browser`, which registers its web
 implementation.)
 
 Get your client id from **Install** in the
-[Keyda Business dashboard](https://keyda.in/business/app/).
+[TelyBot dashboard](https://telybot.com/business/app/).
 
 ## Option 1: embedded (recommended)
 
@@ -113,7 +113,7 @@ if (!opened) {
 `open()` also takes the config inline, so `init()` is optional:
 
 ```ts
-await KeydaBot.open({ clientId: 'kb_live_…', baseUrl: 'https://staging.keyda.in' });
+await KeydaBot.open({ clientId: 'kb_live_…', baseUrl: 'https://staging.telybot.com' });
 ```
 
 After `init()`, what `open()` is given is laid over it: `open({ question })`
@@ -169,7 +169,7 @@ getEmbeddedWidget(): EmbeddedWidget | null
 chatUrl(clientId: string, baseUrl?: string): string
 ```
 
-`show`/`dismiss`/`isShowing` are the names every Keyda SDK uses;
+`show`/`dismiss`/`isShowing` are the names every TelyBot SDK uses;
 `open`/`close`/`isOpen` are the same three operations under the names a
 JavaScript caller expects. They are the same functions, not variants.
 
@@ -355,7 +355,7 @@ Stated plainly, because discovering these after shipping is worse:
   That is a design constraint, not an oversight.
 
 On outbound links: the chat now carries many of them, not just the
-"Powered by Keyda" footer — every URL or markdown link in a bot answer is
+"Powered by TelyBot" footer — every URL or markdown link in a bot answer is
 rendered as an anchor with `target="_blank" rel="noopener noreferrer"`. On the
 full-screen path those open outside the chat by construction (the system
 browser owns the surface). On the embedded path, what happens to a

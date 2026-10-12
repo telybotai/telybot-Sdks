@@ -186,7 +186,7 @@ jobs:
           unzip -o -q classes.jar -d classes
           # The version (BuildConfig keeps it as a constant) and the default server.
           grep -qaF "$VERSION" classes/in/keyda/bot/BuildConfig.class
-          grep -rqaF "https://keyda.in/business" classes/in/keyda/bot/
+          grep -rqaF "https://telybot.com/business" classes/in/keyda/bot/
           echo "JitPack: v$VERSION, version and base URL in the classes"
 
   spm:

@@ -3,6 +3,11 @@
 
 ## 0.2.0 — unreleased
 
+* **Points at telybot.com.** Keyda Business is now TelyBot, at its own home: the default
+  `baseUrl` is `https://telybot.com/business`. A build on the old default keeps working —
+  `keyda.in/business` forwards there for at least twelve months — but the chat is one hop
+  closer from here on. Package names, classes and the `KeydaBot` bridge names are unchanged
+  in this release; they move in the next major.
 - **`KeydaBotChat`: the chat inside one of your own screens.** A widget with no
   close bar; lay it out in a `SafeArea` like any other. With a sheet open in the
   chat (an item, the cart, a booking) back closes the sheet; otherwise it is
@@ -97,7 +102,7 @@
 
 ## 0.1.2
 
-- Version alignment across every Keyda Business SDK; no code changes.
+- Version alignment across every TelyBot SDK; no code changes.
 - All chat features ship server-side (rendered answers with working links,
   the in-thread "Talk to a person" form, the improved greeting) and reach
   this package without an update — this release aligns versions and docs.
@@ -108,7 +113,7 @@ First release.
 
 - `KeydaBot.init`, `show`, `dismiss`, `isShowing`.
 - Opens `{baseUrl}/chat/{clientId}` full-screen in a WebView; `baseUrl`
-  defaults to `https://keyda.in/business` and is overridable.
+  defaults to `https://telybot.com/business` and is overridable.
 - Client ids are validated at `init` and a malformed one throws there.
 - Navigation off the chat's origin never happens inside the WebView; the URL
   is opened in the system browser instead. `onExternalLink` replaces that

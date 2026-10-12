@@ -9,14 +9,14 @@
 Pod::Spec.new do |s|
   s.name             = 'KeydaBot'
   s.version          = '0.2.0'
-  s.summary          = 'Drop-in customer support chat for iOS, powered by Keyda Business.'
+  s.summary          = 'Drop-in customer support chat for iOS, powered by TelyBot.'
   s.description      = <<-DESC
-    A small WebView wrapper that opens your Keyda Business bot inside your app.
+    A small WebView wrapper that opens your TelyBot bot inside your app.
     You need only the public client id from your dashboard.
   DESC
-  s.homepage         = 'https://keyda.in/business'
+  s.homepage         = 'https://telybot.com/business'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'Keyda' => 'support@keyda.in' }
+  s.author           = { 'TelyBot' => 'support@telybot.com' }
   s.source           = { :git => 'https://github.com/KeydaAI/keyda-business-sdks.git',
                          :tag => "v#{s.version}" }
   # Matches Package.swift, which points its target at the same directory —

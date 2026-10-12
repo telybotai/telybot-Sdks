@@ -1,7 +1,7 @@
 # KeydaBot — iOS
 
 **This is a WebView wrapper.** `KeydaBot` presents a sheet containing a `WKWebView`
-pointed at `https://keyda.in/business/chat/<your client id>`. The transcript, the
+pointed at `https://telybot.com/business/chat/<your client id>`. The transcript, the
 composer, the welcome message and the accent colour are all the hosted chat page — the
 same one that runs on your website. There is no native chat UI in this package, and
 saying so up front is the point: an integrator who finds that out after shipping has
@@ -65,15 +65,15 @@ the active window; pass one explicitly if you would rather choose:
 
 | Call | What it does |
 |---|---|
-| `initialize(clientId:baseUrl:)` | Stores the configuration and validates the client id. `baseUrl` defaults to `https://keyda.in/business`. |
+| `initialize(clientId:baseUrl:)` | Stores the configuration and validates the client id. `baseUrl` defaults to `https://telybot.com/business`. |
 | `show(from:question:)` | Presents the chat as a sheet; `question` goes in its message box, unsent. A second call while it is up only puts its question in the box. |
 | `dismiss()` | Closes it. Safe to call when nothing is showing. |
 | `isShowing` | Whether the chat is on screen right now, including after a swipe-down. |
 | `onShow`, `onDismiss` | Optional closures, called on the main thread when the sheet appears and when it has gone. |
 | `makeChatViewController(question:)` | The chat as a view controller for one of your own screens (below). |
 
-Your client id is under **Install** in the [Keyda Business
-dashboard](https://keyda.in/business/app/).
+Your client id is under **Install** in the [TelyBot
+dashboard](https://telybot.com/business/app/).
 
 ### Open with a question
 
@@ -213,7 +213,7 @@ not make this SDK use the camera, and it still reads no device identifier.
 
 ## What it does that you would otherwise have to get right yourself
 
-* **Links leave the chat.** The page carries a real "Powered by Keyda" link. Any
+* **Links leave the chat.** The page carries a real "Powered by TelyBot" link. Any
   navigation to another host, any `target="_blank"`, and any `tel:`/`mailto:`/`sms:`
   goes to the system browser, so the conversation is still there when the customer
   comes back. A WebView that follows such a link in place loses the conversation with
@@ -234,7 +234,7 @@ not make this SDK use the camera, and it still reads no device identifier.
   sheet.
 * **A privacy manifest ships with it** (`PrivacyInfo.xcprivacy`, from 0.2.0): no
   tracking, no tracking domains, no required-reason API. It lists what the chat sends
-  to Keyda for the business — the conversation, attached photos and documents, and the
+  to TelyBot for the business — the conversation, attached photos and documents, and the
   name, email, phone and address an order, a booking or the contact form asks for — all
   for app functionality. Xcode's privacy report for your app includes it; your App Store
   privacy label should say the same.

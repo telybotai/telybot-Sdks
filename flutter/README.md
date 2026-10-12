@@ -1,11 +1,11 @@
 # keyda_bot
 
 **This package is a WebView wrapper.** It opens one hosted page —
-`https://keyda.in/business/chat/{your-client-id}` — full-screen over your
+`https://telybot.com/business/chat/{your-client-id}` — full-screen over your
 Flutter app. There is no native Dart chat UI in here, and there will not be
 one.
 
-That is the design, not a shortcut. Every Keyda surface (the website widget,
+That is the design, not a shortcut. Every TelyBot surface (the website widget,
 Android, iOS, this) loads the same page, so when an owner changes their
 welcome message or their accent colour in the dashboard it is live everywhere
 at once, with no app release. A native chat screen per platform would be
@@ -52,7 +52,7 @@ Flutter web is out; desktop depends entirely on whether `webview_flutter`
 supports it, and nothing in this package has been tested there.
 
 Get your client id from **Install** in the
-[Keyda Business dashboard](https://keyda.in/business/app/). It looks like
+[TelyBot dashboard](https://telybot.com/business/app/). It looks like
 `kb_live_` followed by 8–48 lowercase hex characters.
 
 ## Use
@@ -161,7 +161,7 @@ is missing.
 
 ## baseUrl
 
-`init` defaults to `https://keyda.in/business`. Override it for staging or a
+`init` defaults to `https://telybot.com/business`. Override it for staging or a
 self-hosted install:
 
 ```dart
@@ -187,7 +187,7 @@ Android, an ATS exception in `Info.plist` on iOS. `https://` needs neither.
 
 ## Links out of the chat
 
-The chat page carries real links: a "Powered by Keyda" link, and whatever the
+The chat page carries real links: a "Powered by TelyBot" link, and whatever the
 owner put in their answers — a `mailto:`, a `tel:`, a `wa.me` or UPI link if
 that is how their customers reach them.
 
@@ -335,7 +335,7 @@ Stated plainly, because finding these out later is worse:
 
 `flutter test` covers the parts that decide what a customer sees: client id
 validation, chat URL building, the same-origin rule that keeps a
-"Powered by Keyda" tap from replacing a live conversation, the visitor's
+"Powered by TelyBot" tap from replacing a live conversation, the visitor's
 rules, and the reply check against a stand-in server.
 
 ## Licence

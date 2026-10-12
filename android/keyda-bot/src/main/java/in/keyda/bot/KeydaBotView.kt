@@ -707,7 +707,7 @@ class KeydaBotView @JvmOverloads constructor(
 
     /**
      * True only for the chat page itself: the exact scheme + host + port it is served from, AND
-     * its own path. The origin alone is not enough: the "Powered by Keyda" link CONTRACT rule 2 is
+     * its own path. The origin alone is not enough: the "Powered by TelyBot" link CONTRACT rule 2 is
      * written about points at the marketing site on the SAME host the chat is served from, and an
      * origin-only test would keep it in the WebView and replace the conversation.
      */

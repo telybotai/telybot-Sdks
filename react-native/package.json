@@ -1,7 +1,7 @@
 {
   "name": "@keyda/bot-react-native",
   "version": "0.2.0",
-  "description": "Open your Keyda Business bot in a React Native app: a Modal + WebView around the hosted chat page.",
+  "description": "Open your TelyBot bot in a React Native app: a Modal + WebView around the hosted chat page.",
   "license": "MIT",
   "main": "src/index.tsx",
   "types": "src/index.tsx",
@@ -20,7 +20,7 @@
     "react-native",
     "webview"
   ],
-  "homepage": "https://keyda.in/business",
+  "homepage": "https://telybot.com/business",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/KeydaAI/keyda-business-sdks.git",

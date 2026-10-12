@@ -59,11 +59,11 @@ const ID_CASES = [
   [`${GOOD}\n`, false], [` ${GOOD}`, false], [null, false], [undefined, false],
 ];
 const URL_CASES = [
-  [undefined, `https://keyda.in/business/chat/${GOOD}`],
-  ['https://keyda.in/business', `https://keyda.in/business/chat/${GOOD}`],
-  ['https://keyda.in/business/', `https://keyda.in/business/chat/${GOOD}`],
-  ['https://keyda.in/business', `https://keyda.in/business/chat/${GOOD}`],
-  ['https://keyda.in/business/', `https://keyda.in/business/chat/${GOOD}`],
+  [undefined, `https://telybot.com/business/chat/${GOOD}`],
+  ['https://telybot.com/business', `https://telybot.com/business/chat/${GOOD}`],
+  ['https://telybot.com/business/', `https://telybot.com/business/chat/${GOOD}`],
+  ['https://telybot.com/business', `https://telybot.com/business/chat/${GOOD}`],
+  ['https://telybot.com/business/', `https://telybot.com/business/chat/${GOOD}`],
 ];
 
 try {

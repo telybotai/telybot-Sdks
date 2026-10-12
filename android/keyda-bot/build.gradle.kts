@@ -116,9 +116,9 @@ publishing {
             afterEvaluate { from(components["release"]) }
 
             pom {
-                name.set("Keyda Bot")
-                description.set("Opens a Keyda Business chat page in a full-screen WebView.")
-                url.set("https://keyda.in/business")
+                name.set("TelyBot")
+                description.set("Opens a TelyBot chat page in a full-screen WebView.")
+                url.set("https://telybot.com/business")
                 licenses {
                     license {
                         name.set("MIT")

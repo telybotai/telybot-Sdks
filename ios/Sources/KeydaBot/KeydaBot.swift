@@ -36,12 +36,12 @@ public enum KeydaBot {
     /// because the alternative is a 404 page wearing your support button.
     ///
     /// - Parameters:
-    ///   - clientId: from **Install** in the Keyda Business dashboard. `kb_live_`
+    ///   - clientId: from **Install** in the TelyBot dashboard. `kb_live_`
     ///     followed by 8–48 lowercase hex characters.
     ///   - baseUrl: override only for self-hosting or staging. Must match
     ///     `KeydaBotConfiguration.defaultBaseUrl` when omitted; the literal is repeated
     ///     here because a public default argument cannot reference an internal constant.
-    public static func initialize(clientId: String, baseUrl: String = "https://keyda.in/business") {
+    public static func initialize(clientId: String, baseUrl: String = "https://telybot.com/business") {
         do {
             let configuration = try KeydaBotConfiguration(clientId: clientId, baseUrl: baseUrl)
             state.configuration = configuration
