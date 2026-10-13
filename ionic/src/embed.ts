@@ -105,8 +105,7 @@ export function embedWidget(options: EmbedOptions): Promise<boolean> {
   // Two ways the widget can already be present: we added the tag before, or
   // it is running. widget.js has its own double-embed guard, so a second tag
   // would be harmless but pointless — and a second network request.
-  // data-keyda-embed is the tag a 0.x copy of this package added.
-  if (document.querySelector(`script[${SCRIPT_MARKER}],script[data-keyda-embed]`) || getEmbeddedWidget()) {
+  if (document.querySelector(`script[${SCRIPT_MARKER}]`) || getEmbeddedWidget()) {
     return Promise.resolve(true);
   }
 
@@ -151,11 +150,9 @@ export function embedWidget(options: EmbedOptions): Promise<boolean> {
 export function getEmbeddedWidget(): EmbeddedWidget | null {
   if (typeof window === 'undefined') return null;
   type Loaded = EmbeddedWidget & { __loaded?: boolean };
-  const w = window as unknown as { TelyBot?: Loaded; KeydaBot?: Loaded };
-  // `window.TelyBot` is the widget's name; `window.KeydaBot` is the same object
-  // under its old name, the only one a server from before 2026-10 exposes.
+  const w = window as unknown as { TelyBot?: Loaded };
   // `__loaded` is widget.js's own marker. Testing it, rather than testing for
   // the object, avoids mistaking some other `window.TelyBot` for the widget.
-  const widget = w.TelyBot && w.TelyBot.__loaded ? w.TelyBot : w.KeydaBot;
+  const widget = w.TelyBot;
   return widget && widget.__loaded ? widget : null;
 }

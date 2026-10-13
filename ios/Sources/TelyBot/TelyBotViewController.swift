@@ -420,13 +420,10 @@ final class TelyBotViewController: UIViewController {
 
     // MARK: - Theme
 
-    /// `theme` out of `telybot:theme`, or out of `keyda:theme` from an older server; else nil.
+    /// `theme` out of `telybot:theme`; nil for anything else.
     private static func kind(of type: String?) -> String? {
-        guard let type = type else { return nil }
-        for prefix in ["telybot:", "keyda:"] where type.hasPrefix(prefix) {
-            return String(type.dropFirst(prefix.count))
-        }
-        return nil
+        guard let type = type, type.hasPrefix("telybot:") else { return nil }
+        return String(type.dropFirst("telybot:".count))
     }
 
     /// Applies the theme the hosted page reports, and nothing else.
@@ -437,7 +434,6 @@ final class TelyBotViewController: UIViewController {
     /// the visitor" means and what a backend that predates the bridge gets. Parsing is
     /// deliberately forgiving — anything that is not a JSON object with
     /// `type == "telybot:theme"` and a recognised `mode` is dropped without a trace.
-    /// A server deployed before 1.0.0 names the types `keyda:…`; read too, until 2.0.0.
     /// This runs inside the host's process; a malformed message must never bring it
     /// down (rule 6).
     fileprivate func receive(scriptMessage message: WKScriptMessage) {

@@ -55,10 +55,6 @@ jobs:
         run: xcodebuild -scheme TelyBot -destination 'generic/platform=iOS Simulator' -derivedDataPath "$RUNNER_TEMP/dd6" SWIFT_VERSION=6 build -quiet
       - name: iOS Simulator build, Swift 5
         run: xcodebuild -scheme TelyBot -destination 'generic/platform=iOS Simulator' -derivedDataPath "$RUNNER_TEMP/dd5" SWIFT_VERSION=5 build -quiet
-      # The 0.x product name, kept until 2.0.0: it re-exports TelyBot and aliases the
-      # old type names, and an app that has not renamed yet imports it.
-      - name: iOS Simulator build, the deprecated KeydaBot product
-        run: xcodebuild -scheme KeydaBot -destination 'generic/platform=iOS Simulator' -derivedDataPath "$RUNNER_TEMP/ddk" build -quiet
       # The podspec is installed by URL (CocoaPods trunk is read-only and we
       # never published there), so its source_files must keep matching
       # Package.swift. Warnings are the two builds' business above; a

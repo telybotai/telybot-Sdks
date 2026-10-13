@@ -121,19 +121,6 @@ class ReplyStore {
       let raw: string | null = null;
       try {
         raw = await storage.getItem(this.key);
-        if (!raw) {
-          // 0.2.x kept the list as keyda_bot_waits_<id>. Carried across once,
-          // so a reply a 0.2.x install was still waiting for lights the dot
-          // after the update to 1.0.
-          const old = this.key.replace(/^telybot_waits_/, 'keyda_bot_waits_');
-          const was = await storage.getItem(old);
-          if (was) {
-            raw = was;
-            await storage.setItem(this.key, was);
-            if (storage.removeItem) await storage.removeItem(old);
-            else await storage.setItem(old, '');
-          }
-        }
       } catch {
         return;
       }

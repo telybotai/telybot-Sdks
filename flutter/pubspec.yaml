@@ -1,6 +1,6 @@
 name: telybot
 description: Telybot chat for Flutter — a thin WebView wrapper that opens your hosted Telybot chat page over your app. No analytics, no device identifiers, no third-party packages.
-version: 1.0.0
+version: 2.0.0
 homepage: https://telybot.com
 repository: https://github.com/telybotai/telybot-Sdks
 issue_tracker: https://github.com/telybotai/telybot-Sdks/issues

@@ -23,7 +23,7 @@ From [pub.dev](https://pub.dev/packages/telybot):
 
 ```yaml
 dependencies:
-  telybot: ^1.0.0
+  telybot: ^2.0.0
 ```
 
 To build against an unreleased commit instead, point at this repository — the

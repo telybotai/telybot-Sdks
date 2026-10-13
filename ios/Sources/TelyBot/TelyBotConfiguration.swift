@@ -21,7 +21,7 @@ struct TelyBotConfiguration: Equatable {
     /// This package's version, as the chat page reads it in the User-Agent
     /// (`TelyBot/<version> (iOS)`). Kept equal to the podspec's by
     /// `tools/release.mjs`.
-    static let sdkVersion = "1.0.0"
+    static let sdkVersion = "2.0.0"
 
     let clientId: String
     let chatURL: URL

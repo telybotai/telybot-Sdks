@@ -4,7 +4,7 @@ Tags: chatbot, live chat, customer support, ai, assistant
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 2.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -208,84 +208,27 @@ are removed, on every site of a network install. Nothing else is stored.
 
 == Changelog ==
 
+= 2.0.0 =
+* Removes what was kept for sites coming from the plugin's earlier name: its settings are
+  no longer read, and only TELYBOT_BASE_URL and the telybot_base_url filter set the host.
+  A site already on 1.0.0 changes nothing.
+
 = 1.0.0 =
-* Renamed: the plugin is now `telybot` (folder `telybot/`, file `telybot.php`). Your client id
-  and credit setting are carried over from the older `keyda-bot` plugin on the first load;
-  deactivate and delete that one afterwards — a notice says so while both are active.
-* A `KEYDA_BOT_BASE_URL` constant or `keyda_bot_base_url` filter you already use still works
-  until 2.0.0; the new names are `TELYBOT_BASE_URL` and `telybot_base_url`. With
-  `WP_DEBUG` on, WordPress notes the old filter as deprecated.
-* Uninstalling removes the settings under both names.
-* Documentation: "External services" now says what the chat keeps in the
-  visitor's browser. A chat lasts one browser tab (the text still said 24
-  hours), and a random id, sent with each chat, links a visitor's chats for you.
-* Documentation: the chat's console lines now begin `[TelyBot]` (they began
-  `[KeydaBot]`); the troubleshooting steps say so.
+* First release as `telybot` (folder `telybot/`, file `telybot.php`): one field for your
+  client id, an optional "Powered by Telybot" credit (off until you tick it), and nothing
+  else to configure. Everything the chat says and looks like comes from your dashboard.
+* Point it at another host with the `TELYBOT_BASE_URL` constant or the `telybot_base_url`
+  filter (see the FAQ).
+* "External services" says exactly what leaves the visitor's browser and what the chat
+  keeps there. The console lines the chat writes begin `[TelyBot]`.
+* Uninstalling removes both settings, on every site of a network install.
 
-= 0.2.0 =
-* Points at telybot.com: Keyda Business is now Telybot, at its own home. The widget loads from https://telybot.com by default; the old address forwards there for at least twelve months.
-* The plugin's source moved to https://github.com/telybotai/telybot-Sdks.
-* Version aligned with the rest of the Telybot SDKs. The plugin itself only
-  gains a note for WordPress's Plugin Check, which now reports no errors and
-  no warnings: the chat script is hosted and versioned by Telybot, so it is
-  loaded without a WordPress version number on purpose (one would only stop
-  your visitors' browsers from caching it).
-* The chat itself is served by Telybot and improves with no plugin update. On a
-  tablet the chat panel now stays above the on-screen keyboard (on an iPad the
-  message box went behind it), and on a phone opening the chat no longer
-  raises the keyboard over the welcome message.
-
-= 0.1.4 =
-* The "Powered by Telybot" credit in the chat panel is now a setting, and it is
-  off until you turn it on. Installing this plugin no longer puts any link to
-  us on your public site. Pasting the script tag by hand is unchanged — that
-  is you choosing to add it, and it keeps the credit.
-* Licence stated as GPLv2 or later throughout, with the full licence text
-  included in the plugin.
-* Deleting the plugin now clears the credit-link setting as well as the
-  client id.
-* Documentation: "Tested up to" raised to WordPress 7.1.
-* Version aligned with the rest of the Telybot SDKs, which grew file-chooser
-  support this release. On a website the widget's attach button is an ordinary
-  file input in an ordinary browser, which has always opened its own picker —
-  nothing to add here, and no new permission or request of any kind.
-
-= 0.1.3 =
-* Documentation: the "different host" FAQ now says what the base URL really
-  is — the directory `widget.js` is served from, path prefix included — and
-  that a self-host must answer at that origin's `/api/business/v1`. The old
-  text told you the opposite.
-* Documentation: "Tested up to" raised to WordPress 6.8.
-* Theme: your bot's theme (light, dark, or matching the visitor's device) is
-  set in your Telybot dashboard and applied by the widget itself. There
-  is no theme setting in this plugin, and none is needed — a change in the
-  dashboard is live on your site straight away.
-* Removed a `Domain Path` header that pointed at a languages directory the
-  plugin does not ship.
-
-= 0.1.2 =
-* Documentation: draft bots render nothing on a customer site (the launcher no
-  longer appears with an "unavailable" message); the troubleshooting checklist
-  and inline-embed FAQ now say so.
-* Documentation: the external-services disclosure now covers the optional
-  "Talk to a person" form and exactly what it sends.
-
-= 0.1.0 =
-* First release.
+Versions before 1.0.0 were released under an earlier name.
 
 == Upgrade Notice ==
 
+= 2.0.0 =
+Nothing to do on a site already running 1.0.0.
+
 = 1.0.0 =
-Renamed to telybot. Your client id carries over; deactivate and delete the older keyda-bot
-plugin afterwards.
-
-= 0.2.0 =
-Keyda Business is now Telybot. The chat now loads from telybot.com; there is
-nothing to change on your side.
-
-= 0.1.4 =
-The "Powered by Telybot" credit is now off unless you turn it on under Settings
-&rarr; Telybot. If you were showing it and want to keep it, tick the box.
-
-= 0.1.0 =
-First release.
+First release under this name.

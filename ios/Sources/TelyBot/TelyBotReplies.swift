@@ -313,23 +313,6 @@ final class TelyBotReplies: @unchecked Sendable {
         }
         let folder = support.appendingPathComponent("TelyBot", isDirectory: true)
         let file = folder.appendingPathComponent("waits_\(clientId).json")
-        // 0.2.x kept the list under Application Support/KeydaBot/. Carried across once, so a
-        // reply a 0.2.x install was still waiting for lights the dot after the update to 1.0;
-        // the old folder is removed after.
-        let fileManager = FileManager.default
-        let old = support.appendingPathComponent("KeydaBot", isDirectory: true)
-        if fileManager.fileExists(atPath: old.path) {
-            let oldFile = old.appendingPathComponent("waits_\(clientId).json")
-            if !fileManager.fileExists(atPath: file.path), fileManager.fileExists(atPath: oldFile.path) {
-                try? fileManager.createDirectory(at: folder, withIntermediateDirectories: true)
-                try? fileManager.moveItem(at: oldFile, to: file)
-                var moved = file
-                var values = URLResourceValues()
-                values.isExcludedFromBackup = true
-                try? moved.setResourceValues(values)
-            }
-            try? fileManager.removeItem(at: old)
-        }
         return file
     }
 

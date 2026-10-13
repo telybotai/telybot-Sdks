@@ -11,7 +11,7 @@ plugins {
 // One source of truth for the version. It is both the published Maven version and the string the
 // WebView appends to its User-Agent; when those two drift, a support ticket says the app runs a
 // version that was never released.
-val sdkVersion = "1.0.0"
+val sdkVersion = "2.0.0"
 
 android {
     namespace = "com.telybot.sdk"

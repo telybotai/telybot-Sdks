@@ -22,10 +22,7 @@ let package = Package(
         .iOS(.v15)
     ],
     products: [
-        .library(name: "TelyBot", targets: ["TelyBot"]),
-        // The 0.x product name, deprecated: re-exports TelyBot and aliases the old
-        // type names (ios/Sources/KeydaBot). Removed in 2.0.0.
-        .library(name: "KeydaBot", targets: ["KeydaBot"])
+        .library(name: "TelyBot", targets: ["TelyBot"])
     ],
     targets: [
         // The privacy manifest ships inside the package (as a resource bundle),
@@ -35,7 +32,6 @@ let package = Package(
             path: "ios/Sources/TelyBot",
             resources: [.copy("PrivacyInfo.xcprivacy")]
         ),
-        .target(name: "KeydaBot", dependencies: ["TelyBot"], path: "ios/Sources/KeydaBot"),
         // Pure unit tests over client-id validation, URL building and the
         // stays-in-chat rule — no simulator, no host app. `swift test` runs
         // them on the machine you are sitting at.

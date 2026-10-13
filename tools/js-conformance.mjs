@@ -183,14 +183,6 @@ try {
   old.chatAppeared(); await settle(); old.chatWentAway(); await settle();
   steps.push(['an older saved list loads; appearing alone does not clear it', loaded && old.unread]);
 
-  // 0.2.x saved the list as keyda_bot_waits_<id>: carried to the 1.0 key once,
-  // the old key removed, and what it held still counts.
-  disk.clear();
-  const root4 = `${base}/fourth/chat/${GOOD}`;
-  disk.set(`keyda_bot_waits_${GOOD}`, JSON.stringify({ root: root4, waits: [{ c: C, at: '', t: t0, told: X }] }));
-  const moved = R.repliesFor(GOOD, root4);
-  moved.useStorage(storage); await settle();
-  steps.push(['a 0.2.x list moves to the new key, unread kept', disk.has(`telybot_waits_${GOOD}`) && !disk.has(`keyda_bot_waits_${GOOD}`) && moved.unread]);
 
   Date.now = realNow; srv.close();
   const wrong = steps.filter(([, good]) => !good);

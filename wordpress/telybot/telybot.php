@@ -3,7 +3,7 @@
  * Plugin Name:       Telybot
  * Plugin URI:        https://telybot.com/
  * Description:       Adds your Telybot chat assistant to your site. Paste your client id under Settings &rarr; Telybot; the greeting, colours and answers all come from your Telybot dashboard.
- * Version:           1.0.0
+ * Version:           2.0.0
  * Requires at least: 5.6
  * Requires PHP:      7.4
  * Author:            Telybot
@@ -96,14 +96,7 @@ function telybot_base_url() {
 
 	if ( defined( 'TELYBOT_BASE_URL' ) && is_string( TELYBOT_BASE_URL ) ) {
 		$base = TELYBOT_BASE_URL;
-	} elseif ( defined( 'KEYDA_BOT_BASE_URL' ) && is_string( KEYDA_BOT_BASE_URL ) ) {
-		// The 0.x plugin's wp-config constant, still honoured until 2.0.0.
-		$base = KEYDA_BOT_BASE_URL;
 	}
-
-	// The 0.x name, still honoured until 2.0.0; WordPress tells a developer who
-	// hooks it (with WP_DEBUG on) to move to telybot_base_url. It runs first.
-	$base = (string) apply_filters_deprecated( 'keyda_bot_base_url', array( $base ), '1.0.0', 'telybot_base_url' );
 
 	/**
 	 * Filters the host the Telybot widget is loaded from.
@@ -302,54 +295,6 @@ function telybot_admin_notice_unconfigured() {
 	);
 }
 add_action( 'admin_notices', 'telybot_admin_notice_unconfigured' );
-
-/**
- * Carry the 0.x plugin's settings over, once.
- *
- * This plugin was "keyda-bot" (options keyda_bot_client_id and
- * keyda_bot_branding) until 1.0.0. A site that installs this one keeps its
- * client id and its credit choice without pasting anything again. Only when
- * this plugin has nothing saved yet: it never overwrites a value of its own.
- *
- * @return void
- */
-function telybot_migrate_from_keyda_bot() {
-	if ( false !== get_option( TELYBOT_OPTION, false ) ) {
-		return;
-	}
-	$old_id = get_option( 'keyda_bot_client_id', false );
-	if ( false === $old_id ) {
-		return;
-	}
-	update_option( TELYBOT_OPTION, telybot_is_valid_client_id( (string) $old_id ) ? (string) $old_id : '' );
-	$old_branding = get_option( 'keyda_bot_branding', false );
-	if ( false !== $old_branding ) {
-		update_option( TELYBOT_OPTION_BRANDING, $old_branding );
-	}
-}
-add_action( 'plugins_loaded', 'telybot_migrate_from_keyda_bot' );
-
-/**
- * Ask for the 0.x plugin to be deactivated while both are active.
- *
- * Both would add the widget script; widget.js's own guard keeps the page to
- * one chat, but two plugins for one job is one too many to keep updated.
- *
- * @return void
- */
-function telybot_admin_notice_old_plugin() {
-	if ( ! current_user_can( 'activate_plugins' ) || ! function_exists( 'is_plugin_active' ) ) {
-		return;
-	}
-	if ( ! is_plugin_active( 'keyda-bot/keyda-bot.php' ) ) {
-		return;
-	}
-	printf(
-		'<div class="notice notice-info"><p>%s</p></div>',
-		esc_html__( 'The Telybot plugin replaces the older "Telybot (keyda-bot)" plugin, and your client id has been carried over. Deactivate and delete the older one on the Plugins screen.', 'telybot' )
-	);
-}
-add_action( 'admin_notices', 'telybot_admin_notice_old_plugin' );
 
 // The settings screen is admin-only code. Loading it on every front-end
 // request would parse a file that can never run there, on every page view.

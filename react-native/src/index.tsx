@@ -38,7 +38,7 @@ export type {TelyBotReplies, TelyBotRepliesOptions, TelyBotStorage, TelyBotVisit
 const DEFAULT_BASE_URL = 'https://telybot.com';
 
 /** This package's version — `version` in package.json, which the suite holds it to. */
-const SDK_VERSION = '1.0.0';
+const SDK_VERSION = '2.0.0';
 
 /** The shape the platform issues. Kept identical to the server's own check. */
 const CLIENT_ID = /^kb_live_[0-9a-f]{8,48}$/;
@@ -202,12 +202,9 @@ const PALETTE = {
   dark: {bg: '#0b1220', glyph: '#cbd5e1', title: '#e2e8f0', body: '#94a3b8', bar: 'light-content' as const},
 };
 
-/**
- * Whether a message type from the page is `telybot:<kind>`, or `keyda:<kind>`, the
- * name a server deployed before 1.0.0 sends (read until 2.0.0).
- */
+/** Whether a message type from the page is `telybot:<kind>`. */
 function isKind(type: unknown, kind: string): boolean {
-  return type === 'telybot:' + kind || type === 'keyda:' + kind;
+  return type === 'telybot:' + kind;
 }
 
 /**

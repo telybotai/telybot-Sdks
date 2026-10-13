@@ -32,7 +32,7 @@ Or in a `Package.swift` (the package identity is the repository name in lowercas
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/telybotai/telybot-Sdks", from: "1.0.0")
+    .package(url: "https://github.com/telybotai/telybot-Sdks", from: "2.0.0")
 ],
 targets: [
     .target(name: "YourApp", dependencies: [.product(name: "TelyBot", package: "telybot-sdks")])
@@ -45,7 +45,7 @@ Working inside this monorepo, point at the repo root (that is where the manifest
 ### CocoaPods
 
 ```ruby
-pod 'TelyBot', :podspec => 'https://raw.githubusercontent.com/telybotai/telybot-Sdks/v1.0.0/TelyBot.podspec'
+pod 'TelyBot', :podspec => 'https://raw.githubusercontent.com/telybotai/telybot-Sdks/v2.0.0/TelyBot.podspec'
 ```
 
 Pointing at the podspec by URL works whether or not the pod is on CocoaPods trunk. Pin it to a

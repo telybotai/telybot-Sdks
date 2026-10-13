@@ -6,12 +6,12 @@ Drop the Telybot bot into your app. One key, every platform.
 
 | Platform | Package | Status |
 |---|---|---|
-| Android | `com.telybot:telybot` | JitPack `com.github.telybotai:telybot-Sdks:v1.0.0` |
-| iOS | `TelyBot` (SPM / CocoaPods) | SPM from this repository at tag `v1.0.0` |
-| React Native | `@telybot/react-native` | npm `@telybot/react-native@1.0.0` |
-| Flutter | `telybot` | pub.dev `telybot ^1.0.0` |
-| Ionic / Capacitor | `@telybot/capacitor` | npm `@telybot/capacitor@1.0.0` |
-| WordPress | `telybot` plugin | source here (`wordpress/telybot/`, 1.0.0) |
+| Android | `com.telybot:telybot` | JitPack `com.github.telybotai:telybot-Sdks:v2.0.0` |
+| iOS | `TelyBot` (SPM / CocoaPods) | SPM from this repository at tag `v2.0.0` |
+| React Native | `@telybot/react-native` | npm `@telybot/react-native@2.0.0` |
+| Flutter | `telybot` | pub.dev `telybot ^2.0.0` |
+| Ionic / Capacitor | `@telybot/capacitor` | npm `@telybot/capacitor@2.0.0` |
+| WordPress | `telybot` plugin | source here (`wordpress/telybot/`, 2.0.0) |
 | Any website | `<script src="https://telybot.com/widget.js">` | shipped |
 
 Every one of these opens the same hosted chat page, so a change an owner makes
@@ -23,23 +23,6 @@ what it costs.
 
 Get your client id from **Install** in the [Telybot
 dashboard](https://telybot.com/app/).
-
-## Moving from 0.x
-
-1.0.0 gave every package the Telybot name. On Android and iOS the old names
-keep compiling, deprecated, until 2.0.0, so an app can take the update first and
-rename after. The old npm and pub.dev packages are not updated any more: install
-the new one and rename. A reply your customer was waiting for is carried over on
-the first start, and the WordPress plugin takes over the old plugin's settings.
-
-| 0.x | 1.0.0 |
-|---|---|
-| Android `in.keyda:keyda-bot`, ``import `in`.keyda.bot.KeydaBot`` | `com.telybot:telybot`, `import com.telybot.sdk.TelyBot` |
-| iOS product `KeydaBot`, `import KeydaBot` | product `TelyBot`, `import TelyBot` |
-| npm `@keyda/bot-react-native`, `<KeydaBot>` | `@telybot/react-native`, `<TelyBot>` |
-| pub.dev `keyda_bot`, `KeydaBot` | `telybot`, `TelyBot` |
-| npm `@keyda/bot-capacitor`, `KeydaBot` | `@telybot/capacitor`, `TelyBot` |
-| WordPress `keyda-bot` | `telybot` — your client id is carried over |
 
 ## Licence
 

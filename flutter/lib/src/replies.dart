@@ -285,18 +285,7 @@ class TelyBotReplies with WidgetsBindingObserver {
     if (key == null) return;
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? raw = prefs.getString(key);
-      if (raw == null) {
-        // 0.2.x kept the list as keyda_bot_waits_<id>. Carried across once, so a
-        // reply a 0.2.x install was still waiting for lights the badge after the
-        // update to 1.0.
-        final String old = key.replaceFirst('telybot_waits_', 'keyda_bot_waits_');
-        raw = prefs.getString(old);
-        if (raw != null) {
-          await prefs.setString(key, raw);
-          await prefs.remove(old);
-        }
-      }
+      final String? raw = prefs.getString(key);
       if (raw == null) return;
       final Object? json = jsonDecode(raw);
       if (json is! Map || json['root'] != _root) return;

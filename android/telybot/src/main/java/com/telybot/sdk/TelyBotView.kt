@@ -63,7 +63,6 @@ import java.lang.ref.WeakReference
  *    looking at — a ViewPager2 neighbour, a tab that keeps its views visible.
  *  * **[destroy]** when the screen is gone for good.
  */
-// open: in.keyda.bot.KeydaBotView, the deprecated 0.x name, is a subclass (removed in 2.0.0).
 open class TelyBotView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -619,8 +618,7 @@ open class TelyBotView @JvmOverloads constructor(
     /**
      * The one object the page can reach: `window.TelyBotNative`, one method, one string in. It
      * carries three message types: `telybot:theme` (rule 7), `telybot:sheets` (rule 10) and
-     * `telybot:waits` — the chats waiting for the business's reply (TelyBotReplies). A server
-     * deployed before 1.0.0 names them `keyda:…`; read too, until 2.0.0.
+     * `telybot:waits` — the chats waiting for the business's reply (TelyBotReplies).
      *
      * A nested (static) class holding the view weakly, because the WebView holds this bridge
      * strongly and the view holds the WebView. Everything here runs on the JavaBridge thread, on
@@ -665,12 +663,9 @@ open class TelyBotView @JvmOverloads constructor(
             }
         }
 
-        /** `theme` out of `telybot:theme`, or out of `keyda:theme` from an older server; else null. */
-        private fun kindOf(type: String): String? = when {
-            type.startsWith("telybot:") -> type.removePrefix("telybot:")
-            type.startsWith("keyda:") -> type.removePrefix("keyda:")
-            else -> null
-        }
+        /** `theme` out of `telybot:theme`; null for anything else. */
+        private fun kindOf(type: String): String? =
+            if (type.startsWith("telybot:")) type.removePrefix("telybot:") else null
 
         /** `#rrggbb` only. Anything else - named colours, alpha, garbage - is "no accent". */
         private fun parseAccent(value: String): Int? {

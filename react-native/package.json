@@ -1,6 +1,6 @@
 {
   "name": "@telybot/react-native",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Open your Telybot bot in a React Native app: a Modal + WebView around the hosted chat page.",
   "license": "MIT",
   "main": "src/index.tsx",

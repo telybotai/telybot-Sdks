@@ -15,7 +15,7 @@ taking your app down with it.
 
 ## Install
 
-Published on **JitPack**; `v1.0.0` resolves today (the repository is tagged, and JitPack builds
+Published on **JitPack**; `v2.0.0` resolves today (the repository is tagged, and JitPack builds
 the `android/` project from that tag):
 
 ```kotlin
@@ -28,16 +28,16 @@ dependencyResolutionManagement {
 }
 
 // app/build.gradle.kts
-implementation("com.github.telybotai:telybot-Sdks:v1.0.0")
+implementation("com.github.telybotai:telybot-Sdks:v2.0.0")
 ```
 
 To build against an unreleased commit instead, publish it locally from a clone:
 
 ```bash
-cd android && ./gradlew :telybot:publishToMavenLocal   # com.telybot:telybot:1.0.0
+cd android && ./gradlew :telybot:publishToMavenLocal   # com.telybot:telybot:2.0.0
 ```
 
-and add `mavenLocal()` to your repositories, with `implementation("com.telybot:telybot:1.0.0")`.
+and add `mavenLocal()` to your repositories, with `implementation("com.telybot:telybot:2.0.0")`.
 `com.telybot:telybot` on Maven Central is the intended long-term home; it is not there yet, and
 this README will say so until it is.
 
@@ -58,14 +58,6 @@ supportButton.setOnClickListener(v -> TelyBot.show(this));
 ```
 
 Get the client id from **Install** in the [Telybot dashboard](https://telybot.com/app/).
-
-### Moving from 0.x
-
-1.0.0 renamed the package from <code>`in`.keyda.bot</code> to `com.telybot.sdk` and the classes
-from `KeydaBot…` to `TelyBot…` (`TelyBot`, `TelyBot.Listener`, `TelyBotView`). The old
-`in.keyda.bot.KeydaBot` and `KeydaBotView` still compile, as deprecated forwards to the new
-ones, until 2.0.0 — update the dependency first, rename at your own pace. The reply list a
-0.x install kept is carried over on the first start.
 
 ## The whole API
 
@@ -325,7 +317,7 @@ Stated plainly, because finding these out after shipping is worse:
 ```bash
 cd android
 ./gradlew :telybot:assembleRelease      # telybot/build/outputs/aar/
-./gradlew :telybot:publishToMavenLocal  # com.telybot:telybot:1.0.0
+./gradlew :telybot:publishToMavenLocal  # com.telybot:telybot:2.0.0
 ./gradlew :telybot:lintRelease          # kept at zero errors
 ```
 

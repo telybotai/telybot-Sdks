@@ -441,18 +441,12 @@ class TelyBotChatPageState extends State<TelyBotChatPage> {
     }
   }
 
-  /// `theme` out of `telybot:theme`, or out of `keyda:theme`, the name a
-  /// server deployed before 1.0.0 sends (read until 2.0.0); otherwise null.
+  /// `theme` out of `telybot:theme`; null for anything else.
   static String? _kindOf(Object? type) {
-    if (type is! String) {
+    if (type is! String || !type.startsWith('telybot:')) {
       return null;
     }
-    for (final String prefix in const <String>['telybot:', 'keyda:']) {
-      if (type.startsWith(prefix)) {
-        return type.substring(prefix.length);
-      }
-    }
-    return null;
+    return type.substring('telybot:'.length);
   }
 
   /// Rule 7: the page announces the owner's resolved theme as

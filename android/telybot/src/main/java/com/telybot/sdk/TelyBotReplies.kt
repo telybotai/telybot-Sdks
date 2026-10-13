@@ -58,8 +58,6 @@ internal object TelyBotReplies {
     private const val MAX_REDIRECTS = 3
     private const val FILE_PREFIX = "telybot_waits_"
 
-    /** What 0.2.x called the same file; migrated by [switchTo], tidied by [forgetOtherClients]. */
-    private const val OLD_FILE_PREFIX = "keyda_bot_waits_"
 
     private val REDIRECTS = setOf(301, 302, 303, 307, 308)
     private val CONVERSATION_SHAPE = Regex("^[0-9a-f-]{36}\$", RegexOption.IGNORE_CASE)
@@ -280,10 +278,6 @@ internal object TelyBotReplies {
             // too, for a conversation that phone never had.
             val dir = app.noBackupFilesDir
             val file = File(dir, "$FILE_PREFIX$clientId.json")
-            // 0.2.x kept the list as keyda_bot_waits_<id>.json. Carried across once, so a reply
-            // a 0.2.x install was still waiting for lights the dot after the update to 1.0.
-            val old = File(dir, "$OLD_FILE_PREFIX$clientId.json")
-            if (!file.exists() && old.exists()) old.renameTo(file)
             val early = if (waitsFrom == page) waits else mutableListOf()
             store = AtomicFile(file)
             root = baseRoot
@@ -482,9 +476,7 @@ internal object TelyBotReplies {
     private fun forgetOtherClients(dir: File, keep: String) {
         try {
             dir.listFiles()?.forEach { f ->
-                if ((f.name.startsWith(FILE_PREFIX) && !f.name.startsWith(keep)) ||
-                    f.name.startsWith(OLD_FILE_PREFIX)
-                ) f.delete()
+                if (f.name.startsWith(FILE_PREFIX) && !f.name.startsWith(keep)) f.delete()
             }
         } catch (e: Exception) {
             Log.d(TelyBot.TAG, "Could not tidy old reply lists: ${e.javaClass.simpleName}")

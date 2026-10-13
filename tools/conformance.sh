@@ -157,18 +157,23 @@ grep -q "Linking.openURL" react-native/src/*.tsx 2>/dev/null \
   && ok "react-native escapes navigation to the browser" || no "react-native does not escape navigation"
 
 echo "== message types =="
-# The page names its messages telybot:<kind> to a 1.0.0 shell, and a server
-# deployed before 1.0.0 names them keyda:<kind>. Every shell that reads them
-# takes both prefixes (CONTRACT.md, Names) and compares only the kind, so no
-# full type may be spelled out in a comparison.
+# The page names its messages telybot:<kind> (CONTRACT.md, Names). Every shell
+# reads that prefix and compares only the kind, so no full type is spelled out
+# in a comparison.
 for f in android/telybot/src/main/java/com/telybot/sdk/TelyBotView.kt \
          ios/Sources/TelyBot/TelyBotViewController.swift \
          react-native/src/index.tsx \
          flutter/lib/src/chat_page.dart; do
   p=$(echo "$f" | cut -d/ -f1)
-  if grep -qE "[\"']telybot:[\"']" "$f" && grep -qE "[\"']keyda:[\"']" "$f" \
-     && ! grep -vE "^ *(//|\\*|/\\*)" "$f" | grep -qE "[\"'](keyda|telybot):(theme|sheets|waits)[\"']"; then ok "$p reads telybot: and keyda: message types"
-  else no "$p does not read both message-type prefixes"; fi
+  if grep -qE "[\"']telybot:[\"']" "$f" \
+     && ! grep -vE "^ *(//|\\*|/\\*)" "$f" | grep -qE "[\"']telybot:(theme|sheets|waits)[\"']"; then ok "$p reads telybot: message types"
+  else no "$p does not read the telybot: message types"; fi
+done
+# One name. No package, its README or its build files say anything else.
+for p in android ios react-native flutter ionic wordpress; do
+  hits=$(grep -rIilE "k[e]yda" "$p" --exclude-dir=node_modules --exclude-dir=build --exclude-dir=.gradle \
+    --exclude-dir=.dart_tool --exclude-dir=dist --exclude-dir=.build 2>/dev/null | head -3)
+  [ -z "$hits" ] && ok "$p carries only the Telybot name" || no "$p still names the old brand: $(echo $hits | tr '\n' ' ')"
 done
 grep -qF "{type:'telybot:back',handled:h}" react-native/src/index.tsx 2>/dev/null \
   && ok "react-native answers back as telybot:back" || no "react-native back answer is not telybot:back"

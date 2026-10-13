@@ -8,7 +8,7 @@
 # onboarding is a bad first impression.
 Pod::Spec.new do |s|
   s.name             = 'TelyBot'
-  s.version          = '1.0.0'
+  s.version          = '2.0.0'
   s.summary          = 'Drop-in customer support chat for iOS, powered by Telybot.'
   s.description      = <<-DESC
     A small WebView wrapper that opens your Telybot bot inside your app.

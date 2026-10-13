@@ -138,7 +138,7 @@ Steps:
 
    ```sh
    cd wordpress
-   zip -r /tmp/telybot-1.0.0.zip telybot -x '*.DS_Store' -x '__MACOSX/*'
+   zip -r /tmp/telybot-2.0.0.zip telybot -x '*.DS_Store' -x '__MACOSX/*'
    ```
 
    Unzip it somewhere clean and confirm the top-level folder is `telybot/`.
@@ -151,8 +151,8 @@ Steps:
    rsync -a --delete --exclude '.DS_Store' telybot/ telybot-svn/trunk/
    cd telybot-svn
    svn add --force trunk
-   svn cp trunk "tags/1.0.0"
-   svn ci -m "Release 1.0.0"
+   svn cp trunk "tags/2.0.0"
+   svn ci -m "Release 2.0.0"
    ```
 
    WordPress.org serves whichever tag `Stable tag:` in **trunk's** `readme.txt`

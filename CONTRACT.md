@@ -87,25 +87,13 @@ user-identity call — the visitor above is offered to the customer, never
 asserted to the server. An SDK method that does not work end-to-end is worse
 than a missing one.
 
-## Names (1.0.0)
+## Names
 
 Every package, class, bridge, message type and User-Agent mark carries the
-Telybot name from 1.0.0 — `TelyBotNative`, `messageHandlers.telyBot`,
-`TelyBotFlutter`, `telybot:theme`, `telybot:sheets`, `telybot:waits`,
-`telybot:back`, `TelyBot/<version> (…)`, `window.TelyBot`. The 0.x names are
-kept beside them, because apps already installed depend on them:
-
-* the page posts to the 0.x bridge names too (`KeydaBotNative`,
-  `messageHandlers.keydaBot`, `KeydaBotFlutter`, and React Native without a
-  `TelyBot/` User-Agent mark), with the 0.x message types (`keyda:theme`,
-  `keyda:sheets`, `keyda:waits`), so a 0.x app keeps its theme, back and
-  replies; it reads the `KeydaBot/` User-Agent mark as well;
-* a 1.0.0 shell reads `keyda:<kind>` as `telybot:<kind>`: that is what a
-  server deployed before 1.0.0 sends;
-* `window.KeydaBot` is the same object as `window.TelyBot`.
-
-All three go in 2.0.0 of the SDKs and the server release that matches it.
-A 1.0.0 shell registers and calls only the Telybot names.
+Telybot name: `TelyBotNative`, `messageHandlers.telyBot`, `TelyBotFlutter`,
+`telybot:theme`, `telybot:sheets`, `telybot:waits`, `telybot:back`,
+`TelyBot/<version> (…)`, `window.TelyBot`. A shell registers, calls and reads
+only these names.
 
 ## Rules that are not negotiable
 
