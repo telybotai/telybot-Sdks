@@ -8,9 +8,6 @@
 * The page's messages are `telybot:theme`, `telybot:sheets` and `telybot:waits`, and back is
   answered as `telybot:back`; the `keyda:…` names a server deployed before this release sends
   are still read, until 2.0.0.
-* **`@keyda/bot-react-native` 0.2.1** depends on this package and re-exports it under the old
-  names, deprecated, so an app can take the update first and rename after. It is the last
-  release under that name.
 * The reply list a 0.x app kept in your `storage` (`keyda_bot_waits_<id>`) moves to
   `telybot_waits_<id>` on first use, so a reply the customer was waiting for still counts.
 * The retry button draws in the chat's own colours (ink on the page background, in both

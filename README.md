@@ -26,10 +26,11 @@ dashboard](https://telybot.com/app/).
 
 ## Moving from 0.x
 
-1.0.0 gave every package the Telybot name. The old names keep working, as
-deprecated aliases or forwarding releases, until 2.0.0, so an app can take the
-update first and rename after. A reply your customer was waiting for is carried
-over on the first start.
+1.0.0 gave every package the Telybot name. On Android and iOS the old names
+keep compiling, deprecated, until 2.0.0, so an app can take the update first and
+rename after. The old npm and pub.dev packages are not updated any more: install
+the new one and rename. A reply your customer was waiting for is carried over on
+the first start, and the WordPress plugin takes over the old plugin's settings.
 
 | 0.x | 1.0.0 |
 |---|---|

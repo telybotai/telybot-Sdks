@@ -9,8 +9,6 @@
   channel is `TelyBotFlutter` and the User-Agent mark `TelyBot/1.0.0 (Flutter)`.
 * The page's messages are `telybot:theme`, `telybot:sheets` and `telybot:waits`; the `keyda:…`
   names a server deployed before this release sends are still read, until 2.0.0.
-* **`keyda_bot` 0.2.1** depends on this package and re-exports it with the old names as
-  deprecated typedefs; pub.dev lists it as replaced by `telybot`.
 * The reply list (`keyda_bot_waits_<id>` in shared_preferences) moves to `telybot_waits_<id>`
   on first use, so a reply the customer was waiting for still counts.
 * The example app uses the Telybot plum.

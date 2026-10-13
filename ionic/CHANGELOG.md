@@ -9,8 +9,6 @@
   recognised, so the widget is never loaded twice.
 * `getEmbeddedWidget()` reads `window.TelyBot`, falling back to `window.KeydaBot` for a server
   from before October 2026.
-* **`@keyda/bot-capacitor` 0.2.1** depends on this package and re-exports it under the old
-  names, deprecated. It is the last release under that name.
 
 ## 0.2.0 — 2026-10-13
 
