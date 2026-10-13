@@ -101,8 +101,9 @@ function telybot_base_url() {
 		$base = KEYDA_BOT_BASE_URL;
 	}
 
-	/** This filter is documented below; the 0.x name runs first, until 2.0.0. */
-	$base = (string) apply_filters( 'keyda_bot_base_url', $base );
+	// The 0.x name, still honoured until 2.0.0; WordPress tells a developer who
+	// hooks it (with WP_DEBUG on) to move to telybot_base_url. It runs first.
+	$base = (string) apply_filters_deprecated( 'keyda_bot_base_url', array( $base ), '1.0.0', 'telybot_base_url' );
 
 	/**
 	 * Filters the host the Telybot widget is loaded from.

@@ -213,7 +213,8 @@ are removed, on every site of a network install. Nothing else is stored.
   and credit setting are carried over from the older `keyda-bot` plugin on the first load;
   deactivate and delete that one afterwards — a notice says so while both are active.
 * A `KEYDA_BOT_BASE_URL` constant or `keyda_bot_base_url` filter you already use still works
-  until 2.0.0; the new names are `TELYBOT_BASE_URL` and `telybot_base_url`.
+  until 2.0.0; the new names are `TELYBOT_BASE_URL` and `telybot_base_url`. With
+  `WP_DEBUG` on, WordPress notes the old filter as deprecated.
 * Uninstalling removes the settings under both names.
 * Documentation: "External services" now says what the chat keeps in the
   visitor's browser. A chat lasts one browser tab (the text still said 24
