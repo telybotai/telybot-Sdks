@@ -119,7 +119,7 @@ class TelyBotChatPageState extends State<TelyBotChatPage> {
   bool _isLoading = true;
   bool _failed = false;
 
-  /// The page's sheet count (`keyda:sheets`, CONTRACT.md rule 10).
+  /// The page's sheet count (`telybot:sheets`, CONTRACT.md rule 10).
   int _sheets = 0;
 
   /// The question this chat was opened with or last given.
@@ -441,8 +441,22 @@ class TelyBotChatPageState extends State<TelyBotChatPage> {
     }
   }
 
+  /// `theme` out of `telybot:theme`, or out of `keyda:theme`, the name a
+  /// server deployed before 1.0.0 sends (read until 2.0.0); otherwise null.
+  static String? _kindOf(Object? type) {
+    if (type is! String) {
+      return null;
+    }
+    for (final String prefix in const <String>['telybot:', 'keyda:']) {
+      if (type.startsWith(prefix)) {
+        return type.substring(prefix.length);
+      }
+    }
+    return null;
+  }
+
   /// Rule 7: the page announces the owner's resolved theme as
-  /// `{"type":"keyda:theme","mode":"light"|"dark",...}`. Anything else on the
+  /// `{"type":"telybot:theme","mode":"light"|"dark",...}`. Anything else on the
   /// channel — another type, malformed JSON, a non-object — is ignored; the
   /// page is content we do not control, and a bad message must never crash
   /// the host app (rule 6).
@@ -456,14 +470,15 @@ class TelyBotChatPageState extends State<TelyBotChatPage> {
     if (decoded is! Map<String, dynamic>) {
       return;
     }
-    if (decoded['type'] == 'keyda:sheets') {
+    final String? kind = _kindOf(decoded['type']);
+    if (kind == 'sheets') {
       final Object? open = decoded['open'];
       if (open is num && open >= 0 && open <= 64 && mounted) {
         _setSheets(open.toInt());
       }
       return;
     }
-    if (decoded['type'] == 'keyda:waits') {
+    if (kind == 'waits') {
       // The chats waiting for the business's reply; validated there. A chat
       // out of sight (focused: false) draws a reply nobody sees.
       TelyBotReplies.instance.onWaits(
@@ -473,7 +488,7 @@ class TelyBotChatPageState extends State<TelyBotChatPage> {
       );
       return;
     }
-    if (decoded['type'] != 'keyda:theme') {
+    if (kind != 'theme') {
       return;
     }
     final Object? mode = decoded['mode'];

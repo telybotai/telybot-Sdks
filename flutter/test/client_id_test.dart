@@ -179,7 +179,7 @@ void main() {
       // the SAME ORIGIN as the chat — an origin comparison says "ours", the
       // WebView navigates in place, and the conversation is gone.
       //
-      // The earlier version of this test asserted against https://keyda.in/,
+      // The earlier version of this test asserted against another site's address,
       // which is not the link the widget renders. It passed while the bug was
       // live.
       expect(staysInChat(Uri.parse('https://telybot.com/'), chat), isFalse);

@@ -10,7 +10,7 @@ import UIKit
 ///
 /// The page is the source of truth. It keeps the chats it is waiting on (up to three,
 /// for 14 days, each with the time of the last row it showed) and sends that list over
-/// the bridge as `keyda:waits` whenever it changes. This keeps a copy on disk, and when
+/// the bridge as `telybot:waits` whenever it changes. This keeps a copy on disk, and when
 /// the app comes to the foreground with no chat on screen it asks the same public route
 /// the page asks (`/widget/{clientId}/messages`) whether a person has written since.
 /// Nothing here moves the page's place: the page does that when it draws the reply, and
@@ -122,7 +122,7 @@ final class TelyBotReplies: @unchecked Sendable {
         }
     }
 
-    /// A `keyda:waits` message from the page. `fromOnScreen`: the chat that sent it was
+    /// A `telybot:waits` message from the page. `fromOnScreen`: the chat that sent it was
     /// on screen, so what it drew was seen. `chat`: that chat's address, to tell a chat
     /// still open from before `initialize` was called with another client id or server.
     func onWaits(_ list: [Any]?, fromOnScreen: Bool, chat: String) {

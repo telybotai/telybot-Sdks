@@ -1,5 +1,5 @@
 === Telybot ===
-Contributors: keyda
+Contributors: telybot
 Tags: chatbot, live chat, customer support, ai, assistant
 Requires at least: 5.6
 Tested up to: 7.1
@@ -32,12 +32,12 @@ plugin suits you:
 The widget renders inside a shadow root, so your theme's CSS cannot break it and
 its CSS cannot reach your site. It never throws an error into your page: if it
 cannot reach Telybot while your page is loading it adds nothing at all and writes
-one `[KeydaBot]` warning to the browser console, and a message that fails to
+one `[TelyBot]` warning to the browser console, and a message that fails to
 send is answered in the chat itself.
 
 Your bot has to be set live in the dashboard. While it is still a draft the
 widget adds nothing to your pages at all — it only writes one console line:
-`[KeydaBot] this bot is in draft — set it live in your Telybot dashboard to show
+`[TelyBot] this bot is in draft — set it live in your Telybot dashboard to show
 it here.`
 
 = What this plugin does not do =
@@ -156,7 +156,7 @@ In this order:
 2. Clear your caching plugin's cache. A page cached before you saved the id has
    no script tag in it.
 3. Open your browser's developer console and look for a line beginning
-   `[KeydaBot]`. "missing data-key" means something rewrote or merged the tag —
+   `[TelyBot]`. "missing data-key" means something rewrote or merged the tag —
    exclude the handle `telybot` from script concatenation.
 4. If your bot has an authorised-domains list in the dashboard, your site's
    domain has to be on it. Until it is, the request is refused and the widget
@@ -219,6 +219,8 @@ are removed, on every site of a network install. Nothing else is stored.
 * Documentation: "External services" now says what the chat keeps in the
   visitor's browser. A chat lasts one browser tab (the text still said 24
   hours), and a random id, sent with each chat, links a visitor's chats for you.
+* Documentation: the chat's console lines now begin `[TelyBot]` (they began
+  `[KeydaBot]`); the troubleshooting steps say so.
 
 = 0.2.0 =
 * Points at telybot.com: Keyda Business is now Telybot, at its own home. The widget loads from https://telybot.com by default; the old address forwards there for at least twelve months.

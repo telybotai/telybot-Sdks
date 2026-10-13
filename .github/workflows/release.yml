@@ -15,8 +15,7 @@
 # the one GitHub puts in the run's identity — and so does npm's provenance
 # with each package.json's repository.url. Every file here says
 # telybotai/telybot-Sdks, spelled exactly as GitHub spells it (moved there on
-# 2026-10-12 from KeydaAI/keyda-business-sdks by way of Gleegl/Telybot-Sdks;
-# both old URLs redirect).
+# 2026-10-12 from two earlier names, both of which redirect).
 #
 # Nothing goes to npm or pub.dev unless the tag matches every package
 # (tools/release.mjs) and the whole CI workflow passes on the tagged commit.

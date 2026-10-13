@@ -420,14 +420,24 @@ final class TelyBotViewController: UIViewController {
 
     // MARK: - Theme
 
+    /// `theme` out of `telybot:theme`, or out of `keyda:theme` from an older server; else nil.
+    private static func kind(of type: String?) -> String? {
+        guard let type = type else { return nil }
+        for prefix in ["telybot:", "keyda:"] where type.hasPrefix(prefix) {
+            return String(type.dropFirst(prefix.count))
+        }
+        return nil
+    }
+
     /// Applies the theme the hosted page reports, and nothing else.
     ///
     /// The page is the only party that knows the owner's dashboard setting, so the
-    /// shell never guesses: until a `keyda:theme` message arrives the override stays
+    /// shell never guesses: until a `telybot:theme` message arrives the override stays
     /// `.unspecified` and the chrome follows the device, which is exactly what "Match
     /// the visitor" means and what a backend that predates the bridge gets. Parsing is
     /// deliberately forgiving — anything that is not a JSON object with
-    /// `type == "keyda:theme"` and a recognised `mode` is dropped without a trace.
+    /// `type == "telybot:theme"` and a recognised `mode` is dropped without a trace.
+    /// A server deployed before 1.0.0 names the types `keyda:…`; read too, until 2.0.0.
     /// This runs inside the host's process; a malformed message must never bring it
     /// down (rule 6).
     fileprivate func receive(scriptMessage message: WKScriptMessage) {
@@ -448,7 +458,8 @@ final class TelyBotViewController: UIViewController {
         // The chats waiting for the business's reply (`TelyBotReplies`), validated there.
         // A chat that is loaded but not on screen still draws a reply; that is not the
         // customer seeing it.
-        if payload?["type"] as? String == "keyda:waits" {
+        let kind = Self.kind(of: payload?["type"] as? String)
+        if kind == "waits" {
             TelyBotReplies.shared.onWaits(
                 payload?["waits"] as? [Any],
                 fromOnScreen: countedOnScreen,
@@ -457,7 +468,7 @@ final class TelyBotViewController: UIViewController {
             return
         }
 
-        guard let theme = payload, theme["type"] as? String == "keyda:theme" else { return }
+        guard let theme = payload, kind == "theme" else { return }
 
         let style: UIUserInterfaceStyle
         switch theme["mode"] as? String {

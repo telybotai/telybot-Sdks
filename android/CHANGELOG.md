@@ -11,8 +11,9 @@
   `TelyBot`, and `KeydaBotView` is a `TelyBotView`. Update the dependency first, rename at your
   own pace; both go in 2.0.0.
 * The JavaScript bridge is `TelyBotNative` and the User-Agent mark `TelyBot/1.0.0 (Android)`.
-  Needs a Telybot server from October 2026 (telybot.com is). The message types
-  (`keyda:theme`, `keyda:sheets`, `keyda:waits`) are protocol and unchanged.
+  Needs a Telybot server from October 2026 (telybot.com is). The page's messages are
+  `telybot:theme`, `telybot:sheets` and `telybot:waits`; the `keyda:…` names a server deployed
+  before this release sends are still read, until 2.0.0.
 * The reply list a 0.x install kept (`keyda_bot_waits_<id>.json`) moves to
   `telybot_waits_<id>.json` on the first start, so a reply the customer was waiting for still
   lights the dot.

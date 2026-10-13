@@ -203,9 +203,17 @@ const PALETTE = {
 };
 
 /**
+ * Whether a message type from the page is `telybot:<kind>`, or `keyda:<kind>`, the
+ * name a server deployed before 1.0.0 sends (read until 2.0.0).
+ */
+function isKind(type: unknown, kind: string): boolean {
+  return type === 'telybot:' + kind || type === 'keyda:' + kind;
+}
+
+/**
  * The scheme a message from the page names, or null for anything else.
  *
- * The page posts `{"type":"keyda:theme","mode":"light"|"dark",...}` through
+ * The page posts `{"type":"telybot:theme","mode":"light"|"dark",...}` through
  * window.ReactNativeWebView.postMessage as early as its <head> runs, and again
  * when a "Match the visitor" bot flips with the OS. Anything else arriving on
  * that channel — another message type, a non-JSON string, a future field
@@ -226,7 +234,7 @@ function themeFromMessage(data: unknown): Scheme | null {
     return null;
   }
   const msg = parsed as {type?: unknown; mode?: unknown};
-  if (msg.type !== 'keyda:theme') {
+  if (!isKind(msg.type, 'theme')) {
     return null;
   }
   return msg.mode === 'dark' ? 'dark' : msg.mode === 'light' ? 'light' : null;
@@ -237,25 +245,25 @@ function themeFromMessage(data: unknown): Scheme | null {
  * open over the conversation — an item over the menu, the cart, a booking —
  * and back is the customer closing THAT. The page's `TelyBot.back()` takes
  * off the top sheet and answers whether there was one; the answer comes back
- * as a `keyda:back` message. A page too old to have `back()`, or one that
+ * as a `telybot:back` message. A page too old to have `back()`, or one that
  * throws, answers false and the chat closes as it always did. The trailing
  * `true;` is react-native-webview's own advice for injected scripts.
  */
 const BACK_SCRIPT =
   "(function(){var h=false;try{h=!!(window.TelyBot&&typeof window.TelyBot.back==='function'&&window.TelyBot.back());}catch(e){}" +
-  "window.ReactNativeWebView.postMessage(JSON.stringify({type:'keyda:back',handled:h}));})();true;";
+  "window.ReactNativeWebView.postMessage(JSON.stringify({type:'telybot:back',handled:h}));})();true;";
 
 /** How long back waits for the page's answer before closing the chat anyway. */
 const BACK_ANSWER_MS = 500;
 
 /** The page's answer to BACK_SCRIPT: true / false, or null for any other message. */
 function backAnswerFromMessage(data: unknown): boolean | null {
-  if (typeof data !== 'string' || data.indexOf('keyda:back') < 0) {
+  if (typeof data !== 'string' || data.indexOf('telybot:back') < 0) {
     return null;
   }
   try {
     const msg = JSON.parse(data) as {type?: unknown; handled?: unknown};
-    return msg && msg.type === 'keyda:back' ? msg.handled === true : null;
+    return msg && msg.type === 'telybot:back' ? msg.handled === true : null;
   } catch {
     return null;
   }
@@ -313,12 +321,12 @@ function visitorScript(visitor: Required<TelyBotVisitor> | null): string {
   );
 }
 
-/** The chats waiting for a reply — `{"type":"keyda:waits","waits":[…]}` — or null. */
+/** The chats waiting for a reply — `{"type":"telybot:waits","waits":[…]}` — or null. */
 function waitsFromMessage(data: unknown): unknown[] | null {
-  if (typeof data !== 'string' || data.indexOf('keyda:waits') < 0) return null;
+  if (typeof data !== 'string' || data.indexOf(':waits') < 0) return null;
   try {
     const msg = JSON.parse(data) as {type?: unknown; waits?: unknown};
-    return msg && msg.type === 'keyda:waits' && Array.isArray(msg.waits) ? msg.waits : null;
+    return msg && isKind(msg.type, 'waits') && Array.isArray(msg.waits) ? msg.waits : null;
   } catch {
     return null;
   }
@@ -337,16 +345,16 @@ function prefillScript(question: string): string {
 const BACK_ONLY_SCRIPT = "(function(){try{window.TelyBot&&window.TelyBot.back&&window.TelyBot.back();}catch(e){}})();true;";
 
 /**
- * The page's sheet count — `{"type":"keyda:sheets","open":n}` (CONTRACT rule
+ * The page's sheet count — `{"type":"telybot:sheets","open":n}` (CONTRACT rule
  * 10) — or null for any other message.
  */
 function sheetsFromMessage(data: unknown): number | null {
-  if (typeof data !== 'string' || data.indexOf('keyda:sheets') < 0) {
+  if (typeof data !== 'string' || data.indexOf(':sheets') < 0) {
     return null;
   }
   try {
     const msg = JSON.parse(data) as {type?: unknown; open?: unknown};
-    if (!msg || msg.type !== 'keyda:sheets' || typeof msg.open !== 'number') return null;
+    if (!msg || !isKind(msg.type, 'sheets') || typeof msg.open !== 'number') return null;
     return msg.open >= 0 && msg.open <= 64 ? Math.floor(msg.open) : null;
   } catch {
     return null;

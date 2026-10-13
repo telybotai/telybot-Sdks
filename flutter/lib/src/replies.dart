@@ -16,7 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 ///
 /// The page is the source of truth. It keeps the chats it is waiting on (up to
 /// three, for 14 days, each with the time of the last row it showed) and sends
-/// that list over the bridge as `keyda:waits` whenever it changes. This keeps a
+/// that list over the bridge as `telybot:waits` whenever it changes. This keeps a
 /// copy (shared_preferences), and when the app comes to the foreground with no
 /// chat on screen it asks the same public route the page asks
 /// (`/widget/{clientId}/messages`) whether a person has written since. Nothing
@@ -111,7 +111,7 @@ class TelyBotReplies with WidgetsBindingObserver {
     if (state == AppLifecycleState.resumed) look(forced: false);
   }
 
-  /// A `keyda:waits` message from the page of the chat at [chatUrl], which
+  /// A `telybot:waits` message from the page of the chat at [chatUrl], which
   /// [fromOnScreen] says counts as on screen.
   ///
   /// Only a chat on screen moves the customer's place. One loaded out of

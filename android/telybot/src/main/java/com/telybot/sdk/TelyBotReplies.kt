@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit
  *
  * The page is the source of truth. It keeps the chats it is waiting on (up to three, for 14 days,
  * each with the time of the last row it showed) and sends that list over the bridge as
- * `keyda:waits` whenever it changes. This object keeps a copy on disk, and when the app comes to
+ * `telybot:waits` whenever it changes. This object keeps a copy on disk, and when the app comes to
  * the foreground with no chat on screen it asks the same public route the page asks
  * (`/widget/{clientId}/messages`) whether a person has written since. Nothing here moves the
  * page's place: the page does that when it draws the reply, and sends the list back.
@@ -174,7 +174,7 @@ internal object TelyBotReplies {
     }
 
     /**
-     * A `keyda:waits` message from the page in [from]. The bridge's thread.
+     * A `telybot:waits` message from the page in [from]. The bridge's thread.
      *
      * Whether [from] is on screen is read here, with [lock] held, and not when [worker] gets to
      * it: a chat that came on screen in between has its own task queued behind this one.

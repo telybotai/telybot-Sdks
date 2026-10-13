@@ -145,7 +145,7 @@ open class TelyBotView @JvmOverloads constructor(
      */
     private var chatEverLoaded = false
 
-    /** The page's sheet count (`keyda:sheets`), and whether it has ever reported one. */
+    /** The page's sheet count (`telybot:sheets`), and whether it has ever reported one. */
     private var sheetsOpen = 0
     private var sheetsReported = false
 
@@ -185,7 +185,7 @@ open class TelyBotView @JvmOverloads constructor(
     internal var darkTheme = false
         private set
 
-    /** True once a `keyda:theme` message has arrived; from then on the page decides. */
+    /** True once a `telybot:theme` message has arrived; from then on the page decides. */
     private var themeFromPage = false
 
     /** The owner's accent, when the page sent one that parsed. Null means "use the theme's ink". */
@@ -618,8 +618,9 @@ open class TelyBotView @JvmOverloads constructor(
 
     /**
      * The one object the page can reach: `window.TelyBotNative`, one method, one string in. It
-     * carries three message types: `keyda:theme` (rule 7), `keyda:sheets` (rule 10) and
-     * `keyda:waits` — the chats waiting for the business's reply (TelyBotReplies).
+     * carries three message types: `telybot:theme` (rule 7), `telybot:sheets` (rule 10) and
+     * `telybot:waits` — the chats waiting for the business's reply (TelyBotReplies). A server
+     * deployed before 1.0.0 names them `keyda:…`; read too, until 2.0.0.
      *
      * A nested (static) class holding the view weakly, because the WebView holds this bridge
      * strongly and the view holds the WebView. Everything here runs on the JavaBridge thread, on
@@ -635,8 +636,8 @@ open class TelyBotView @JvmOverloads constructor(
             if (json == null) return
             try {
                 val message = JSONObject(json)
-                when (message.optString("type")) {
-                    "keyda:theme" -> {
+                when (kindOf(message.optString("type"))) {
+                    "theme" -> {
                         val dark = when (message.optString("mode")) {
                             "dark" -> true
                             "light" -> false
@@ -645,7 +646,7 @@ open class TelyBotView @JvmOverloads constructor(
                         val pageAccent = parseAccent(message.optString("accent"))
                         view.mainHandler.post { view.onPageTheme(dark, pageAccent) }
                     }
-                    "keyda:sheets" -> {
+                    "sheets" -> {
                         val open = message.optInt("open", -1)
                         if (open < 0 || open > 64) return
                         view.mainHandler.post {
@@ -656,12 +657,19 @@ open class TelyBotView @JvmOverloads constructor(
                     }
                     // Validated there, field by field; nothing reaches the view. The view goes along
                     // to say whether the customer could see the page that sent it.
-                    "keyda:waits" -> TelyBotReplies.onWaits(message.optJSONArray("waits"), view)
+                    "waits" -> TelyBotReplies.onWaits(message.optJSONArray("waits"), view)
                 }
             } catch (malformed: Exception) {
                 // A surprise from a web page is still not a crash.
                 Log.w(TelyBot.TAG, "Ignored an unreadable message from the chat page")
             }
+        }
+
+        /** `theme` out of `telybot:theme`, or out of `keyda:theme` from an older server; else null. */
+        private fun kindOf(type: String): String? = when {
+            type.startsWith("telybot:") -> type.removePrefix("telybot:")
+            type.startsWith("keyda:") -> type.removePrefix("keyda:")
+            else -> null
         }
 
         /** `#rrggbb` only. Anything else - named colours, alpha, garbage - is "no accent". */

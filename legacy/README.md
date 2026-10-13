@@ -11,7 +11,7 @@ They are published by hand once, after the 1.0.0 packages exist
 |---|---|---|
 | `react-native/` | npm `@keyda/bot-react-native` | `@telybot/react-native` |
 | `capacitor/` | npm `@keyda/bot-capacitor` | `@telybot/capacitor` |
-| `keyda_bot/` | pub.dev `keyda_bot` | `telybot` |
+| `flutter/` | pub.dev `keyda_bot` | `telybot` |
 
 They sit outside `tools/release.mjs` on purpose: they keep their own version.
 Android and iOS need no shim — the deprecated `KeydaBot` names ship inside 1.0.0.

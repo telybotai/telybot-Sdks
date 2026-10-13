@@ -5,6 +5,9 @@
 * **Renamed to Telybot:** `npm install @telybot/react-native react-native-webview`. Components
   and hooks `TelyBot`, `TelyBotChat`, `useTelyBot`, `useTelyBotReplies`; types `TelyBot…`.
   The User-Agent mark is `TelyBot/1.0.0 (ReactNative)`.
+* The page's messages are `telybot:theme`, `telybot:sheets` and `telybot:waits`, and back is
+  answered as `telybot:back`; the `keyda:…` names a server deployed before this release sends
+  are still read, until 2.0.0.
 * **`@keyda/bot-react-native` 0.2.1** depends on this package and re-exports it under the old
   names, deprecated, so an app can take the update first and rename after. It is the last
   release under that name.

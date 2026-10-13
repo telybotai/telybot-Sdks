@@ -89,19 +89,22 @@ than a missing one.
 
 ## Names (1.0.0)
 
-Every package, class, bridge and User-Agent mark carries the Telybot name from
-1.0.0 — `TelyBotNative`, `messageHandlers.telyBot`, `TelyBotFlutter`,
-`TelyBot/<version> (…)`, `window.TelyBot`. Three things keep their old spelling
-on purpose, because shells already installed depend on them:
+Every package, class, bridge, message type and User-Agent mark carries the
+Telybot name from 1.0.0 — `TelyBotNative`, `messageHandlers.telyBot`,
+`TelyBotFlutter`, `telybot:theme`, `telybot:sheets`, `telybot:waits`,
+`telybot:back`, `TelyBot/<version> (…)`, `window.TelyBot`. The 0.x names are
+kept beside them, because apps already installed depend on them:
 
-* the message **types** — `keyda:theme`, `keyda:sheets`, `keyda:waits`,
-  `keyda:back` — are protocol between the page and every shell, not brand;
 * the page posts to the 0.x bridge names too (`KeydaBotNative`,
-  `messageHandlers.keydaBot`, `KeydaBotFlutter`) and reads the `KeydaBot/`
-  User-Agent mark, so a 0.x app keeps its theme, back and replies;
+  `messageHandlers.keydaBot`, `KeydaBotFlutter`, and React Native without a
+  `TelyBot/` User-Agent mark), with the 0.x message types (`keyda:theme`,
+  `keyda:sheets`, `keyda:waits`), so a 0.x app keeps its theme, back and
+  replies; it reads the `KeydaBot/` User-Agent mark as well;
+* a 1.0.0 shell reads `keyda:<kind>` as `telybot:<kind>`: that is what a
+  server deployed before 1.0.0 sends;
 * `window.KeydaBot` is the same object as `window.TelyBot`.
 
-All three stay until 2.0.0 of the SDKs and the server release that matches it.
+All three go in 2.0.0 of the SDKs and the server release that matches it.
 A 1.0.0 shell registers and calls only the Telybot names.
 
 ## Rules that are not negotiable
@@ -152,7 +155,7 @@ A 1.0.0 shell registers and calls only the Telybot names.
    its `<head>` runs and again whenever a "Match the visitor" bot flips with
    the OS:
 
-       {"type":"keyda:theme","mode":"light"|"dark","setting":"auto"|"light"|"dark","accent":"#rrggbb"}
+       {"type":"telybot:theme","mode":"light"|"dark","setting":"auto"|"light"|"dark","accent":"#rrggbb"}
 
    to every bridge it can find: `window.ReactNativeWebView.postMessage(json)`
    (React Native), `window.TelyBotNative.onTheme(json)` (Android
@@ -162,8 +165,8 @@ A 1.0.0 shell registers and calls only the Telybot names.
    `window.TelyBotFlutter.postMessage(json)` (Flutter `JavaScriptChannel`
    named `TelyBotFlutter`). Shells apply `mode` — dark: background `#0b1220`,
    light status-bar text; light: background `#f7f8fc`, dark status-bar text —
-   and ignore any message whose `type` they do not know: `keyda:theme` here,
-   `keyda:sheets` (rule 10) and `keyda:waits` (rule 11). Until the
+   and ignore any message whose `type` they do not know: `telybot:theme` here,
+   `telybot:sheets` (rule 10) and `telybot:waits` (rule 11). Until the
    message arrives (and against a backend that predates it) a shell follows
    the device, which is what "Match the visitor" means. Capacitor/Ionic opens
    the page in the system browser sheet, which has no bridge; the chat inside
@@ -221,7 +224,7 @@ A 1.0.0 shell registers and calls only the Telybot names.
    `window.TelyBot.back()`: it closes the sheet on top and returns `true`, or
    returns `false` when none is open. A shell calls it on back and closes the
    chat only on `false`. The page also announces its sheet count —
-   `{"type":"keyda:sheets","open":n}`, at load and on every change, through
+   `{"type":"telybot:sheets","open":n}`, at load and on every change, through
    the same four bridges as the theme (Android's `onTheme` carries it; a
    shell ignores a type it does not know). An embedded chat has to answer
    back AT ONCE — its sheet or the host's screen — and uses the count for
@@ -235,7 +238,7 @@ A 1.0.0 shell registers and calls only the Telybot names.
    | Shell | How back reaches the page | Since |
    |---|---|---|
    | Android | `OnBackInvokedCallback` / `onBackPressed` → `evaluateJavascript`; `TelyBotView.goBack()` from the sheet count | 0.2.0 |
-   | React Native (Android) | `Modal onRequestClose` → `injectJavaScript`, answered with a `keyda:back` message; `<TelyBotChat />` takes `BackHandler` only while a sheet is open | 0.2.0 |
+   | React Native (Android) | `Modal onRequestClose` → `injectJavaScript`, answered with a `telybot:back` message; `<TelyBotChat />` takes `BackHandler` only while a sheet is open | 0.2.0 |
    | Flutter (Android) | `PopScope` → `runJavaScriptReturningResult`; `TelyBotChat` sets `canPop` from the sheet count | 0.2.0 |
    | iOS | no system back; the sheet's own back control | — |
    | Ionic full screen | the browser's own back | — |
@@ -255,7 +258,7 @@ A 1.0.0 shell registers and calls only the Telybot names.
    time of the last row it showed (`at`) — and announces the list through the
    bridges, at load and on every change:
 
-       {"type":"keyda:waits","waits":[{"c":"<conversation uuid>","at":"<ISO time, or \"\">","t":<ms when added>}]}
+       {"type":"telybot:waits","waits":[{"c":"<conversation uuid>","at":"<ISO time, or \"\">","t":<ms when added>}]}
 
    (`at` is empty when the form was sent before the page had read any row.)
 

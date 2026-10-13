@@ -8,7 +8,7 @@
  *
  * The page is the source of truth. It keeps the chats it is waiting on (up to
  * three, for 14 days, each with the time of the last row it showed) and sends
- * that list over the bridge as `keyda:waits` whenever it changes. A store here
+ * that list over the bridge as `telybot:waits` whenever it changes. A store here
  * keeps a copy, and when the app comes to the foreground with no chat on
  * screen it asks the same public route the page asks
  * (`/widget/{clientId}/messages`) whether a person has written since. Nothing
@@ -159,7 +159,7 @@ class ReplyStore {
   }
 
   /**
-   * A `keyda:waits` message from the page. `fromOnScreen`: the chat that sent
+   * A `telybot:waits` message from the page. `fromOnScreen`: the chat that sent
    * it counts as on screen. Only such a chat moves the customer's place. One
    * loaded out of sight (a tab not selected) keeps polling and draws what
    * comes where nobody sees it; taking its word made the badge go out on a

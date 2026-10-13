@@ -26,7 +26,7 @@ struct TelyBotWait: Codable, Equatable, Sendable {
     static let maxCount = 3
     static let lifetime: TimeInterval = 14 * 24 * 60 * 60
 
-    /// A `keyda:waits` list from the page: its first three, each well formed and under
+    /// A `telybot:waits` list from the page: its first three, each well formed and under
     /// 14 days old.
     static func parse(_ list: [Any]?, now: Date) -> [TelyBotWait] {
         let ms = now.timeIntervalSince1970 * 1000

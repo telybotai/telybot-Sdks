@@ -11,7 +11,8 @@
   2.0.0. (The `KeydaBot` pod stays installable from its `v0.2.0` podspec URL.)
 * The script message handler is `telyBot`, and the web view's User-Agent now ends
   `TelyBot/1.0.0 (iOS)` (0.x set no mark on iOS). Needs a Telybot server from October 2026.
-  The message types (`keyda:theme`, …) are protocol and unchanged.
+  The page's messages are `telybot:theme` and `telybot:waits`; the `keyda:…` names a server
+  deployed before this release sends are still read, until 2.0.0.
 * The reply list moves from `Application Support/KeydaBot/` to `Application Support/TelyBot/`
   on the first start, so a reply the customer was waiting for still counts; the old folder is
   removed. Log subsystem `com.telybot.sdk`.
