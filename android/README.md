@@ -1,6 +1,6 @@
 # Telybot for Android
 
-`in.keyda:keyda-bot` opens `https://telybot.com/chat/<your client id>` in a full-screen
+`com.telybot:telybot` opens `https://telybot.com/chat/<your client id>` in a full-screen
 WebView. That is the whole library, and this page is not going to pretend otherwise.
 
 There is exactly one Telybot chat interface, served by the platform, and every Telybot SDK loads that
@@ -15,7 +15,7 @@ taking your app down with it.
 
 ## Install
 
-Published on **JitPack**; `v0.2.0` resolves today (the repository is tagged, and JitPack builds
+Published on **JitPack**; `v1.0.0` resolves today (the repository is tagged, and JitPack builds
 the `android/` project from that tag):
 
 ```kotlin
@@ -28,55 +28,57 @@ dependencyResolutionManagement {
 }
 
 // app/build.gradle.kts
-implementation("com.github.telybotai:telybot-Sdks:v0.2.0")
+implementation("com.github.telybotai:telybot-Sdks:v1.0.0")
 ```
 
 To build against an unreleased commit instead, publish it locally from a clone:
 
 ```bash
-cd android && ./gradlew :keyda-bot:publishToMavenLocal   # in.keyda:keyda-bot:0.2.0
+cd android && ./gradlew :telybot:publishToMavenLocal   # com.telybot:telybot:1.0.0
 ```
 
-and add `mavenLocal()` to your repositories, with `implementation("in.keyda:keyda-bot:0.2.0")`.
-`in.keyda:keyda-bot` on Maven Central is the intended long-term home; it is not there yet, and
+and add `mavenLocal()` to your repositories, with `implementation("com.telybot:telybot:1.0.0")`.
+`com.telybot:telybot` on Maven Central is the intended long-term home; it is not there yet, and
 this README will say so until it is.
 
 ## Use
 
 ```kotlin
-import `in`.keyda.bot.KeydaBot                       // backticks required, see below
+import com.telybot.sdk.TelyBot
 
-KeydaBot.init(this, "kb_live_9f4c2a10")              // once, in Application.onCreate()
-supportButton.setOnClickListener { KeydaBot.show(this) }
+TelyBot.init(this, "kb_live_9f4c2a10")              // once, in Application.onCreate()
+supportButton.setOnClickListener { TelyBot.show(this) }
 ```
 
 From Java, every call is static:
 
 ```java
-KeydaBot.init(this, "kb_live_9f4c2a10");
-supportButton.setOnClickListener(v -> KeydaBot.show(this));
+TelyBot.init(this, "kb_live_9f4c2a10");
+supportButton.setOnClickListener(v -> TelyBot.show(this));
 ```
 
 Get the client id from **Install** in the [Telybot dashboard](https://telybot.com/app/).
 
-### `in` is a Kotlin keyword
+### Moving from 0.x
 
-The package is `in.keyda.bot`, and `in` is reserved in Kotlin, so Kotlin files must escape it in
-the import: <code>import `in`.keyda.bot.KeydaBot</code>. Java is unaffected. Android Studio
-writes the backticks for you when it auto-imports.
+1.0.0 renamed the package from <code>`in`.keyda.bot</code> to `com.telybot.sdk` and the classes
+from `KeydaBot…` to `TelyBot…` (`TelyBot`, `TelyBot.Listener`, `TelyBotView`). The old
+`in.keyda.bot.KeydaBot` and `KeydaBotView` still compile, as deprecated forwards to the new
+ones, until 2.0.0 — update the dependency first, rename at your own pace. The reply list a
+0.x install kept is carried over on the first start.
 
 ## The whole API
 
 | Call | Does |
 |---|---|
-| `KeydaBot.init(context, clientId, baseUrl = "https://telybot.com")` | stores and validates the configuration |
-| `KeydaBot.show(activity, question = null)` | opens the chat over your app; `question` goes in its message box, unsent |
-| `KeydaBot.dismiss()` | closes it; safe when it is not open, safe from any thread |
-| `KeydaBot.isShowing` | whether the chat is on screen right now |
-| `KeydaBot.listener` | optional `onShow()` / `onDismiss()` for the full-screen chat, and `onReply()` (below) |
-| `KeydaBot.setVisitor(name, phone, email)` / `clearVisitor()` | your signed-in customer, offered in the chat's forms (below) |
-| `KeydaBot.hasUnreadReply` / `checkForReplies()` | a reply from the business the customer has not seen (below) |
-| `KeydaBotView(context)` | the chat as a view of your own screen (below) |
+| `TelyBot.init(context, clientId, baseUrl = "https://telybot.com")` | stores and validates the configuration |
+| `TelyBot.show(activity, question = null)` | opens the chat over your app; `question` goes in its message box, unsent |
+| `TelyBot.dismiss()` | closes it; safe when it is not open, safe from any thread |
+| `TelyBot.isShowing` | whether the chat is on screen right now |
+| `TelyBot.listener` | optional `onShow()` / `onDismiss()` for the full-screen chat, and `onReply()` (below) |
+| `TelyBot.setVisitor(name, phone, email)` / `clearVisitor()` | your signed-in customer, offered in the chat's forms (below) |
+| `TelyBot.hasUnreadReply` / `checkForReplies()` | a reply from the business the customer has not seen (below) |
+| `TelyBotView(context)` | the chat as a view of your own screen (below) |
 
 There is no message API and no identify call. The one unread signal is a reply from a person at
 the business that the chat has not shown yet — which the server can answer honestly. A method that
@@ -85,7 +87,7 @@ does not work end to end is worse than a missing one.
 ### Open with a question
 
 ```kotlin
-askButton.setOnClickListener { KeydaBot.show(this, "Is this in stock?") }
+askButton.setOnClickListener { TelyBot.show(this, "Is this in stock?") }
 ```
 
 The question is put in the chat's message box; the customer reads it and taps send. It travels in
@@ -96,8 +98,8 @@ runs of spaces.
 ### Your signed-in customer
 
 ```kotlin
-KeydaBot.setVisitor(name = user.name, phone = user.phone, email = user.email)   // any of them
-KeydaBot.clearVisitor()                                                          // on sign-out
+TelyBot.setVisitor(name = user.name, phone = user.phone, email = user.email)   // any of them
+TelyBot.clearVisitor()                                                          // on sign-out
 ```
 
 The chat then does not ask what your app already knows. The details are **offered, never sent**:
@@ -117,36 +119,36 @@ dashboard later. The chat shows the answer the next time it opens. This tells yo
 there:
 
 ```kotlin
-KeydaBot.listener = object : KeydaBot.Listener {
+TelyBot.listener = object : TelyBot.Listener {
     override fun onReply() { chatButton.showBadge() }    // once per new reply
     override fun onShow() { chatButton.hideBadge() }
 }
-// on resume: if (KeydaBot.hasUnreadReply) chatButton.showBadge()
+// on resume: if (TelyBot.hasUnreadReply) chatButton.showBadge()
 ```
 
-From Java the getter is `KeydaBot.hasUnreadReply()`.
+From Java the getter is `TelyBot.hasUnreadReply()`.
 
 The SDK asks when your app comes to the foreground — once a minute at most, and only for chats in
-which the customer asked for a person in the last 14 days. `KeydaBot.checkForReplies()` asks now
+which the customer asked for a person in the last 14 days. `TelyBot.checkForReplies()` asks now
 (once in 10 seconds at most). `hasUnreadReply` stays true until the customer opens the chat (full
-screen or a `KeydaBotView` on screen), which shows the reply. A chat that is loaded but out of
-sight — a `KeydaBotView` in a background tab, a GONE one, or one whose `active` is false — does
+screen or a `TelyBotView` on screen), which shows the reply. A chat that is loaded but out of
+sight — a `TelyBotView` in a background tab, a GONE one, or one whose `active` is false — does
 not count as seen, even though it draws the reply. The list of chats to ask about is
 the page's own — chat ids and times, kept in a file in `noBackupFilesDir`; nothing else is stored
 or sent. There is no push: a reply is noticed when the app is opened.
 
-### The chat inside one of your own screens: `KeydaBotView`
+### The chat inside one of your own screens: `TelyBotView`
 
 For a Help tab or a support screen, instead of the full-screen chat:
 
 ```kotlin
-val chat = KeydaBotView(this).apply { question = "Is this in stock?" }   // after init()
+val chat = TelyBotView(this).apply { question = "Is this in stock?" }   // after init()
 container.addView(chat)
 // when the screen is gone for good:
 chat.destroy()
 ```
 
-From Compose: `AndroidView(factory = { KeydaBotView(it) }, onRelease = { it.destroy() })`.
+From Compose: `AndroidView(factory = { TelyBotView(it) }, onRelease = { it.destroy() })`.
 
 Your screen owns what is around the view, so four things are yours:
 
@@ -164,7 +166,7 @@ Your screen owns what is around the view, so four things are yours:
   the chat draws counts as seen (above).
 
   ```kotlin
-  AndroidView(factory = { KeydaBotView(it) }, update = { it.active = tab == Tab.Help }, onRelease = { it.destroy() })
+  AndroidView(factory = { TelyBotView(it) }, update = { it.active = tab == Tab.Help }, onRelease = { it.destroy() })
   // ViewPager2 page fragment: onResume() { chat.active = true }  onPause() { chat.active = false }
   ```
 * **`destroy()`** when the screen is gone, or the WebView keeps the whole screen in memory.
@@ -177,7 +179,7 @@ theme and the retry screen work exactly as in the full-screen chat.
 Self-hosting or staging:
 
 ```kotlin
-KeydaBot.init(this, "kb_live_9f4c2a10", "https://chat.mystore.in")
+TelyBot.init(this, "kb_live_9f4c2a10", "https://chat.mystore.in")
 ```
 
 Trailing slashes are trimmed. `http://` is accepted so a local server works; anything else is
@@ -236,7 +238,7 @@ permission and reaches the gallery and the documents providers without one.
   where the system forces apps edge-to-edge and ignores that, it pads for the IME insets itself.
 * **Safe areas are respected** — status bar, gesture bar and display cutout.
 * **The chrome follows the chat's theme.** See "Theme" below: the page announces the owner's
-  Theme setting through a one-method JavaScript bridge (`window.KeydaBotNative.onTheme`), and the
+  Theme setting through a one-method JavaScript bridge (`window.TelyBotNative.onTheme`), and the
   Activity paints its window, status and navigation bars, spinner and retry screen to match. On
   Android 10+ the Activity switches itself to the platform DayNight theme so that a "Match the
   visitor" bot actually sees the device's dark mode inside the WebView.
@@ -248,7 +250,7 @@ permission and reaches the gallery and the documents providers without one.
   conversation. There is no camera path, on purpose (see Limitations).
 * **Back closes what the customer is looking at first.** With a sheet open over the conversation
   — an item over the menu, the cart, a booking — back closes that sheet; with none open it closes
-  the chat. The page answers through `KeydaBot.back()`; a page too old to have it, or one that
+  the chat. The page answers through `TelyBot.back()`; a page too old to have it, or one that
   does not answer within half a second, closes the chat. Predictive back (API 33+) is registered
   as well as the classic callback, so a host app targeting Android 16 behaves the same.
 * **A slow connection shows a spinner, then a retry.** On 2G and patchy 3G the page can take
@@ -256,7 +258,7 @@ permission and reaches the gallery and the documents providers without one.
 * **If Android kills the WebView's render process**, the chat view is rebuilt and the customer is
   offered a retry. The default behaviour would take your whole app down with it.
 * **No analytics, no device identifiers, no cookies of ours.** The only thing added to the
-  User-Agent is `KeydaBot/<version> (Android)`, which carries a version and nothing else. The
+  User-Agent is `TelyBot/<version> (Android)`, which carries a version and nothing else. The
   reply check is a plain `HttpURLConnection` and sends no cookie of its own; if your app installs
   a process-wide `CookieHandler`, that handler adds to it whatever cookies your app itself stored
   for the chat's host.
@@ -304,7 +306,7 @@ Stated plainly, because finding these out after shipping is worse:
   is next opened (`onReply`, above), not before.
 * **No theme API.** The owner sets the theme in the dashboard and the page carries it (see
   "Theme" above). There is no call to restyle the chat, or the screen around it, from your app.
-* **Embedded, the screen is yours.** A `KeydaBotView` pads for no system bar and handles back only
+* **Embedded, the screen is yours.** A `TelyBotView` pads for no system bar and handles back only
   when you ask it to (`goBack()`); see above. It cannot tell an unselected ViewPager2 page from the
   selected one: say so with `active`.
 * **Seven English strings.** The retry screen's copy, and the toast shown when nothing on the
@@ -322,9 +324,9 @@ Stated plainly, because finding these out after shipping is worse:
 
 ```bash
 cd android
-./gradlew :keyda-bot:assembleRelease      # keyda-bot/build/outputs/aar/
-./gradlew :keyda-bot:publishToMavenLocal  # in.keyda:keyda-bot:0.2.0
-./gradlew :keyda-bot:lintRelease          # kept at zero errors
+./gradlew :telybot:assembleRelease      # telybot/build/outputs/aar/
+./gradlew :telybot:publishToMavenLocal  # com.telybot:telybot:1.0.0
+./gradlew :telybot:lintRelease          # kept at zero errors
 ```
 
 Build it on a **JDK 17** (`JAVA_HOME=/opt/homebrew/opt/openjdk@17`, or Android Studio's bundled

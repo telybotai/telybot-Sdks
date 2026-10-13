@@ -18,7 +18,7 @@
  * digits (and only `+ - ( ) .` and spaces besides), an email up to 254
  * characters. Pass `undefined` when the customer signs out.
  */
-export interface KeydaBotVisitor {
+export interface TelyBotVisitor {
   name?: string;
   phone?: string;
   email?: string;
@@ -72,7 +72,7 @@ export function cleanEmail(value: unknown): string {
 }
 
 /** What is left of a visitor, or null when nothing is — the same as no visitor. */
-export function cleanVisitor(visitor: KeydaBotVisitor | null | undefined): Required<KeydaBotVisitor> | null {
+export function cleanVisitor(visitor: TelyBotVisitor | null | undefined): Required<TelyBotVisitor> | null {
   if (!visitor || typeof visitor !== 'object') return null;
   const out = {name: cleanName(visitor.name), phone: cleanPhone(visitor.phone), email: cleanEmail(visitor.email)};
   return out.name || out.phone || out.email ? out : null;

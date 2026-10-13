@@ -1,6 +1,6 @@
-# KeydaBot — iOS
+# TelyBot — iOS
 
-**This is a WebView wrapper.** `KeydaBot` presents a sheet containing a `WKWebView`
+**This is a WebView wrapper.** `TelyBot` presents a sheet containing a `WKWebView`
 pointed at `https://telybot.com/chat/<your client id>`. The transcript, the
 composer, the welcome message and the accent colour are all the hosted chat page — the
 same one that runs on your website. There is no native chat UI in this package, and
@@ -32,10 +32,10 @@ Or in a `Package.swift` (the package identity is the repository name in lowercas
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/telybotai/telybot-Sdks", from: "0.2.0")
+    .package(url: "https://github.com/telybotai/telybot-Sdks", from: "1.0.0")
 ],
 targets: [
-    .target(name: "YourApp", dependencies: [.product(name: "KeydaBot", package: "telybot-sdks")])
+    .target(name: "YourApp", dependencies: [.product(name: "TelyBot", package: "telybot-sdks")])
 ]
 ```
 
@@ -45,7 +45,7 @@ Working inside this monorepo, point at the repo root (that is where the manifest
 ### CocoaPods
 
 ```ruby
-pod 'KeydaBot', :podspec => 'https://raw.githubusercontent.com/telybotai/telybot-Sdks/v0.2.0/KeydaBot.podspec'
+pod 'TelyBot', :podspec => 'https://raw.githubusercontent.com/telybotai/telybot-Sdks/v1.0.0/TelyBot.podspec'
 ```
 
 Pointing at the podspec by URL works whether or not the pod is on CocoaPods trunk. Pin it to a
@@ -54,15 +54,15 @@ release tag, as above: the podspec on `main` can name a version whose tag does n
 ## Use
 
 ```swift
-import KeydaBot
+import TelyBot
 
-KeydaBot.initialize(clientId: "kb_live_3f9a2c81")   // once, at launch
-KeydaBot.show()                                      // from your support button
+TelyBot.initialize(clientId: "kb_live_3f9a2c81")   // once, at launch
+TelyBot.show()                                      // from your support button
 ```
 
 That is the whole integration. `show()` presents from the top-most view controller of
 the active window; pass one explicitly if you would rather choose:
-`KeydaBot.show(from: self)`.
+`TelyBot.show(from: self)`.
 
 | Call | What it does |
 |---|---|
@@ -79,7 +79,7 @@ dashboard](https://telybot.com/app/).
 ### Open with a question
 
 ```swift
-KeydaBot.show(question: "Is this in stock?")
+TelyBot.show(question: "Is this in stock?")
 ```
 
 The question is put in the chat's message box; the customer reads it and taps send. It
@@ -89,8 +89,8 @@ as one line: the chat joins lines and collapses runs of spaces.
 ### Your signed-in customer
 
 ```swift
-KeydaBot.setVisitor(name: user.name, phone: user.phone, email: user.email)  // any of them
-KeydaBot.clearVisitor()                                                      // on sign-out
+TelyBot.setVisitor(name: user.name, phone: user.phone, email: user.email)  // any of them
+TelyBot.clearVisitor()                                                      // on sign-out
 ```
 
 The chat then does not ask what your app already knows. The details are **offered, never
@@ -101,7 +101,7 @@ verified identity. A value that does not look like what it claims is dropped who
 never shortened: a name of up to 80 characters, a phone number of 8–15 digits (spaces
 and `+ - ( ) .` allowed, not starting `+0`), an email address of up to 254 characters.
 Both calls reach every chat open now — the sheet and embedded chats
-(`makeChatViewController`, `KeydaBotView`) alike, one still loading included — and
+(`makeChatViewController`, `TelyBotView`) alike, one still loading included — and
 every one after.
 
 ### A reply while the chat is closed
@@ -111,14 +111,14 @@ from the dashboard later. The chat shows the answer the next time it opens. This
 your app it is there:
 
 ```swift
-KeydaBot.onReply = { chatButton.showBadge() }          // once per new reply, main thread
-KeydaBot.onShow = { chatButton.hideBadge() }
-// when your screen appears: if KeydaBot.hasUnreadReply { chatButton.showBadge() }
+TelyBot.onReply = { chatButton.showBadge() }          // once per new reply, main thread
+TelyBot.onShow = { chatButton.hideBadge() }
+// when your screen appears: if TelyBot.hasUnreadReply { chatButton.showBadge() }
 ```
 
 The SDK asks when your app comes to the foreground — once a minute at most, and only for
 chats in which the customer asked for a person in the last 14 days.
-`KeydaBot.checkForReplies()` asks now (once in 10 seconds at most). `hasUnreadReply` stays
+`TelyBot.checkForReplies()` asks now (once in 10 seconds at most). `hasUnreadReply` stays
 `true` until the customer opens the chat (the sheet, or an embedded chat on screen), which
 shows the reply. An embedded chat that is loaded but not on screen — in a tab that is not
 selected — may draw the reply, but that does not count as seen: the SDK asks at once, and
@@ -134,17 +134,17 @@ For a Help tab or a support screen, instead of the sheet:
 
 ```swift
 // UIKit: push it, or add it as a child view controller
-if let chat = KeydaBot.makeChatViewController(question: "Is this in stock?") {
+if let chat = TelyBot.makeChatViewController(question: "Is this in stock?") {
     navigationController?.pushViewController(chat, animated: true)
 }
 
 // SwiftUI
-KeydaBotView(question: "Is this in stock?")
+TelyBotView(question: "Is this in stock?")
     .navigationTitle("Help")
 
 // SwiftUI, as a sheet with its own close button
 Button("Chat with us") { showChat = true }
-    .keydaBot(isPresented: $showChat)
+    .telyBot(isPresented: $showChat)
 ```
 
 Embedded, the chat has no close button — your screen's navigation is the way out. It
@@ -157,7 +157,7 @@ it or the screen under it.
 ### A different host
 
 ```swift
-KeydaBot.initialize(clientId: "kb_live_3f9a2c81", baseUrl: "https://chat.yourcompany.in")
+TelyBot.initialize(clientId: "kb_live_3f9a2c81", baseUrl: "https://chat.yourcompany.in")
 ```
 
 For self-hosting and staging. A path is kept, so `https://yourcompany.in/support`
@@ -185,7 +185,7 @@ host app cannot override what the owner chose.
 
 The id must match `kb_live_` followed by 8–48 lowercase hex characters. Anything else
 trips an assertion in debug and CI, logs at fault level in release (subsystem
-`in.keyda.KeydaBot`, visible in Console.app), and leaves the bot switched off. It never
+`com.telybot.sdk`, visible in Console.app), and leaves the bot switched off. It never
 throws into your code and never crashes your shipped app — but it will not open a 404
 page in front of your customer either.
 

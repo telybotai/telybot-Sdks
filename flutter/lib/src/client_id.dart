@@ -6,7 +6,7 @@
 library;
 
 /// Where the hosted chat lives unless the integrator says otherwise.
-const String kKeydaDefaultBaseUrl = 'https://telybot.com';
+const String kTelyBotDefaultBaseUrl = 'https://telybot.com';
 
 /// `kb_live_` followed by 8-48 lowercase hex characters.
 ///
@@ -15,18 +15,18 @@ const String kKeydaDefaultBaseUrl = 'https://telybot.com';
 /// with a stray newline is a different string and must be reported as one.
 final RegExp _clientIdPattern = RegExp(r'^kb_live_[0-9a-f]{8,48}$');
 
-/// Thrown at `KeydaBot.init` when the client id or base URL cannot possibly
+/// Thrown at `TelyBot.init` when the client id or base URL cannot possibly
 /// address a chat.
 ///
 /// This fires during integration, on the developer's machine, on the first
 /// run — which is the only time it is cheap to fix. The alternative is a
 /// customer tapping the chat button and getting a 404 page.
-class KeydaBotConfigError extends ArgumentError {
+class TelyBotConfigError extends ArgumentError {
   /// Creates the error with a message aimed at whoever wired up the SDK.
-  KeydaBotConfigError(super.message);
+  TelyBotConfigError(super.message);
 
   @override
-  String toString() => 'KeydaBotConfigError: $message';
+  String toString() => 'TelyBotConfigError: $message';
 }
 
 /// Whether [clientId] has the shape the platform issues.
@@ -35,7 +35,7 @@ class KeydaBotConfigError extends ArgumentError {
 /// only the server knows that.
 bool isValidClientId(String clientId) => _clientIdPattern.hasMatch(clientId);
 
-/// Returns [clientId] unchanged, or throws [KeydaBotConfigError].
+/// Returns [clientId] unchanged, or throws [TelyBotConfigError].
 ///
 /// Nothing is trimmed or lower-cased on the way through. Quietly repairing an
 /// id here would mean the same string that works on Flutter fails on iOS and
@@ -44,7 +44,7 @@ String validateClientId(String clientId) {
   if (isValidClientId(clientId)) {
     return clientId;
   }
-  throw KeydaBotConfigError(
+  throw TelyBotConfigError(
     'Not a Telybot client id: "$clientId". Expected kb_live_ followed by 8-48 '
     'lowercase hex characters, exactly as shown under Install in the Telybot '
     'dashboard (watch for a copied space, newline or capital letter).',
@@ -53,26 +53,26 @@ String validateClientId(String clientId) {
 
 /// Parses [baseUrl] into an origin the chat can be loaded from.
 ///
-/// Throws [KeydaBotConfigError] for anything that cannot host a page: a bare
+/// Throws [TelyBotConfigError] for anything that cannot host a page: a bare
 /// host with no scheme, a scheme no WebView will load, an empty host, or a
 /// URL carrying a query or fragment (those would be dropped when the chat
 /// path is appended, so accepting them would silently ignore what was asked).
 Uri normalizeBaseUrl(String baseUrl) {
   final Uri? parsed = Uri.tryParse(baseUrl.trim());
   if (parsed == null) {
-    throw KeydaBotConfigError('baseUrl is not a URL: "$baseUrl".');
+    throw TelyBotConfigError('baseUrl is not a URL: "$baseUrl".');
   }
   if (parsed.scheme != 'https' && parsed.scheme != 'http') {
-    throw KeydaBotConfigError(
+    throw TelyBotConfigError(
       'baseUrl must start with https:// (http:// is allowed for local and '
       'staging servers only). Got: "$baseUrl".',
     );
   }
   if (parsed.host.isEmpty) {
-    throw KeydaBotConfigError('baseUrl has no host: "$baseUrl".');
+    throw TelyBotConfigError('baseUrl has no host: "$baseUrl".');
   }
   if (parsed.hasQuery || parsed.hasFragment) {
-    throw KeydaBotConfigError(
+    throw TelyBotConfigError(
       'baseUrl must be an origin, optionally with a path prefix — no query '
       'string and no #fragment. Got: "$baseUrl".',
     );
@@ -87,7 +87,7 @@ Uri normalizeBaseUrl(String baseUrl) {
 /// `https://acme.example/support/chat/kb_live_...`.
 Uri buildChatUrl({
   required String clientId,
-  String baseUrl = kKeydaDefaultBaseUrl,
+  String baseUrl = kTelyBotDefaultBaseUrl,
 }) {
   final String id = validateClientId(clientId);
   final Uri base = normalizeBaseUrl(baseUrl);

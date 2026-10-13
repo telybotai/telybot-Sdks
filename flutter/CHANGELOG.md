@@ -1,6 +1,19 @@
 # Changelog
 
 
+## 1.0.0 — 2026-10-13
+
+* **Renamed to Telybot:** `flutter pub add telybot`, then
+  `import 'package:telybot/telybot.dart';`. Classes `TelyBot`, `TelyBotChat`,
+  `TelyBotConfigError`, `TelyBotExternalLinkHandler`, `kTelyBotDefaultBaseUrl`. The JavaScript
+  channel is `TelyBotFlutter` and the User-Agent mark `TelyBot/1.0.0 (Flutter)`.
+* **`keyda_bot` 0.2.1** depends on this package and re-exports it with the old names as
+  deprecated typedefs; pub.dev lists it as replaced by `telybot`.
+* The reply list (`keyda_bot_waits_<id>` in shared_preferences) moves to `telybot_waits_<id>`
+  on first use, so a reply the customer was waiting for still counts.
+* The example app uses the Telybot plum.
+* Needs a Telybot server from October 2026 (telybot.com is).
+
 ## 0.2.0 — 2026-10-13
 
 * **Points at telybot.com.** Keyda Business is now Telybot, at its own home: the default

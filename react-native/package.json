@@ -1,6 +1,6 @@
 {
-  "name": "@keyda/bot-react-native",
-  "version": "0.2.0",
+  "name": "@telybot/react-native",
+  "version": "1.0.0",
   "description": "Open your Telybot bot in a React Native app: a Modal + WebView around the hosted chat page.",
   "license": "MIT",
   "main": "src/index.tsx",
@@ -14,7 +14,6 @@
     "LICENSE"
   ],
   "keywords": [
-    "keyda",
     "telybot",
     "chatbot",
     "support",

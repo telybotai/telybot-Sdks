@@ -2,15 +2,15 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 
-/// `KeydaBot.setVisitor`'s details, cleaned the way the chat page cleans them,
+/// `TelyBot.setVisitor`'s details, cleaned the way the chat page cleans them,
 /// so a value the page would drop never leaves the app either.
 ///
 /// A value that does not look like what it claims is dropped whole, never cut:
 /// a phone number or an email with its end cut off is a wrong one, offered to
 /// the customer as if it were theirs.
 @immutable
-class KeydaVisitor {
-  const KeydaVisitor._(this.name, this.phone, this.email);
+class TelyBotVisitor {
+  const TelyBotVisitor._(this.name, this.phone, this.email);
 
   static final RegExp _controls = RegExp(r'[\x00-\x1f\x7f]+');
   static final RegExp _spaces = RegExp(r'\s+');
@@ -23,14 +23,14 @@ class KeydaVisitor {
   static final RegExp _email = RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@.]{2,}$');
 
   /// Null when nothing usable is left — the same as no visitor at all.
-  static KeydaVisitor? of({String? name, String? phone, String? email}) {
+  static TelyBotVisitor? of({String? name, String? phone, String? email}) {
     final String n = cleanName(name);
     final String p = cleanPhone(phone);
     final String e = cleanEmail(email);
     if (n.isEmpty && p.isEmpty && e.isEmpty) {
       return null;
     }
-    return KeydaVisitor._(n, p, e);
+    return TelyBotVisitor._(n, p, e);
   }
 
   /// One line of 1–80 characters, or empty. Control characters become a
@@ -79,12 +79,12 @@ class KeydaVisitor {
         if (email.isNotEmpty) 'email=${Uri.encodeComponent(email)}',
       ];
 
-  /// `{"name":…,"phone":…,"email":…}` for `KeydaBot.setVisitor` on the page.
+  /// `{"name":…,"phone":…,"email":…}` for `TelyBot.setVisitor` on the page.
   String toJson() => jsonEncode(<String, String>{'name': name, 'phone': phone, 'email': email});
 
   @override
   bool operator ==(Object other) =>
-      other is KeydaVisitor && other.name == name && other.phone == phone && other.email == email;
+      other is TelyBotVisitor && other.name == name && other.phone == phone && other.email == email;
 
   @override
   int get hashCode => Object.hash(name, phone, email);
@@ -103,4 +103,4 @@ String withoutLoneSurrogates(String value) {
 bool _isSurrogate(int rune) => rune >= 0xD800 && rune <= 0xDFFF;
 
 /// The current visitor; every chat on screen listens.
-final ValueNotifier<KeydaVisitor?> keydaVisitor = ValueNotifier<KeydaVisitor?>(null);
+final ValueNotifier<TelyBotVisitor?> telyBotVisitor = ValueNotifier<TelyBotVisitor?>(null);

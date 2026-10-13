@@ -1,4 +1,4 @@
-# keyda_bot
+# telybot
 
 **This package is a WebView wrapper.** It opens one hosted page —
 `https://telybot.com/chat/{your-client-id}` — full-screen over your
@@ -19,11 +19,11 @@ The full reasoning, shared by every SDK in this repository, is in
 
 ## Install
 
-From [pub.dev](https://pub.dev/packages/keyda_bot):
+From [pub.dev](https://pub.dev/packages/telybot):
 
 ```yaml
 dependencies:
-  keyda_bot: ^0.2.0
+  telybot: ^1.0.0
 ```
 
 To build against an unreleased commit instead, point at this repository — the
@@ -31,7 +31,7 @@ package is its `flutter/` directory:
 
 ```yaml
 dependencies:
-  keyda_bot:
+  telybot:
     git:
       url: https://github.com/telybotai/telybot-Sdks.git
       path: flutter
@@ -58,12 +58,12 @@ Get your client id from **Install** in the
 ## Use
 
 ```dart
-import 'package:keyda_bot/keyda_bot.dart';
+import 'package:telybot/telybot.dart';
 
 void main() {
   // Throws immediately if the id is malformed — better here than in front of
   // a customer.
-  KeydaBot.init('kb_live_9f2c41ab7d3e');
+  TelyBot.init('kb_live_9f2c41ab7d3e');
   runApp(const MyApp());
 }
 ```
@@ -72,7 +72,7 @@ Then, wherever your "Chat with us" affordance lives:
 
 ```dart
 FloatingActionButton(
-  onPressed: () => KeydaBot.show(context),
+  onPressed: () => TelyBot.show(context),
   child: const Icon(Icons.chat_bubble_outline),
 )
 ```
@@ -81,26 +81,26 @@ That is the whole API:
 
 | Call | What it does |
 |---|---|
-| `KeydaBot.init(clientId, baseUrl: ...)` | Stores and validates the configuration. Throws `KeydaBotConfigError` on a malformed id or base URL. |
-| `KeydaBot.show(context, question: ..., onExternalLink: ...)` | Presents the chat full-screen, `question` in its message box (unsent). The future completes when it closes. A second call while it is open only puts its question in the box. |
-| `KeydaBot.dismiss()` | Closes it. A no-op if nothing is showing. |
-| `KeydaBot.isShowing` | Whether it is on screen — including after the customer left with the back gesture. |
-| `KeydaBotChat(question: ..., focused: ...)` | The chat as a widget of your own screen (below). |
-| `KeydaBot.setVisitor(name: ..., phone: ..., email: ...)` / `clearVisitor()` | Your signed-in customer, offered in the chat's forms (below). |
-| `KeydaBot.hasUnreadReply` / `onReply` / `checkForReplies()` | A reply from the business the customer has not seen (below). |
+| `TelyBot.init(clientId, baseUrl: ...)` | Stores and validates the configuration. Throws `TelyBotConfigError` on a malformed id or base URL. |
+| `TelyBot.show(context, question: ..., onExternalLink: ...)` | Presents the chat full-screen, `question` in its message box (unsent). The future completes when it closes. A second call while it is open only puts its question in the box. |
+| `TelyBot.dismiss()` | Closes it. A no-op if nothing is showing. |
+| `TelyBot.isShowing` | Whether it is on screen — including after the customer left with the back gesture. |
+| `TelyBotChat(question: ..., focused: ...)` | The chat as a widget of your own screen (below). |
+| `TelyBot.setVisitor(name: ..., phone: ..., email: ...)` / `clearVisitor()` | Your signed-in customer, offered in the chat's forms (below). |
+| `TelyBot.hasUnreadReply` / `onReply` / `checkForReplies()` | A reply from the business the customer has not seen (below). |
 
 `question` travels in the URL's #fragment, so it never reaches a server log;
 the customer still taps send. Up to 500 characters, as one line: the chat
 joins lines and collapses runs of spaces.
 
-### The chat inside one of your own screens: `KeydaBotChat`
+### The chat inside one of your own screens: `TelyBotChat`
 
 For a Help tab or a support screen, instead of the full-screen route:
 
 ```dart
 Scaffold(
   appBar: AppBar(title: const Text('Help')),
-  body: const SafeArea(top: false, child: KeydaBotChat(question: 'Is this in stock?')),
+  body: const SafeArea(top: false, child: TelyBotChat(question: 'Is this in stock?')),
 )
 ```
 
@@ -117,8 +117,8 @@ can see, and the chat then counts as off screen for `hasUnreadReply`.
 ### Your signed-in customer
 
 ```dart
-KeydaBot.setVisitor(name: user.name, phone: user.phone, email: user.email); // any of them
-KeydaBot.clearVisitor();                                                     // on sign-out
+TelyBot.setVisitor(name: user.name, phone: user.phone, email: user.email); // any of them
+TelyBot.clearVisitor();                                                     // on sign-out
 ```
 
 The chat then does not ask what your app already knows. The details are
@@ -138,18 +138,18 @@ answer from the dashboard later. The chat shows the answer the next time it
 opens. This tells your app it is there:
 
 ```dart
-KeydaBot.onReply = () => debugPrint('new reply');   // once per new reply
+TelyBot.onReply = () => debugPrint('new reply');   // once per new reply
 ValueListenableBuilder<bool>(
-  valueListenable: KeydaBot.hasUnreadReply,
+  valueListenable: TelyBot.hasUnreadReply,
   builder: (_, bool unread, __) => Badge(isLabelVisible: unread, child: const Icon(Icons.chat)),
 )
 ```
 
 The SDK asks when your app comes to the foreground — once a minute at most,
 and only for chats in which the customer asked for a person in the last 14
-days. `KeydaBot.checkForReplies()` asks now (once in 10 seconds at most).
+days. `TelyBot.checkForReplies()` asks now (once in 10 seconds at most).
 `hasUnreadReply` stays true until the customer opens the chat, which shows the
-reply. A `KeydaBotChat(focused: false)` still draws a reply in its hidden tab,
+reply. A `TelyBotChat(focused: false)` still draws a reply in its hidden tab,
 and that does not count as seen: the badge stays on, and `onReply` is called,
 until the tab is selected. The list of chats to ask about is the page's own —
 chat ids and times, kept with `shared_preferences`; nothing else is stored or
@@ -165,7 +165,7 @@ is missing.
 self-hosted install:
 
 ```dart
-KeydaBot.init('kb_live_9f2c41ab7d3e', baseUrl: 'http://10.0.2.2:8080');
+TelyBot.init('kb_live_9f2c41ab7d3e', baseUrl: 'http://10.0.2.2:8080');
 ```
 
 Give an origin, optionally with a path prefix
@@ -207,7 +207,7 @@ To route links yourself — into your own in-app browser, or nowhere at all —
 pass a handler. It replaces the default entirely:
 
 ```dart
-KeydaBot.show(
+TelyBot.show(
   context,
   onExternalLink: (Uri url) async {
     // your in-app browser, your allow list, or an empty body to ignore links
@@ -237,7 +237,7 @@ to this package, which repaints its own chrome to match: the status-bar icons,
 the close button, the loading cover and the retry screen (dark `#0b1220` /
 light `#f7f8fc`, the page's own backgrounds). Until the page reports, the
 chrome follows the device scheme, which is what "Match the visitor" means
-anyway. There is no theme parameter on `KeydaBot.show` and no plan for one:
+anyway. There is no theme parameter on `TelyBot.show` and no plan for one:
 the host app does not get to contradict the owner.
 
 ## Attachments

@@ -23,11 +23,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// here moves the page's place: the page does that when it draws the reply,
 /// and sends the list back. Only a chat on screen counts as the customer having
 /// seen it — one loaded out of sight draws the reply all the same.
-class KeydaReplies with WidgetsBindingObserver {
-  KeydaReplies._();
+class TelyBotReplies with WidgetsBindingObserver {
+  TelyBotReplies._();
 
-  /// The one watcher; `KeydaBot` and every chat talk to it.
-  static final KeydaReplies instance = KeydaReplies._();
+  /// The one watcher; `TelyBot` and every chat talk to it.
+  static final TelyBotReplies instance = TelyBotReplies._();
 
   static const int _maxWaits = 3;
   static const Duration _ttl = Duration(days: 14);
@@ -72,13 +72,13 @@ class KeydaReplies with WidgetsBindingObserver {
 
   Future<void> _run(Future<void> Function() work) {
     final Future<void> next = _queue.then((_) => work()).catchError((Object e) {
-      debugPrint('KeydaBot: reply check: $e');
+      debugPrint('TelyBot: reply check: $e');
     });
     _queue = next;
     return next;
   }
 
-  /// From `KeydaBot.init`. Safe to call again; a different client id or
+  /// From `TelyBot.init`. Safe to call again; a different client id or
   /// server starts afresh.
   void start(Uri chatUrl, String clientId) {
     final Uri messages = Uri(
@@ -88,7 +88,7 @@ class KeydaReplies with WidgetsBindingObserver {
       path: '/api/business/v1/widget/$clientId/messages',
     );
     final String root = chatUrl.toString();
-    final String key = 'keyda_bot_waits_$clientId';
+    final String key = 'telybot_waits_$clientId';
     _run(() async {
       _messages = messages;
       if (_key != key || _root != root) {
@@ -139,7 +139,7 @@ class KeydaReplies with WidgetsBindingObserver {
     }
     final String root = chatUrl.toString();
     _run(() async {
-      // This watcher follows the last KeydaBot.init(); a chat still open under
+      // This watcher follows the last TelyBot.init(); a chat still open under
       // an earlier client id or server must not overwrite that one's list.
       if (root != _root) return;
       final Map<String, _Wait> prior = <String, _Wait>{
@@ -195,7 +195,7 @@ class KeydaReplies with WidgetsBindingObserver {
     _run(_settle);
   }
 
-  /// `KeydaBot.checkForReplies()`, and the foreground.
+  /// `TelyBot.checkForReplies()`, and the foreground.
   Future<void> look({required bool forced}) {
     if (_onScreen > 0) return Future<void>.value();
     return _run(() => _lookNow(forced ? _minForcedInterval : _minInterval));
@@ -285,7 +285,18 @@ class KeydaReplies with WidgetsBindingObserver {
     if (key == null) return;
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
-      final String? raw = prefs.getString(key);
+      String? raw = prefs.getString(key);
+      if (raw == null) {
+        // 0.2.x kept the list as keyda_bot_waits_<id>. Carried across once, so a
+        // reply a 0.2.x install was still waiting for lights the badge after the
+        // update to 1.0.
+        final String old = key.replaceFirst('telybot_waits_', 'keyda_bot_waits_');
+        raw = prefs.getString(old);
+        if (raw != null) {
+          await prefs.setString(key, raw);
+          await prefs.remove(old);
+        }
+      }
       if (raw == null) return;
       final Object? json = jsonDecode(raw);
       if (json is! Map || json['root'] != _root) return;
@@ -310,7 +321,7 @@ class KeydaReplies with WidgetsBindingObserver {
       unread.value =
           _onScreen == 0 && _waits.any((_Wait w) => w.told.compareTo(w.at) > 0);
     } catch (e) {
-      debugPrint('KeydaBot: discarding an unreadable reply list: $e');
+      debugPrint('TelyBot: discarding an unreadable reply list: $e');
     }
   }
 
@@ -340,7 +351,7 @@ class KeydaReplies with WidgetsBindingObserver {
         }),
       );
     } catch (e) {
-      debugPrint('KeydaBot: could not save the reply list: $e');
+      debugPrint('TelyBot: could not save the reply list: $e');
     }
   }
 }

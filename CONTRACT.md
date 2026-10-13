@@ -42,16 +42,16 @@ new conversation.
 | `show(..., question?)` | present the chat over the host app; `question` goes in its message box, unsent (0.2.0) |
 | `dismiss()` | close it |
 | `isShowing` | is it presented right now |
-| embed | the chat as a view of the host's own screen: Android `KeydaBotView`, iOS `makeChatViewController` / SwiftUI `KeydaBotView`, React Native `<KeydaBotChat />`, Flutter `KeydaBotChat`, Ionic `embedWidget()` (0.2.0) |
-| show / dismiss callbacks | where the platform has no way to tell otherwise: Android `KeydaBot.listener`, iOS `onShow` / `onDismiss` (0.2.0) |
+| embed | the chat as a view of the host's own screen: Android `TelyBotView`, iOS `makeChatViewController` / SwiftUI `TelyBotView`, React Native `<TelyBotChat />`, Flutter `TelyBotChat`, Ionic `embedWidget()` (0.2.0) |
+| show / dismiss callbacks | where the platform has no way to tell otherwise: Android `TelyBot.listener`, iOS `onShow` / `onDismiss` (0.2.0) |
 | visitor | the host's signed-in customer, offered — never sent — in the chat's forms: `setVisitor(name?, phone?, email?)` / `clearVisitor()` on Android, iOS and Flutter; React Native's `visitor` prop; Ionic's embedded widget's `setVisitor` — not its full screen, which is the system browser (0.2.0) |
-| replies | a person's reply the chat has not shown yet (rule 11): `hasUnreadReply`, `onReply`, `checkForReplies()` on Android, iOS and Flutter; React Native's `useKeydaBotReplies` (0.2.0) |
+| replies | a person's reply the chat has not shown yet (rule 11): `hasUnreadReply`, `onReply`, `checkForReplies()` on Android, iOS and Flutter; React Native's `useTelyBotReplies` (0.2.0) |
 
 A question is never sent for the customer: it is put in the composer and
 they tap send. It travels in the chat URL's fragment — `#q=<url-encoded>`,
 at most 500 characters, as one line (the page joins lines and collapses
 spaces) — which never reaches a server log. For a chat already on screen a
-shell calls `window.KeydaBot.prefill(text)`.
+shell calls `window.TelyBot.prefill(text)`.
 
 The visitor rides the same fragment — `&name=…&phone=…&email=…` — and is
 offered in the contact form, the checkout, a booking and a welcome question
@@ -62,7 +62,7 @@ by every shell alike: a name of up to 80 characters on one line; a phone of
 digits, spaces and `+ - ( ) .` with 8 to 15 digits, not `+0…`; an email of up
 to 254 characters whose domain ends in two or more letters. For a chat already
 on screen, and after every load, a shell calls
-`window.KeydaBot.setVisitor({name, phone, email})` — `{}` when there is none,
+`window.TelyBot.setVisitor({name, phone, email})` — `{}` when there is none,
 so a sign-out during a load is not lost. The page reads `name`, `phone` and
 `email` from the fragment only inside an app: a link anyone can send must not
 be able to put an address in someone's contact form. Ionic's full screen does
@@ -86,6 +86,23 @@ Nothing else. No message APIs, no unread counts we cannot honestly source
 user-identity call — the visitor above is offered to the customer, never
 asserted to the server. An SDK method that does not work end-to-end is worse
 than a missing one.
+
+## Names (1.0.0)
+
+Every package, class, bridge and User-Agent mark carries the Telybot name from
+1.0.0 — `TelyBotNative`, `messageHandlers.telyBot`, `TelyBotFlutter`,
+`TelyBot/<version> (…)`, `window.TelyBot`. Three things keep their old spelling
+on purpose, because shells already installed depend on them:
+
+* the message **types** — `keyda:theme`, `keyda:sheets`, `keyda:waits`,
+  `keyda:back` — are protocol between the page and every shell, not brand;
+* the page posts to the 0.x bridge names too (`KeydaBotNative`,
+  `messageHandlers.keydaBot`, `KeydaBotFlutter`) and reads the `KeydaBot/`
+  User-Agent mark, so a 0.x app keeps its theme, back and replies;
+* `window.KeydaBot` is the same object as `window.TelyBot`.
+
+All three stay until 2.0.0 of the SDKs and the server release that matches it.
+A 1.0.0 shell registers and calls only the Telybot names.
 
 ## Rules that are not negotiable
 
@@ -119,8 +136,8 @@ than a missing one.
    the bars even where the shell has kept the chat clear of them (32px at the
    bottom of a tablet, measured), WebView 133 reports 0 where the chat IS
    under a side navigation bar — so the hosted page ignores the bottom and
-   side insets inside an Android shell: one with the `KeydaBotNative` or
-   `KeydaBotFlutter` bridge, or React Native's with its User-Agent mark
+   side insets inside an Android shell: one with the `TelyBotNative` or
+   `TelyBotFlutter` bridge, or React Native's with its User-Agent mark
    (0.2.0+). iOS web views report only what they overlap.
 5. **No analytics, no device identifiers, no third-party dependencies.** An
    SDK that a small business drops into their app must not add trackers to
@@ -138,12 +155,12 @@ than a missing one.
        {"type":"keyda:theme","mode":"light"|"dark","setting":"auto"|"light"|"dark","accent":"#rrggbb"}
 
    to every bridge it can find: `window.ReactNativeWebView.postMessage(json)`
-   (React Native), `window.KeydaBotNative.onTheme(json)` (Android
-   `addJavascriptInterface` named `KeydaBotNative`),
-   `window.webkit.messageHandlers.keydaBot.postMessage(json)` (iOS
-   `WKScriptMessageHandler` named `keydaBot`) and
-   `window.KeydaBotFlutter.postMessage(json)` (Flutter `JavaScriptChannel`
-   named `KeydaBotFlutter`). Shells apply `mode` — dark: background `#0b1220`,
+   (React Native), `window.TelyBotNative.onTheme(json)` (Android
+   `addJavascriptInterface` named `TelyBotNative`),
+   `window.webkit.messageHandlers.telyBot.postMessage(json)` (iOS
+   `WKScriptMessageHandler` named `telyBot`) and
+   `window.TelyBotFlutter.postMessage(json)` (Flutter `JavaScriptChannel`
+   named `TelyBotFlutter`). Shells apply `mode` — dark: background `#0b1220`,
    light status-bar text; light: background `#f7f8fc`, dark status-bar text —
    and ignore any message whose `type` they do not know: `keyda:theme` here,
    `keyda:sheets` (rule 10) and `keyda:waits` (rule 11). Until the
@@ -170,19 +187,19 @@ than a missing one.
 
    | Shell | Who opens the picker | Since |
    |---|---|---|
-   | Android (`in.keyda:keyda-bot`) | this SDK — `WebChromeClient.onShowFileChooser` handing the page's own `accept` list to `FileChooserParams.createIntent()`: the gallery and the documents providers, no camera | 0.1.4 |
-   | iOS (`KeydaBot`) | WebKit, with no code here | always |
-   | React Native (`@keyda/bot-react-native`) | `react-native-webview`'s own chrome client | always |
-   | Flutter (`keyda_bot`) | this package on Android — `AndroidWebViewController.setOnShowFileSelector`, answered from the Flutter team's `image_picker` (the photo picker) for an images-only input and `file_selector` (the system file picker) for anything else; WebKit on iOS | 0.1.4 (photos), 0.2.0 (documents) |
-   | Ionic / Capacitor (`@keyda/bot-capacitor`) | Capacitor's own `BridgeWebChromeClient` on the embedded path, the system browser on the full-screen one | always |
+   | Android (`com.telybot:telybot`) | this SDK — `WebChromeClient.onShowFileChooser` handing the page's own `accept` list to `FileChooserParams.createIntent()`: the gallery and the documents providers, no camera | 0.1.4 |
+   | iOS (`TelyBot`) | WebKit, with no code here | always |
+   | React Native (`@telybot/react-native`) | `react-native-webview`'s own chrome client | always |
+   | Flutter (`telybot`) | this package on Android — `AndroidWebViewController.setOnShowFileSelector`, answered from the Flutter team's `image_picker` (the photo picker) for an images-only input and `file_selector` (the system file picker) for anything else; WebKit on iOS | 0.1.4 (photos), 0.2.0 (documents) |
+   | Ionic / Capacitor (`@telybot/capacitor`) | Capacitor's own `BridgeWebChromeClient` on the embedded path, the system browser on the full-screen one | always |
    | WordPress and any website | the browser | always |
 
    An installed app can be a year behind, so the page has to be able to tell
    which of these it is inside before it draws an attach button. The two
    shells that had to grow one say so in the User-Agent —
-   `KeydaBot/<version> (Android)` and `KeydaBot/<version> (Flutter)`, a
+   `TelyBot/<version> (Android)` and `TelyBot/<version> (Flutter)`, a
    version and nothing else. The other three have always answered and need no
-   signal for this; React Native adds `KeydaBot/<version> (ReactNative)` from
+   signal for this; React Native adds `TelyBot/<version> (ReactNative)` from
    0.2.0 for rule 4.
 
    Two obligations follow that no SDK can discharge for the host app, so they
@@ -201,7 +218,7 @@ than a missing one.
    sheets over the conversation — the menu, an item over it, the cart, a
    booking — and keeps them in a stack. On Android, back over an open sheet is
    the customer closing that sheet, not the chat. The page exposes
-   `window.KeydaBot.back()`: it closes the sheet on top and returns `true`, or
+   `window.TelyBot.back()`: it closes the sheet on top and returns `true`, or
    returns `false` when none is open. A shell calls it on back and closes the
    chat only on `false`. The page also announces its sheet count —
    `{"type":"keyda:sheets","open":n}`, at load and on every change, through
@@ -217,19 +234,19 @@ than a missing one.
 
    | Shell | How back reaches the page | Since |
    |---|---|---|
-   | Android | `OnBackInvokedCallback` / `onBackPressed` → `evaluateJavascript`; `KeydaBotView.goBack()` from the sheet count | 0.2.0 |
-   | React Native (Android) | `Modal onRequestClose` → `injectJavaScript`, answered with a `keyda:back` message; `<KeydaBotChat />` takes `BackHandler` only while a sheet is open | 0.2.0 |
-   | Flutter (Android) | `PopScope` → `runJavaScriptReturningResult`; `KeydaBotChat` sets `canPop` from the sheet count | 0.2.0 |
+   | Android | `OnBackInvokedCallback` / `onBackPressed` → `evaluateJavascript`; `TelyBotView.goBack()` from the sheet count | 0.2.0 |
+   | React Native (Android) | `Modal onRequestClose` → `injectJavaScript`, answered with a `keyda:back` message; `<TelyBotChat />` takes `BackHandler` only while a sheet is open | 0.2.0 |
+   | Flutter (Android) | `PopScope` → `runJavaScriptReturningResult`; `TelyBotChat` sets `canPop` from the sheet count | 0.2.0 |
    | iOS | no system back; the sheet's own back control | — |
    | Ionic full screen | the browser's own back | — |
-   | Ionic embedded | your app's: route Capacitor's `backButton` to `window.KeydaBot.back()` first | — |
+   | Ionic embedded | your app's: route Capacitor's `backButton` to `window.TelyBot.back()` first | — |
 
    An embedded chat that is mounted but not in front — a tab that is not
    selected, a screen under another — must leave back alone: a sheet closed
    in a chat nobody can see is a back press that did nothing. React Native's
-   `<KeydaBotChat focused>` and Flutter's `KeydaBotChat(focused:)` say so
+   `<TelyBotChat focused>` and Flutter's `TelyBotChat(focused:)` say so
    (`BackHandler` and `PopScope` are global to the app and the route); a
-   native `KeydaBotView` takes back only when the host calls `goBack()`.
+   native `TelyBotView` takes back only when the host calls `goBack()`.
 
 11. **The only unread signal is a reply the customer has not seen.** A
    customer who asks for a person leaves their details and closes the chat;
@@ -262,7 +279,7 @@ than a missing one.
    is on screen at that moment; from one that is not, it keeps the page's
    place aside, and catches up to it when that chat (or any chat) comes on
    screen. "On screen" is each shell's own signal: Android's aggregated
-   visibility and `KeydaBotView.active`, iOS's appearance calls, React
+   visibility and `TelyBotView.active`, iOS's appearance calls, React
    Native's and Flutter's `focused`. Ionic's full screen is the system browser, which
    the app cannot read: there the reply simply shows when the chat reopens.
 

@@ -21,8 +21,8 @@ const TSC = process.argv[2] || 'tsc';
 // One directory per package. Sharing one meant both compiled to index.js,
 // and require's cache then handed the second package the FIRST package's
 // module — reporting "chatUrl is not a function" for code that exports it.
-const outRn = mkdtempSync(join(tmpdir(), 'keyda-conf-rn-'));
-const outIon = mkdtempSync(join(tmpdir(), 'keyda-conf-ion-'));
+const outRn = mkdtempSync(join(tmpdir(), 'telybot-conf-rn-'));
+const outIon = mkdtempSync(join(tmpdir(), 'telybot-conf-ion-'));
 const GOOD = 'kb_live_835686cd7c9bf18b9f70c34f';
 let pass = 0; let fail = 0;
 const ok = (m) => { console.log(`  ✓ ${m}`); pass++; };
@@ -62,8 +62,8 @@ const URL_CASES = [
   [undefined, `https://telybot.com/chat/${GOOD}`],
   ['https://telybot.com', `https://telybot.com/chat/${GOOD}`],
   ['https://telybot.com/', `https://telybot.com/chat/${GOOD}`],
-  ['https://telybot.com', `https://telybot.com/chat/${GOOD}`],
-  ['https://telybot.com/', `https://telybot.com/chat/${GOOD}`],
+  ['https://staging.example.com/support', `https://staging.example.com/support/chat/${GOOD}`],
+  ['https://staging.example.com/support/', `https://staging.example.com/support/chat/${GOOD}`],
 ];
 
 try {
@@ -123,7 +123,7 @@ try {
   await new Promise((r) => srv.listen(0, '127.0.0.1', r));
   const C = '1fe085d4-e386-4200-893c-237e021b2308';
   const base = `http://127.0.0.1:${srv.address().port}`;
-  const store = R.repliesFor(GOOD, `${base}/business/chat/${GOOD}`);
+  const store = R.repliesFor(GOOD, `${base}/chat/${GOOD}`);
   let told = 0; store.replied.add(() => told++);
   const realNow = Date.now; let skew = 0; Date.now = () => realNow() + skew;
   const later = async (ms) => { skew += ms; };
@@ -167,21 +167,30 @@ try {
   const disk = new Map();
   const storage = { getItem: async (k) => disk.get(k) ?? null, setItem: async (k, v) => { disk.set(k, v); }, removeItem: async (k) => { disk.delete(k); } };
   const root2 = `${base}/other/chat/${GOOD}`;
-  disk.set(`keyda_bot_waits_${GOOD}`, JSON.stringify({ root: root2, waits: [{ c: C, at: '', t: t0, told: X }] }));
+  disk.set(`telybot_waits_${GOOD}`, JSON.stringify({ root: root2, waits: [{ c: C, at: '', t: t0, told: X }] }));
   const early = R.repliesFor(GOOD, root2);
   early.onWaits([{ c: C, at: X, t: t0 }], true);
   early.useStorage(storage); await settle();
-  const saved = JSON.parse(disk.get(`keyda_bot_waits_${GOOD}`) || '{}').waits || [];
+  const saved = JSON.parse(disk.get(`telybot_waits_${GOOD}`) || '{}').waits || [];
   steps.push(['a list sent before the storage is saved', saved.length === 1 && saved[0].at === X && saved[0].page === X && saved[0].told === X && !early.unread]);
 
   // One saved before `page` existed loads at its own place: unread, and a
   // chat appearing does not by itself make it seen.
-  disk.set(`keyda_bot_waits_${GOOD}`, JSON.stringify({ root: `${base}/third/chat/${GOOD}`, waits: [{ c: C, at: '', t: t0, told: X }] }));
+  disk.set(`telybot_waits_${GOOD}`, JSON.stringify({ root: `${base}/third/chat/${GOOD}`, waits: [{ c: C, at: '', t: t0, told: X }] }));
   const old = R.repliesFor(GOOD, `${base}/third/chat/${GOOD}`);
   old.useStorage(storage); await settle();
   const loaded = old.unread;
   old.chatAppeared(); await settle(); old.chatWentAway(); await settle();
   steps.push(['an older saved list loads; appearing alone does not clear it', loaded && old.unread]);
+
+  // 0.2.x saved the list as keyda_bot_waits_<id>: carried to the 1.0 key once,
+  // the old key removed, and what it held still counts.
+  disk.clear();
+  const root4 = `${base}/fourth/chat/${GOOD}`;
+  disk.set(`keyda_bot_waits_${GOOD}`, JSON.stringify({ root: root4, waits: [{ c: C, at: '', t: t0, told: X }] }));
+  const moved = R.repliesFor(GOOD, root4);
+  moved.useStorage(storage); await settle();
+  steps.push(['a 0.2.x list moves to the new key, unread kept', disk.has(`telybot_waits_${GOOD}`) && !disk.has(`keyda_bot_waits_${GOOD}`) && moved.unread]);
 
   Date.now = realNow; srv.close();
   const wrong = steps.filter(([, good]) => !good);
@@ -214,7 +223,7 @@ try {
   const warn = console.warn; console.warn = () => {};
   let threw = '';
   try {
-    await ion.KeydaBot.open({ clientId: GOOD, question: 'a'.repeat(499) + '\u{1F600}x', visitor: { name: 'Asha & Co', phone: '+91 98765 43210', email: 'asha@example.com' } });
+    await ion.TelyBot.open({ clientId: GOOD, question: 'a'.repeat(499) + '\u{1F600}x', visitor: { name: 'Asha & Co', phone: '+91 98765 43210', email: 'asha@example.com' } });
   } catch (e) { threw = e.message; }
   const frag = new URLSearchParams(opened.split('#')[1] || '');
   const q = frag.get('q') || '';
@@ -227,10 +236,10 @@ try {
   threw = '';
   const urls = [];
   try {
-    ion.KeydaBot.init(GOOD, staging);
-    await ion.KeydaBot.open({ clientId: GOOD }); urls.push(opened);
-    await ion.KeydaBot.open({ question: 'Is it in stock?' }); urls.push(opened);
-    await ion.KeydaBot.open(); urls.push(opened);
+    ion.TelyBot.init(GOOD, staging);
+    await ion.TelyBot.open({ clientId: GOOD }); urls.push(opened);
+    await ion.TelyBot.open({ question: 'Is it in stock?' }); urls.push(opened);
+    await ion.TelyBot.open(); urls.push(opened);
   } catch (e) { threw = e.message; }
   const want = `${staging}/chat/${GOOD}`;
   const kept = !threw && urls.length === 3 && urls[0] === want && urls[1] === `${want}#q=Is%20it%20in%20stock%3F` && urls[2] === want;

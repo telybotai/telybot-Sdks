@@ -13,7 +13,7 @@ import PackageDescription
 // small business drops into their app must not drag trackers or a networking
 // library in behind it; WKWebView is the only thing this package needs.
 let package = Package(
-    name: "KeydaBot",
+    name: "TelyBot",
     platforms: [
         // UIKit + WKWebView presented as a sheet. iOS 15: Xcode 27 builds nothing
         // older (an iOS 13 minimum is an error there, in a CocoaPods build at
@@ -22,19 +22,23 @@ let package = Package(
         .iOS(.v15)
     ],
     products: [
+        .library(name: "TelyBot", targets: ["TelyBot"]),
+        // The 0.x product name, deprecated: re-exports TelyBot and aliases the old
+        // type names (ios/Sources/KeydaBot). Removed in 2.0.0.
         .library(name: "KeydaBot", targets: ["KeydaBot"])
     ],
     targets: [
         // The privacy manifest ships inside the package (as a resource bundle),
         // which is where Xcode's privacy report looks for a dependency's.
         .target(
-            name: "KeydaBot",
-            path: "ios/Sources/KeydaBot",
+            name: "TelyBot",
+            path: "ios/Sources/TelyBot",
             resources: [.copy("PrivacyInfo.xcprivacy")]
         ),
+        .target(name: "KeydaBot", dependencies: ["TelyBot"], path: "ios/Sources/KeydaBot"),
         // Pure unit tests over client-id validation, URL building and the
         // stays-in-chat rule — no simulator, no host app. `swift test` runs
         // them on the machine you are sitting at.
-        .testTarget(name: "KeydaBotTests", dependencies: ["KeydaBot"], path: "ios/Tests/KeydaBotTests")
+        .testTarget(name: "TelyBotTests", dependencies: ["TelyBot"], path: "ios/Tests/TelyBotTests")
     ]
 )

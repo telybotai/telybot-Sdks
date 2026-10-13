@@ -25,7 +25,7 @@ import {AppState} from 'react-native';
 import type {AppStateStatus} from 'react-native';
 
 /** AsyncStorage's shape — pass `AsyncStorage` itself, or a wrapper round MMKV. */
-export interface KeydaBotStorage {
+export interface TelyBotStorage {
   getItem(key: string): Promise<string | null>;
   setItem(key: string, value: string): Promise<void>;
   removeItem?(key: string): Promise<void>;
@@ -95,7 +95,7 @@ class ReplyStore {
   private waits: Wait[] = [];
   private onScreen = 0;
   private lastLook = 0;
-  private storage: KeydaBotStorage | null = null;
+  private storage: TelyBotStorage | null = null;
   private queue: Promise<void> = Promise.resolve();
   /** The page has sent its list since this store was made: memory is newer than disk. */
   private heard = false;
@@ -114,13 +114,26 @@ class ReplyStore {
     return this.queue;
   }
 
-  useStorage(storage: KeydaBotStorage | undefined): void {
+  useStorage(storage: TelyBotStorage | undefined): void {
     if (!storage || storage === this.storage) return;
     this.storage = storage;
     this.run(async () => {
       let raw: string | null = null;
       try {
         raw = await storage.getItem(this.key);
+        if (!raw) {
+          // 0.2.x kept the list as keyda_bot_waits_<id>. Carried across once,
+          // so a reply a 0.2.x install was still waiting for lights the dot
+          // after the update to 1.0.
+          const old = this.key.replace(/^telybot_waits_/, 'keyda_bot_waits_');
+          const was = await storage.getItem(old);
+          if (was) {
+            raw = was;
+            await storage.setItem(this.key, was);
+            if (storage.removeItem) await storage.removeItem(old);
+            else await storage.setItem(old, '');
+          }
+        }
       } catch {
         return;
       }
@@ -297,7 +310,7 @@ export function repliesFor(clientId: string, chatUrl: string): ReplyStore {
   const id = `${chatUrl}`;
   let store = stores.get(id);
   if (!store) {
-    store = new ReplyStore(`keyda_bot_waits_${clientId}`, chatUrl, `${origin}/api/business/v1/widget/${clientId}/messages`);
+    store = new ReplyStore(`telybot_waits_${clientId}`, chatUrl, `${origin}/api/business/v1/widget/${clientId}/messages`);
     stores.set(id, store);
   }
   return store;
@@ -305,20 +318,20 @@ export function repliesFor(clientId: string, chatUrl: string): ReplyStore {
 
 export type {ReplyStore};
 
-export interface KeydaBotRepliesOptions {
-  /** Defaults to the platform's own; the same value you give `<KeydaBot>`. */
+export interface TelyBotRepliesOptions {
+  /** Defaults to the platform's own; the same value you give `<TelyBot>`. */
   baseUrl?: string;
   /**
    * Where to remember the chats waiting for a reply across app restarts:
    * AsyncStorage, or anything with its `getItem`/`setItem`. Without one they
    * are watched only while the app is running.
    */
-  storage?: KeydaBotStorage;
+  storage?: TelyBotStorage;
   /** A person replied while no chat was on screen. Once per new reply. */
   onReply?: () => void;
 }
 
-export interface KeydaBotReplies {
+export interface TelyBotReplies {
   /** True from a reply found until the chat is opened. */
   hasUnreadReply: boolean;
   /** Ask now (at most once every 10 seconds) rather than at the next foreground. */
@@ -326,7 +339,7 @@ export interface KeydaBotReplies {
 }
 
 /** The hook body, with the chat URL already built and checked by index.tsx. */
-export function useReplyStore(store: ReplyStore, options: KeydaBotRepliesOptions): KeydaBotReplies {
+export function useReplyStore(store: ReplyStore, options: TelyBotRepliesOptions): TelyBotReplies {
   const {storage, onReply} = options;
   const [unread, setUnread] = useState(store.unread);
 

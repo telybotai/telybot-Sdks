@@ -20,6 +20,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "keyda-bot-android"
+rootProject.name = "telybot-android"
 
-include(":keyda-bot")
+include(":telybot")

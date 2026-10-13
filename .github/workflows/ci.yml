@@ -34,12 +34,12 @@ jobs:
       - uses: gradle/actions/setup-gradle@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
       # publishToMavenLocal is what JitPack runs on a tag (jitpack.yml): the
       # sources jar and the POM too, which assemble alone never builds.
-      - run: ./gradlew :keyda-bot:assembleRelease :keyda-bot:lintRelease :keyda-bot:publishToMavenLocal --no-daemon
+      - run: ./gradlew :telybot:assembleRelease :telybot:lintRelease :telybot:publishToMavenLocal --no-daemon
       - if: failure()
         uses: actions/upload-artifact@v7
         with:
           name: android-lint
-          path: android/keyda-bot/build/reports/
+          path: android/telybot/build/reports/
           if-no-files-found: ignore
 
   ios:
@@ -52,14 +52,18 @@ jobs:
       # Swift 6 language mode is what a new app gets; Swift 5 is what most
       # existing apps still build in. The package has to compile in both.
       - name: iOS Simulator build, Swift 6
-        run: xcodebuild -scheme KeydaBot -destination 'generic/platform=iOS Simulator' -derivedDataPath "$RUNNER_TEMP/dd6" SWIFT_VERSION=6 build -quiet
+        run: xcodebuild -scheme TelyBot -destination 'generic/platform=iOS Simulator' -derivedDataPath "$RUNNER_TEMP/dd6" SWIFT_VERSION=6 build -quiet
       - name: iOS Simulator build, Swift 5
-        run: xcodebuild -scheme KeydaBot -destination 'generic/platform=iOS Simulator' -derivedDataPath "$RUNNER_TEMP/dd5" SWIFT_VERSION=5 build -quiet
+        run: xcodebuild -scheme TelyBot -destination 'generic/platform=iOS Simulator' -derivedDataPath "$RUNNER_TEMP/dd5" SWIFT_VERSION=5 build -quiet
+      # The 0.x product name, kept until 2.0.0: it re-exports TelyBot and aliases the
+      # old type names, and an app that has not renamed yet imports it.
+      - name: iOS Simulator build, the deprecated KeydaBot product
+        run: xcodebuild -scheme KeydaBot -destination 'generic/platform=iOS Simulator' -derivedDataPath "$RUNNER_TEMP/ddk" build -quiet
       # The podspec is installed by URL (CocoaPods trunk is read-only and we
       # never published there), so its source_files must keep matching
       # Package.swift. Warnings are the two builds' business above; a
       # deprecation one Xcode reports and another does not must not fail this.
-      - run: pod lib lint KeydaBot.podspec --allow-warnings
+      - run: pod lib lint TelyBot.podspec --allow-warnings
 
   js:
     name: React Native and Ionic — versions, types, behaviour
@@ -123,10 +127,10 @@ jobs:
       - name: php -l on every plugin file
         run: |
           php --version
-          find wordpress/keyda-bot -name '*.php' -print0 | xargs -0 -n1 php -l
+          find wordpress/telybot -name '*.php' -print0 | xargs -0 -n1 php -l
       - uses: wordpress/plugin-check-action@10857da14b6c2246d15402b3e69f777edcf8c12e # v1.1.9
         with:
-          build-dir: wordpress/keyda-bot
+          build-dir: wordpress/telybot
 
   conformance:
     name: Conformance — all six against one table

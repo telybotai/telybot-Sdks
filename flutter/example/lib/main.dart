@@ -8,13 +8,13 @@
 // lint is switched off here rather than padding them with comments.
 // ignore_for_file: public_member_api_docs
 import 'package:flutter/material.dart';
-import 'package:keyda_bot/keyda_bot.dart';
+import 'package:telybot/telybot.dart';
 
 void main() {
   // Shape-valid placeholder (kb_live_ + hex) so the example RUNS as shipped —
   // init validates the shape and throws otherwise. It opens the "chat link is
   // not valid" page until you replace it with your real id.
-  KeydaBot.init('kb_live_0123456789ab');
+  TelyBot.init('kb_live_0123456789ab');
   runApp(const ExampleApp());
 }
 
@@ -25,7 +25,7 @@ class ExampleApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Telybot example',
-      theme: ThemeData(colorSchemeSeed: const Color(0xFF3B4EE0), useMaterial3: true),
+      theme: ThemeData(colorSchemeSeed: const Color(0xFF492C41), useMaterial3: true),
       home: const HomeScreen(),
     );
   }
@@ -48,8 +48,8 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        // `context` is what tells KeydaBot which navigator to push onto.
-        onPressed: () => KeydaBot.show(context),
+        // `context` is what tells TelyBot which navigator to push onto.
+        onPressed: () => TelyBot.show(context),
         icon: const Icon(Icons.chat_bubble_outline),
         label: const Text('Ask us anything'),
       ),

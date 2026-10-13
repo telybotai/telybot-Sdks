@@ -33,7 +33,7 @@ const CLIENT_ID_PATTERN = /^kb_live_[0-9a-f]{8,48}$/;
 export function assertClientId(clientId: string): string {
   if (typeof clientId !== 'string' || !CLIENT_ID_PATTERN.test(clientId)) {
     throw new Error(
-      `[KeydaBot] "${String(clientId)}" is not a Telybot client id. Expected ` +
+      `[TelyBot] "${String(clientId)}" is not a Telybot client id. Expected ` +
         `kb_live_ followed by 8-48 hex characters. Copy it from Install in ` +
         `the Telybot dashboard: https://telybot.com/app/`,
     );
@@ -59,12 +59,12 @@ export function normaliseBaseUrl(baseUrl?: string): string {
     parsed = new URL(raw);
   } catch {
     throw new Error(
-      `[KeydaBot] baseUrl "${raw}" is not an absolute URL. Pass something ` +
+      `[TelyBot] baseUrl "${raw}" is not an absolute URL. Pass something ` +
         `like "https://telybot.com", or omit it to use the default.`,
     );
   }
   if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') {
-    throw new Error(`[KeydaBot] baseUrl "${raw}" must be http or https.`);
+    throw new Error(`[TelyBot] baseUrl "${raw}" must be http or https.`);
   }
   // A query or a #fragment is refused rather than tolerated: both callers
   // append a path (`/chat/{id}`, `/widget.js`), so "https://host?x=1" would
@@ -73,13 +73,13 @@ export function normaliseBaseUrl(baseUrl?: string): string {
   // fails at init. The React Native SDK applies the same rule.
   if (parsed.search || parsed.hash || raw.endsWith('?') || raw.endsWith('#')) {
     throw new Error(
-      `[KeydaBot] baseUrl "${raw}" must not carry a query string or a ` +
+      `[TelyBot] baseUrl "${raw}" must not carry a query string or a ` +
         `#fragment: the chat path is appended to it. Pass an origin, ` +
         `optionally with a path prefix, such as "https://example.com/support".`,
     );
   }
   // Keep the path: a self-host may sit under a prefix such as
-  // https://example.in/keyda, and dropping it would 404 every request.
+  // https://example.in/support, and dropping it would 404 every request.
   return raw.replace(/\/+$/, '');
 }
 
@@ -96,6 +96,6 @@ export function widgetScriptUrl(baseUrl?: string): string {
 /** Console-only. Nothing in this package reports a runtime problem by throwing. */
 export function warn(message: string, detail?: unknown): void {
   if (typeof console === 'undefined' || !console.warn) return;
-  if (detail === undefined) console.warn(`[KeydaBot] ${message}`);
-  else console.warn(`[KeydaBot] ${message}`, detail);
+  if (detail === undefined) console.warn(`[TelyBot] ${message}`);
+  else console.warn(`[TelyBot] ${message}`, detail);
 }

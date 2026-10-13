@@ -1,5 +1,21 @@
-# Changelog — in.keyda:keyda-bot
+# Changelog — com.telybot:telybot
 
+
+## 1.0.0 — 2026-10-13
+
+* **Renamed to Telybot.** `implementation("com.github.telybotai:telybot-Sdks:v1.0.0")` (Maven
+  `com.telybot:telybot`), package `com.telybot.sdk`, classes `TelyBot`, `TelyBot.Listener`,
+  `TelyBotView`, `TelyBotActivity`. The import is `import com.telybot.sdk.TelyBot` — no
+  backticks any more.
+* **The 0.x names still compile**, deprecated: `in.keyda.bot.KeydaBot` forwards every call to
+  `TelyBot`, and `KeydaBotView` is a `TelyBotView`. Update the dependency first, rename at your
+  own pace; both go in 2.0.0.
+* The JavaScript bridge is `TelyBotNative` and the User-Agent mark `TelyBot/1.0.0 (Android)`.
+  Needs a Telybot server from October 2026 (telybot.com is). The message types
+  (`keyda:theme`, `keyda:sheets`, `keyda:waits`) are protocol and unchanged.
+* The reply list a 0.x install kept (`keyda_bot_waits_<id>.json`) moves to
+  `telybot_waits_<id>.json` on the first start, so a reply the customer was waiting for still
+  lights the dot.
 
 ## 0.2.0 — 2026-10-13
 

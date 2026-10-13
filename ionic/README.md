@@ -1,4 +1,4 @@
-# @keyda/bot-capacitor
+# @telybot/capacitor
 
 **Most Ionic apps should just use the script tag.** An Ionic or Capacitor app is
 already a web view, so the plain website widget runs inside it unchanged. No npm
@@ -40,7 +40,7 @@ ship. [CONTRACT.md](../CONTRACT.md) explains the trade in full.
 ## Install
 
 ```bash
-npm install @keyda/bot-capacitor
+npm install @telybot/capacitor
 ```
 
 Zero dependencies. For the full-screen surface, also install the optional peer:
@@ -68,7 +68,7 @@ The typed equivalent of the script tag, for when you would rather configure the
 client id in code than in `index.html`:
 
 ```ts
-import { embedWidget } from '@keyda/bot-capacitor';
+import { embedWidget } from '@telybot/capacitor';
 
 // Once, at app bootstrap.
 await embedWidget({ clientId: 'kb_live_YOUR_CLIENT_ID' });
@@ -80,7 +80,7 @@ It never throws for a network failure.
 To open the chat from your own button instead of the floating launcher:
 
 ```ts
-import { getEmbeddedWidget } from '@keyda/bot-capacitor';
+import { getEmbeddedWidget } from '@telybot/capacitor';
 
 getEmbeddedWidget()?.open();
 ```
@@ -90,20 +90,20 @@ Two things about the embedded widget that are easy to trip over:
 - **It mounts once per page load and has no teardown.** Embed it at bootstrap,
   not inside a component that unmounts on navigation. There is no API to remove
   it again, and this package does not pretend otherwise.
-- **`window.KeydaBot` is not this package's `KeydaBot`.** The widget publishes
+- **`window.TelyBot` is not this package's `TelyBot`.** The widget publishes
   its own controls on that global. `getEmbeddedWidget()` is the typed way to
-  reach them. The `KeydaBot` you import drives the full-screen surface, and the
+  reach them. The `TelyBot` you import drives the full-screen surface, and the
   two share no state.
 
 ## Option 2: full-screen
 
 ```ts
-import { KeydaBot } from '@keyda/bot-capacitor';
+import { TelyBot } from '@telybot/capacitor';
 
-KeydaBot.init('kb_live_YOUR_CLIENT_ID');        // once, at bootstrap
+TelyBot.init('kb_live_YOUR_CLIENT_ID');        // once, at bootstrap
 
 // From a button:
-const opened = await KeydaBot.open();
+const opened = await TelyBot.open();
 if (!opened) {
   // Show your own "couldn't open chat, try again". This call hands off to the
   // OS and has no UI of its own to put a retry in.
@@ -113,7 +113,7 @@ if (!opened) {
 `open()` also takes the config inline, so `init()` is optional:
 
 ```ts
-await KeydaBot.open({ clientId: 'kb_live_…', baseUrl: 'https://staging.telybot.com' });
+await TelyBot.open({ clientId: 'kb_live_…', baseUrl: 'https://staging.telybot.com' });
 ```
 
 After `init()`, what `open()` is given is laid over it: `open({ question })`
@@ -124,7 +124,7 @@ And a question to start with — put in the chat's message box, unsent; it
 travels in the URL's #fragment, so it never reaches a server log:
 
 ```ts
-await KeydaBot.open({ question: 'Is this in stock?' });
+await TelyBot.open({ question: 'Is this in stock?' });
 ```
 
 On the embedded path the widget's own controls do the same:
@@ -159,10 +159,10 @@ Install `@capacitor/browser` if you need either of those to mean more.
 ## API
 
 ```ts
-KeydaBot.init(clientId: string, baseUrl?: string): void
-KeydaBot.open(options?: { clientId?, baseUrl?, question? }): Promise<boolean>   // alias: show()
-KeydaBot.close(): Promise<boolean>                                // alias: dismiss()
-KeydaBot.isOpen: boolean                                          // alias: isShowing
+TelyBot.init(clientId: string, baseUrl?: string): void
+TelyBot.open(options?: { clientId?, baseUrl?, question? }): Promise<boolean>   // alias: show()
+TelyBot.close(): Promise<boolean>                                // alias: dismiss()
+TelyBot.isOpen: boolean                                          // alias: isShowing
 
 embedWidget(options: { clientId, baseUrl? }): Promise<boolean>
 getEmbeddedWidget(): EmbeddedWidget | null

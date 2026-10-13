@@ -23,7 +23,7 @@ export interface EmbedOptions {
  * name of 1–80 characters on one line, a phone number with 8–15 digits, an
  * email up to 254 characters.
  */
-export interface KeydaBotVisitor {
+export interface TelyBotVisitor {
   name?: string;
   phone?: string;
   email?: string;
@@ -57,10 +57,10 @@ export interface EmbeddedWidget {
    * Your signed-in customer — `{name, phone, email}`, each optional; `{}`
    * forgets them. Offered, never sent, in the forms that ask for them; true
    * when something usable was left. Absent on a widget older than October
-   * 2026. The one way in for them: the full-screen `KeydaBot.open()` does not
+   * 2026. The one way in for them: the full-screen `TelyBot.open()` does not
    * take them, as its link would keep them in the browser's history.
    */
-  setVisitor?(details: KeydaBotVisitor | null): boolean;
+  setVisitor?(details: TelyBotVisitor | null): boolean;
 }
 
 /**
@@ -68,9 +68,9 @@ export interface EmbeddedWidget {
  *
  * Matching on `src` instead would also match a tag the developer pasted into
  * `index.html` by hand — which is a case we WANT to detect, and do, via the
- * `window.KeydaBot` check below. Two different questions, two different tests.
+ * `window.TelyBot` check below. Two different questions, two different tests.
  */
-const SCRIPT_MARKER = 'data-keyda-embed';
+const SCRIPT_MARKER = 'data-telybot-embed';
 
 /**
  * Injects `<script src="{baseUrl}/widget.js" data-key="{clientId}" async>`.
@@ -105,7 +105,8 @@ export function embedWidget(options: EmbedOptions): Promise<boolean> {
   // Two ways the widget can already be present: we added the tag before, or
   // it is running. widget.js has its own double-embed guard, so a second tag
   // would be harmless but pointless — and a second network request.
-  if (document.querySelector(`script[${SCRIPT_MARKER}]`) || getEmbeddedWidget()) {
+  // data-keyda-embed is the tag a 0.x copy of this package added.
+  if (document.querySelector(`script[${SCRIPT_MARKER}],script[data-keyda-embed]`) || getEmbeddedWidget()) {
     return Promise.resolve(true);
   }
 
@@ -140,8 +141,8 @@ export function embedWidget(options: EmbedOptions): Promise<boolean> {
  * Use it to open the chat from your own button instead of the floating
  * launcher.
  *
- * Two things to know. First, the object lives at `window.KeydaBot`, which is
- * NOT this package's exported `KeydaBot` — that one drives the full-screen
+ * Two things to know. First, the object lives at `window.TelyBot`, which is
+ * NOT this package's exported `TelyBot` — that one drives the full-screen
  * surface and the two share no state. Second, this can return non-null in the
  * gap between the script executing and the widget finishing its config fetch;
  * calling `open()` in that gap does nothing at all rather than erroring. If
@@ -149,9 +150,12 @@ export function embedWidget(options: EmbedOptions): Promise<boolean> {
  */
 export function getEmbeddedWidget(): EmbeddedWidget | null {
   if (typeof window === 'undefined') return null;
-  const widget = (window as unknown as { KeydaBot?: EmbeddedWidget & { __loaded?: boolean } })
-    .KeydaBot;
+  type Loaded = EmbeddedWidget & { __loaded?: boolean };
+  const w = window as unknown as { TelyBot?: Loaded; KeydaBot?: Loaded };
+  // `window.TelyBot` is the widget's name; `window.KeydaBot` is the same object
+  // under its old name, the only one a server from before 2026-10 exposes.
   // `__loaded` is widget.js's own marker. Testing it, rather than testing for
-  // the object, avoids mistaking some other `window.KeydaBot` for the widget.
+  // the object, avoids mistaking some other `window.TelyBot` for the widget.
+  const widget = w.TelyBot && w.TelyBot.__loaded ? w.TelyBot : w.KeydaBot;
   return widget && widget.__loaded ? widget : null;
 }

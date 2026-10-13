@@ -1,0 +1,311 @@
+<?php
+/**
+ * Settings screen: Settings -> Telybot.
+ *
+ * One field, one option. The rest of the bot's configuration — greeting,
+ * accent colour, languages, what it knows — lives in the Telybot
+ * dashboard, on purpose: a setting duplicated here would be a second place to
+ * change it and a second place to be wrong.
+ *
+ * @package Telybot
+ */
+
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Slug of this screen, used for both the menu and the settings sections.
+ */
+define( 'TELYBOT_PAGE', 'telybot' );
+
+/**
+ * Option group. settings_fields() turns this into the nonce and the
+ * option_page field that options.php validates on submit.
+ */
+define( 'TELYBOT_OPTION_GROUP', 'telybot_settings' );
+
+/**
+ * Slug our admin notices are filed under, kept apart from core's 'general' so
+ * settings_errors() prints ours and core's "Settings saved." exactly once each.
+ */
+define( 'TELYBOT_NOTICES', 'telybot_messages' );
+
+/**
+ * Register the screen under Settings.
+ *
+ * @return void
+ */
+function telybot_add_settings_page() {
+	add_options_page(
+		__( 'Telybot', 'telybot' ),
+		__( 'Telybot', 'telybot' ),
+		// Capability check number one: WordPress hides the menu entry and
+		// refuses the screen for anyone without it.
+		'manage_options',
+		TELYBOT_PAGE,
+		'telybot_render_settings_page'
+	);
+}
+add_action( 'admin_menu', 'telybot_add_settings_page' );
+
+/**
+ * Register the option, its sanitiser, and the single field.
+ *
+ * @return void
+ */
+function telybot_register_settings() {
+	register_setting(
+		TELYBOT_OPTION_GROUP,
+		TELYBOT_OPTION,
+		array(
+			'type'              => 'string',
+			'sanitize_callback' => 'telybot_sanitize_client_id',
+			'default'           => '',
+			// Nothing reads this over the REST API, and an option exposed
+			// there is one more surface to reason about for no gain.
+			'show_in_rest'      => false,
+		)
+	);
+
+	add_settings_section(
+		'telybot_main',
+		'',
+		'telybot_render_section_intro',
+		TELYBOT_PAGE
+	);
+
+	add_settings_field(
+		TELYBOT_OPTION,
+		__( 'Client id', 'telybot' ),
+		'telybot_render_client_id_field',
+		TELYBOT_PAGE,
+		'telybot_main',
+		array( 'label_for' => TELYBOT_OPTION )
+	);
+
+	register_setting(
+		TELYBOT_OPTION_GROUP,
+		TELYBOT_OPTION_BRANDING,
+		array(
+			'type'              => 'boolean',
+			'sanitize_callback' => 'telybot_sanitize_branding',
+			'default'           => false,
+			'show_in_rest'      => false,
+		)
+	);
+
+	add_settings_field(
+		TELYBOT_OPTION_BRANDING,
+		__( 'Credit link', 'telybot' ),
+		'telybot_render_branding_field',
+		TELYBOT_PAGE,
+		'telybot_main',
+		array( 'label_for' => TELYBOT_OPTION_BRANDING )
+	);
+}
+
+/**
+ * A checkbox is present or absent; anything else is not an answer.
+ *
+ * @param mixed $value Raw submitted value.
+ * @return bool
+ */
+function telybot_sanitize_branding( $value ) {
+	return ! empty( $value );
+}
+
+/**
+ * The credit-link checkbox.
+ *
+ * Unticked until the site owner ticks it. The plugin directory does not allow
+ * a plugin to put an external link on a public site unless the owner asked for
+ * it, so the question is asked here rather than assumed.
+ *
+ * @return void
+ */
+function telybot_render_branding_field() {
+	$on = (bool) get_option( TELYBOT_OPTION_BRANDING, false );
+	?>
+	<label for="<?php echo esc_attr( TELYBOT_OPTION_BRANDING ); ?>">
+		<input
+			type="checkbox"
+			id="<?php echo esc_attr( TELYBOT_OPTION_BRANDING ); ?>"
+			name="<?php echo esc_attr( TELYBOT_OPTION_BRANDING ); ?>"
+			value="1"
+			<?php checked( $on ); ?>
+		/>
+		<?php esc_html_e( 'Show a "Powered by Telybot" link at the bottom of the chat', 'telybot' ); ?>
+	</label>
+	<p class="description">
+		<?php esc_html_e( 'Off by default. Tick it only if you are happy for the chat to link to telybot.com from your public site.', 'telybot' ); ?>
+	</p>
+	<?php
+}
+add_action( 'admin_init', 'telybot_register_settings' );
+
+/**
+ * Validate the client id before it can be stored.
+ *
+ * By the time options.php calls this it has already checked the nonce from
+ * settings_fields() and the capability behind the option group. That is not a
+ * reason to trust the value: this function is public and update_option() can
+ * reach it from anywhere, so it judges the string and nothing else.
+ *
+ * @param mixed $value Raw submitted value.
+ * @return string Value to store.
+ */
+function telybot_sanitize_client_id( $value ) {
+	$previous = (string) get_option( TELYBOT_OPTION, '' );
+
+	// A posted array would raise "Array to string conversion" on the cast
+	// below, and there is no reading of one that could ever be a valid id.
+	if ( ! is_scalar( $value ) ) {
+		return $previous;
+	}
+
+	// Keys get copied out of a dashboard and arrive with a stray newline or a
+	// leading space more often than not. That is not a wrong key.
+	$value = preg_replace( '/\s+/', '', (string) $value );
+
+	// No sanitize_text_field() here, and that is the point: it strips a
+	// <script> element down to an empty string, and pasting the whole script
+	// tag from the dashboard is the mistake owners actually make. The result
+	// would be indistinguishable from clearing the field, so a fat-fingered
+	// paste would switch a working bot off and report success. The pattern
+	// below is the sanitiser instead — nothing but kb_live_ and hex can
+	// survive it, so whatever comes out is safe to store and to print.
+	if ( '' === $value ) {
+		// Emptying the field is how an owner switches the bot off without
+		// deactivating the plugin, so it is a valid save, not an error.
+		return '';
+	}
+
+	if ( ! telybot_is_valid_client_id( $value ) ) {
+		add_settings_error(
+			TELYBOT_NOTICES,
+			'telybot_client_id_invalid',
+			esc_html__( 'That does not look like a Telybot client id, so it was not saved. A client id starts with kb_live_ and is followed by 8 to 48 characters from 0-9 and a-f.', 'telybot' ),
+			'error'
+		);
+
+		// Keep what was working. A typo in this box must never be able to
+		// take a live bot off a live site.
+		return $previous;
+	}
+
+	return $value;
+}
+
+/**
+ * Short introduction above the field.
+ *
+ * @return void
+ */
+function telybot_render_section_intro() {
+	printf(
+		'<p>%s</p>',
+		sprintf(
+			/* translators: %s: link to the Install page of the Telybot dashboard. */
+			esc_html__( 'Your client id is on the Install page of your Telybot dashboard. %s', 'telybot' ),
+			sprintf(
+				'<a href="%s" target="_blank" rel="noopener noreferrer">%s</a>',
+				esc_url( telybot_base_url() . '/app/' ),
+				esc_html__( 'Open the dashboard', 'telybot' )
+			)
+		)
+	);
+}
+
+/**
+ * The one field.
+ *
+ * @return void
+ */
+function telybot_render_client_id_field() {
+	$value = (string) get_option( TELYBOT_OPTION, '' );
+
+	// True only on the request right after a rejected save, so the message
+	// appears against the field that caused it rather than as a page-level
+	// notice the owner has to map back to an input.
+	$rejected = false;
+	foreach ( get_settings_errors( TELYBOT_NOTICES ) as $error ) {
+		if ( isset( $error['code'] ) && 'telybot_client_id_invalid' === $error['code'] ) {
+			$rejected = true;
+			break;
+		}
+	}
+
+	printf(
+		'<input type="text" id="%1$s" name="%1$s" value="%2$s" class="regular-text code" placeholder="kb_live_0000000000000000" autocomplete="off" spellcheck="false"%3$s />',
+		esc_attr( TELYBOT_OPTION ),
+		esc_attr( $value ),
+		$rejected ? ' aria-invalid="true" aria-describedby="telybot-client-id-error"' : ''
+	);
+
+	if ( $rejected ) {
+		// Inline colour rather than an enqueued stylesheet: one rule on one
+		// admin screen is not worth an extra HTTP request on every page of wp-admin.
+		printf(
+			'<p id="telybot-client-id-error" style="color:#b32d2e;margin:6px 0 0;"><strong>%s</strong> %s</p>',
+			esc_html__( 'Not saved.', 'telybot' ),
+			esc_html__( 'Paste only the id itself — not the whole <script> tag from the dashboard.', 'telybot' )
+		);
+
+		return;
+	}
+
+	if ( '' === $value ) {
+		printf(
+			'<p class="description">%s</p>',
+			esc_html__( 'Until this is filled in, the plugin adds nothing to your site.', 'telybot' )
+		);
+
+		return;
+	}
+
+	printf(
+		'<p class="description">%s</p>',
+		esc_html__( 'The chat is loading on every page of your site. Open your site in a new tab to see it.', 'telybot' )
+	);
+}
+
+/**
+ * Render the screen.
+ *
+ * @return void
+ */
+function telybot_render_settings_page() {
+	// Capability check number two. add_options_page() gates the menu, but a
+	// page callback is a plain function name that another plugin or a custom
+	// admin route can call directly; without this, that path would render the
+	// form — and the saved key — to whoever asked.
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_die( esc_html__( 'You are not allowed to change these settings.', 'telybot' ) );
+	}
+	?>
+	<div class="wrap">
+		<h1><?php esc_html_e( 'Telybot', 'telybot' ); ?></h1>
+
+		<p>
+			<?php esc_html_e( 'This plugin loads the Telybot chat widget on your site. The greeting, colours, languages and answers are all set in your Telybot dashboard and change on your site immediately — there is nothing else to configure here.', 'telybot' ); ?>
+		</p>
+
+		<?php
+		// Prints both our validation error and core's "Settings saved.".
+		// Plugin screens under Settings do not load options-head.php, so
+		// without this call the messages are collected and never shown.
+		settings_errors();
+		?>
+
+		<form action="options.php" method="post">
+			<?php
+			// The nonce and the option_page field. A settings form without
+			// this is a CSRF hole: any page an administrator visits could
+			// post to options.php and change the key under them.
+			settings_fields( TELYBOT_OPTION_GROUP );
+			do_settings_sections( TELYBOT_PAGE );
+			submit_button( __( 'Save changes', 'telybot' ) );
+			?>
+		</form>
+	</div>
+	<?php
+}

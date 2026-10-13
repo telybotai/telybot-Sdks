@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:keyda_bot/src/replies.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:telybot/src/replies.dart';
 
 /// The reply check against a stand-in for `/widget/{clientId}/messages`.
 ///
@@ -47,12 +47,12 @@ void main() {
 
   Future<Map<String, Object?>> stored(String clientId) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return jsonDecode(prefs.getString('keyda_bot_waits_$clientId')!) as Map<String, Object?>;
+    return jsonDecode(prefs.getString('telybot_waits_$clientId')!) as Map<String, Object?>;
   }
 
   test('a reply while the chat is closed: unread, told once, cleared by the page', () async {
     const String clientId = 'kb_live_98379989acbdf20bd9deaa8f';
-    final KeydaReplies replies = KeydaReplies.instance;
+    final TelyBotReplies replies = TelyBotReplies.instance;
     int told = 0;
     replies.onReply = () => told++;
     replies.start(chatUrl(clientId), clientId);
@@ -107,7 +107,7 @@ void main() {
   test("a chat out of sight: only a person's reply lights the dot", () async {
     const String clientId = 'kb_live_0123456789abcdef01234567';
     const String order = '2026-10-09T15:30:00.000Z';
-    final KeydaReplies replies = KeydaReplies.instance;
+    final TelyBotReplies replies = TelyBotReplies.instance;
     int told = 0;
     replies.onReply = () => told++;
     replies.start(chatUrl(clientId), clientId);
@@ -170,12 +170,12 @@ void main() {
 
   test('a saved reply: unread at start; a chat appearing clears it at once, not after a slow look', () async {
     const String clientId = 'kb_live_abcdefabcdefabcdefabcdef';
-    final KeydaReplies replies = KeydaReplies.instance;
+    final TelyBotReplies replies = TelyBotReplies.instance;
     final int now = DateTime.now().millisecondsSinceEpoch;
     // As saved before `page` existed: a reply told about, not yet shown.
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString(
-      'keyda_bot_waits_$clientId',
+      'telybot_waits_$clientId',
       jsonEncode(<String, Object>{
         'root': chatUrl(clientId).toString(),
         'waits': <Object>[

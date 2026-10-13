@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:keyda_bot/src/client_id.dart';
+import 'package:telybot/src/client_id.dart';
 
 void main() {
   group('isValidClientId', () {
@@ -53,8 +53,8 @@ void main() {
       expect(
         () => validateClientId('kb_live_nope'),
         throwsA(
-          isA<KeydaBotConfigError>().having(
-            (KeydaBotConfigError e) => e.toString(),
+          isA<TelyBotConfigError>().having(
+            (TelyBotConfigError e) => e.toString(),
             'toString',
             contains('kb_live_nope'),
           ),
@@ -122,7 +122,7 @@ void main() {
     test('rejects a bad client id before it can reach a URL', () {
       expect(
         () => buildChatUrl(clientId: 'kb_live_BAD'),
-        throwsA(isA<KeydaBotConfigError>()),
+        throwsA(isA<TelyBotConfigError>()),
       );
     });
 
@@ -136,7 +136,7 @@ void main() {
       ]) {
         expect(
           () => buildChatUrl(clientId: 'kb_live_0123abcd', baseUrl: bad),
-          throwsA(isA<KeydaBotConfigError>()),
+          throwsA(isA<TelyBotConfigError>()),
           reason: 'expected "$bad" to be rejected',
         );
       }
@@ -148,14 +148,14 @@ void main() {
           clientId: 'kb_live_0123abcd',
           baseUrl: 'https://telybot.com?env=staging',
         ),
-        throwsA(isA<KeydaBotConfigError>()),
+        throwsA(isA<TelyBotConfigError>()),
       );
       expect(
         () => buildChatUrl(
           clientId: 'kb_live_0123abcd',
           baseUrl: 'https://telybot.com#top',
         ),
-        throwsA(isA<KeydaBotConfigError>()),
+        throwsA(isA<TelyBotConfigError>()),
       );
     });
   });

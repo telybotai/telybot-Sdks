@@ -24,37 +24,39 @@ const N = '(\\d+\\.\\d+\\.\\d+)';
 // [file, pattern with the version as group 2 (group 1 before it, group 3
 // after it), how many times it appears]
 const PLACES = [
-  ['KeydaBot.podspec', `(s\\.version\\s*=\\s*')${N}(')`, 1],
-  ['android/keyda-bot/build.gradle.kts', `(val sdkVersion = ")${N}(")`, 1],
+  ['TelyBot.podspec', `(s\\.version\\s*=\\s*')${N}(')`, 1],
+  ['android/telybot/build.gradle.kts', `(val sdkVersion = ")${N}(")`, 1],
   ['android/README.md', `(telybot-Sdks:v)${N}()`, 1],
   ['android/README.md', `(\`v)${N}(\` resolves today)`, 1],
-  ['android/README.md', `(in\\.keyda:keyda-bot:)${N}()`, 3],
+  ['android/README.md', `(com\\.telybot:telybot:)${N}()`, 3],
   ['ios/README.md', `(from: ")${N}(")`, 1],
-  ['ios/README.md', `(telybot-Sdks/v)${N}(/KeydaBot\\.podspec)`, 1],
+  ['ios/README.md', `(telybot-Sdks/v)${N}(/TelyBot\\.podspec)`, 1],
+  // The iOS User-Agent mark (TelyBot/<version> (iOS)), from 1.0.0.
+  ['ios/Sources/TelyBot/TelyBotConfiguration.swift', `(static let sdkVersion = ")${N}(")`, 1],
   ['react-native/package.json', `(\\n  "version": ")${N}(")`, 1],
   ['react-native/src/index.tsx', `(const SDK_VERSION = ')${N}(')`, 1],
   ['flutter/pubspec.yaml', `(\\nversion: )${N}(\\n)`, 1],
-  ['flutter/lib/src/sdk_version.dart', `(kKeydaSdkVersion = ')${N}(')`, 1],
-  ['flutter/README.md', `(keyda_bot: \\^)${N}()`, 1],
+  ['flutter/lib/src/sdk_version.dart', `(kTelyBotSdkVersion = ')${N}(')`, 1],
+  ['flutter/README.md', `(telybot: \\^)${N}()`, 1],
   ['ionic/package.json', `(\\n  "version": ")${N}(")`, 1],
   // npm writes the package's own version twice into its lockfile.
-  ['ionic/package-lock.json', `("name": "@keyda/bot-capacitor",\\n\\s+"version": ")${N}(")`, 2],
-  ['wordpress/keyda-bot/keyda-bot.php', `(\\n \\* Version:\\s+)${N}(\\n)`, 1],
-  ['wordpress/keyda-bot/readme.txt', `(\\nStable tag: )${N}(\\n)`, 1],
-  ['wordpress/README.md', `(/keyda-bot-)${N}(\\.zip)`, 1],
+  ['ionic/package-lock.json', `("name": "@telybot/capacitor",\\n\\s+"version": ")${N}(")`, 2],
+  ['wordpress/telybot/telybot.php', `(\\n \\* Version:\\s+)${N}(\\n)`, 1],
+  ['wordpress/telybot/readme.txt', `(\\nStable tag: )${N}(\\n)`, 1],
+  ['wordpress/README.md', `(/telybot-)${N}(\\.zip)`, 1],
   ['wordpress/README.md', `("tags/)${N}(")`, 1],
   ['wordpress/README.md', `("Release )${N}(")`, 1],
   ['README.md', `(telybot-Sdks:v)${N}()`, 1],
   ['README.md', `(at tag \`v)${N}(\`)`, 1],
-  ['README.md', `(bot-react-native@)${N}()`, 1],
-  ['README.md', `(keyda_bot \\^)${N}()`, 1],
-  ['README.md', `(bot-capacitor@)${N}()`, 1],
-  ['README.md', `(\`wordpress/keyda-bot/\`, )${N}(\\))`, 1],
+  ['README.md', `(@telybot/react-native@)${N}()`, 1],
+  ['README.md', `(telybot \\^)${N}()`, 1],
+  ['README.md', `(@telybot/capacitor@)${N}()`, 1],
+  ['README.md', `(\`wordpress/telybot/\`, )${N}(\\))`, 1],
 ];
 
 // `## X.Y.Z — unreleased` or `## X.Y.Z — 2026-10-09`, newest first.
 const CHANGELOGS = ['android', 'ios', 'react-native', 'flutter', 'ionic'].map((p) => `${p}/CHANGELOG.md`);
-const WP_README = 'wordpress/keyda-bot/readme.txt';
+const WP_README = 'wordpress/telybot/readme.txt';
 
 // Every pattern here is written for "\n". A file saved with Windows line
 // endings is read as "\n" and written back the way it came.

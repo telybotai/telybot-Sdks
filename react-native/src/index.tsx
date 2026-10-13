@@ -1,5 +1,5 @@
 /**
- * @keyda/bot-react-native
+ * @telybot/react-native
  *
  * A Modal + WebView around the hosted chat page at {baseUrl}/chat/{clientId}.
  * There is one chat renderer — the web widget the platform serves — and every
@@ -29,16 +29,16 @@ import {
 import type {LayoutChangeEvent, StyleProp, ViewStyle} from 'react-native';
 import {WebView} from 'react-native-webview';
 import {repliesFor, useReplyStore} from './replies';
-import type {KeydaBotReplies, KeydaBotRepliesOptions, KeydaBotStorage} from './replies';
+import type {TelyBotReplies, TelyBotRepliesOptions, TelyBotStorage} from './replies';
 import {cleanVisitor, isLoneSurrogate} from './visitor';
-import type {KeydaBotVisitor} from './visitor';
+import type {TelyBotVisitor} from './visitor';
 
-export type {KeydaBotReplies, KeydaBotRepliesOptions, KeydaBotStorage, KeydaBotVisitor};
+export type {TelyBotReplies, TelyBotRepliesOptions, TelyBotStorage, TelyBotVisitor};
 
 const DEFAULT_BASE_URL = 'https://telybot.com';
 
 /** This package's version — `version` in package.json, which the suite holds it to. */
-const SDK_VERSION = '0.2.0';
+const SDK_VERSION = '1.0.0';
 
 /** The shape the platform issues. Kept identical to the server's own check. */
 const CLIENT_ID = /^kb_live_[0-9a-f]{8,48}$/;
@@ -70,7 +70,7 @@ export function isValidClientId(clientId: unknown): boolean {
 }
 
 /**
- * Lower-cases scheme and host only. A baseUrl typed `HTTPS://Business.Keyda.in`
+ * Lower-cases scheme and host only. A baseUrl typed `HTTPS://Chat.Example.COM`
  * would otherwise never prefix-match the all-lowercase URL the WebView reports
  * back, and every navigation — including the chat's own first load — would be
  * treated as a link to somewhere else.
@@ -88,7 +88,7 @@ function canonical(url: string): string {
 export function buildChatUrl(clientId: string, baseUrl: string = DEFAULT_BASE_URL): string {
   if (!isValidClientId(clientId)) {
     throw new Error(
-      '[KeydaBot] Invalid clientId ' +
+      '[TelyBot] Invalid clientId ' +
         JSON.stringify(clientId) +
         '. Expected kb_live_ followed by 8-48 hex characters — copy it from Install in the Telybot dashboard.',
     );
@@ -104,7 +104,7 @@ export function buildChatUrl(clientId: string, baseUrl: string = DEFAULT_BASE_UR
   // https://acme.example/support resolves to /support/chat/{id}.
   if (!/^https?:\/\/[^/?#]+(\/[^?#]*)?$/i.test(base)) {
     throw new Error(
-      '[KeydaBot] Invalid baseUrl ' +
+      '[TelyBot] Invalid baseUrl ' +
         JSON.stringify(baseUrl) +
         '. Expected an absolute http(s) URL — an origin, optionally with a path prefix, and no query string or #fragment — such as ' +
         DEFAULT_BASE_URL +
@@ -159,7 +159,7 @@ function openExternally(url: string): void {
   Linking.openURL(url).catch(() => {});
 }
 
-export interface KeydaBotProps {
+export interface TelyBotProps {
   /** From Install in the Telybot dashboard: kb_live_ + 8-48 hex chars. */
   clientId: string;
   /** Override for self-hosting or staging. Defaults to https://telybot.com */
@@ -177,12 +177,12 @@ export interface KeydaBotProps {
    */
   question?: string;
   /**
-   * Set by `useKeydaBot().show()`: a new number puts `question` in the box
+   * Set by `useTelyBot().show()`: a new number puts `question` in the box
    * again even when it is the same text (the customer may have edited it).
    */
   questionKey?: number;
-  /** Optional: your signed-in customer; see `KeydaBotVisitor`. */
-  visitor?: KeydaBotVisitor;
+  /** Optional: your signed-in customer; see `TelyBotVisitor`. */
+  visitor?: TelyBotVisitor;
 }
 
 type Status = 'loading' | 'ready' | 'failed';
@@ -235,14 +235,14 @@ function themeFromMessage(data: unknown): Scheme | null {
 /**
  * Android back over a live chat (CONTRACT rule 10). The page can have a sheet
  * open over the conversation — an item over the menu, the cart, a booking —
- * and back is the customer closing THAT. The page's `KeydaBot.back()` takes
+ * and back is the customer closing THAT. The page's `TelyBot.back()` takes
  * off the top sheet and answers whether there was one; the answer comes back
  * as a `keyda:back` message. A page too old to have `back()`, or one that
  * throws, answers false and the chat closes as it always did. The trailing
  * `true;` is react-native-webview's own advice for injected scripts.
  */
 const BACK_SCRIPT =
-  "(function(){var h=false;try{h=!!(window.KeydaBot&&typeof window.KeydaBot.back==='function'&&window.KeydaBot.back());}catch(e){}" +
+  "(function(){var h=false;try{h=!!(window.TelyBot&&typeof window.TelyBot.back==='function'&&window.TelyBot.back());}catch(e){}" +
   "window.ReactNativeWebView.postMessage(JSON.stringify({type:'keyda:back',handled:h}));})();true;";
 
 /** How long back waits for the page's answer before closing the chat anyway. */
@@ -292,7 +292,7 @@ function encodePart(value: string): string {
  * visitor's details: the page reads it as it loads and takes it off the
  * address. A fragment is never sent to a server.
  */
-function withStart(chatUrl: string, question: string, visitor: Required<KeydaBotVisitor> | null): string {
+function withStart(chatUrl: string, question: string, visitor: Required<TelyBotVisitor> | null): string {
   const parts: string[] = [];
   const q = question ? encodePart(question) : '';
   if (q) parts.push('q=' + q);
@@ -304,10 +304,10 @@ function withStart(chatUrl: string, question: string, visitor: Required<KeydaBot
   return parts.length ? chatUrl + '#' + parts.join('&') : chatUrl;
 }
 
-/** Hands the page a changed visitor (KeydaBot.setVisitor on the page). */
-function visitorScript(visitor: Required<KeydaBotVisitor> | null): string {
+/** Hands the page a changed visitor (TelyBot.setVisitor on the page). */
+function visitorScript(visitor: Required<TelyBotVisitor> | null): string {
   return (
-    '(function(){try{window.KeydaBot&&window.KeydaBot.setVisitor&&window.KeydaBot.setVisitor(' +
+    '(function(){try{window.TelyBot&&window.TelyBot.setVisitor&&window.TelyBot.setVisitor(' +
     JSON.stringify(visitor ?? {}) +
     ');}catch(e){}})();true;'
   );
@@ -324,17 +324,17 @@ function waitsFromMessage(data: unknown): unknown[] | null {
   }
 }
 
-/** Puts a question in the live chat's composer (KeydaBot.prefill on the page). */
+/** Puts a question in the live chat's composer (TelyBot.prefill on the page). */
 function prefillScript(question: string): string {
   return (
-    '(function(){try{window.KeydaBot&&window.KeydaBot.prefill&&window.KeydaBot.prefill(' +
+    '(function(){try{window.TelyBot&&window.TelyBot.prefill&&window.TelyBot.prefill(' +
     JSON.stringify(question) +
     ');}catch(e){}})();true;'
   );
 }
 
 /** Closes the page's top sheet without asking for an answer (the sheet count is known). */
-const BACK_ONLY_SCRIPT = "(function(){try{window.KeydaBot&&window.KeydaBot.back&&window.KeydaBot.back();}catch(e){}})();true;";
+const BACK_ONLY_SCRIPT = "(function(){try{window.TelyBot&&window.TelyBot.back&&window.TelyBot.back();}catch(e){}})();true;";
 
 /**
  * The page's sheet count — `{"type":"keyda:sheets","open":n}` (CONTRACT rule
@@ -498,8 +498,8 @@ interface SurfaceProps {
 }
 
 /**
- * The WebView, its loading cover and its retry screen — the part `<KeydaBot />`
- * and `<KeydaBotChat />` share.
+ * The WebView, its loading cover and its retry screen — the part `<TelyBot />`
+ * and `<TelyBotChat />` share.
  */
 function ChatSurface({chatUrl, startUrl, colors, status, setStatus, attempt, onRetry, webRef, onMessage, onLoaded}: SurfaceProps): React.ReactElement {
   // react-native-webview types its ref differently across the versions the
@@ -583,8 +583,8 @@ function ChatSurface({chatUrl, startUrl, colors, status, setStatus, attempt, onR
       <View style={styles.center}>
         <Text style={[styles.errorTitle, {color: colors.title}]}>Chat didn’t load</Text>
         <Text style={[styles.errorBody, {color: colors.body}]}>Check your connection and try again.</Text>
-        <Pressable onPress={onRetry} accessibilityRole="button" style={styles.retry}>
-          <Text style={styles.retryLabel}>Try again</Text>
+        <Pressable onPress={onRetry} accessibilityRole="button" style={[styles.retry, {backgroundColor: colors.title}]}>
+          <Text style={[styles.retryLabel, {color: colors.bg}]}>Try again</Text>
         </Pressable>
       </View>
     );
@@ -627,12 +627,12 @@ function ChatSurface({chatUrl, startUrl, colors, status, setStatus, attempt, onR
         // The page is a fixed full-screen layout — Android's overscroll
         // glow on it just reads as broken.
         overScrollMode="never"
-        // `KeydaBot/<version> (ReactNative)` after the platform's own
+        // `TelyBot/<version> (ReactNative)` after the platform's own
         // User-Agent, as the Android and Flutter SDKs mark theirs: a
         // version and nothing else. On Android the page reads it to know
         // this shell keeps the chat clear of the system bars, which the
         // WebView reports as safe area all the same.
-        applicationNameForUserAgent={`KeydaBot/${SDK_VERSION} (ReactNative)`}
+        applicationNameForUserAgent={`TelyBot/${SDK_VERSION} (ReactNative)`}
         // The page's messages: the theme (rule 7), back answers and the
         // sheet count (rule 10). Wiring onMessage is also what makes
         // window.ReactNativeWebView exist in the page at all, so it stays.
@@ -669,7 +669,7 @@ function useStartUrl(
   chatUrl: string,
   question: string | undefined,
   questionKey: number | undefined,
-  visitor: Required<KeydaBotVisitor> | null,
+  visitor: Required<TelyBotVisitor> | null,
   live: boolean,
   attempt: number,
   delivered: React.MutableRefObject<boolean>,
@@ -714,7 +714,7 @@ function usePrefill(
  * `{}` when there is none, so a cleared visitor is cleared there too.
  */
 function useVisitorUpdates(
-  visitor: Required<KeydaBotVisitor> | null,
+  visitor: Required<TelyBotVisitor> | null,
   ready: boolean,
   webRef: React.MutableRefObject<WebHandle | null>,
 ): () => void {
@@ -744,10 +744,10 @@ function useOnScreen(chatUrl: string, clientId: string, onScreen: boolean): void
 
 /**
  * The chat, presented over the host app. Render it once anywhere in the tree
- * and drive `visible` yourself, or let `useKeydaBot` hold that state for you.
- * To put the chat inside one of your own screens instead, see `KeydaBotChat`.
+ * and drive `visible` yourself, or let `useTelyBot` hold that state for you.
+ * To put the chat inside one of your own screens instead, see `TelyBotChat`.
  */
-export function KeydaBot({clientId, baseUrl, visible, onClose, question, questionKey, visitor}: KeydaBotProps): React.ReactElement {
+export function TelyBot({clientId, baseUrl, visible, onClose, question, questionKey, visitor}: TelyBotProps): React.ReactElement {
   // Built on every render, not lazily on first show: a typo in the id then
   // throws while the developer is looking at the screen, instead of the first
   // time a customer taps the button.
@@ -969,22 +969,22 @@ export function KeydaBot({clientId, baseUrl, visible, onClose, question, questio
   );
 }
 
-export interface KeydaBotChatProps {
+export interface TelyBotChatProps {
   /** From Install in the Telybot dashboard: kb_live_ + 8-48 hex chars. */
   clientId: string;
   /** Override for self-hosting or staging. Defaults to https://telybot.com */
   baseUrl?: string;
-  /** Optional: as on `<KeydaBot />`. */
+  /** Optional: as on `<TelyBot />`. */
   question?: string;
-  /** Optional: your signed-in customer, as on `<KeydaBot />`. */
-  visitor?: KeydaBotVisitor;
+  /** Optional: your signed-in customer, as on `<TelyBot />`. */
+  visitor?: TelyBotVisitor;
   /**
    * Is this screen the one in front? Pass React Navigation's `useIsFocused()`
    * (or your tab's selected state) when the chat sits in a tab or under other
    * screens that stay mounted. While false, Android's back is left to your app
    * — it would otherwise close a sheet in a chat nobody can see — and the chat
    * counts as off screen, so the SDK checks for the business's replies itself
-   * (`useKeydaBotReplies`). Default true.
+   * (`useTelyBotReplies`). Default true.
    */
   focused?: boolean;
   /** Size and place it like any view; it fills what it is given. */
@@ -1000,14 +1000,14 @@ export interface KeydaBotChatProps {
 
 /**
  * The chat as a view of your own screen — a Help tab, a support screen —
- * rather than the full-screen `<KeydaBot />`. Same hosted page, same rules.
+ * rather than the full-screen `<TelyBot />`. Same hosted page, same rules.
  *
  * It has no close button (your screen's navigation is the way out) and pads
  * for nothing but the keyboard: lay it out clear of the status and navigation
  * bars as you would any view. On Android, back closes a sheet the chat has
  * open (an item, the cart) before your app's own back handling sees it.
  */
-export function KeydaBotChat({clientId, baseUrl, question, visitor, focused = true, style, onCanGoBackChange}: KeydaBotChatProps): React.ReactElement {
+export function TelyBotChat({clientId, baseUrl, question, visitor, focused = true, style, onCanGoBackChange}: TelyBotChatProps): React.ReactElement {
   const chatUrl = useMemo(() => buildChatUrl(clientId, baseUrl), [clientId, baseUrl]);
   const deviceScheme: Scheme = useColorScheme() === 'dark' ? 'dark' : 'light';
   const [pageScheme, setPageScheme] = useState<Scheme | null>(null);
@@ -1129,7 +1129,7 @@ export function KeydaBotChat({clientId, baseUrl, question, visitor, focused = tr
   );
 }
 
-export interface KeydaBotController {
+export interface TelyBotController {
   /** Is the chat presented right now. */
   isShowing: boolean;
   /**
@@ -1139,15 +1139,15 @@ export interface KeydaBotController {
   show: (question?: string) => void;
   /** Close it. */
   dismiss: () => void;
-  /** Spread onto <KeydaBot />. */
-  botProps: KeydaBotProps;
+  /** Spread onto <TelyBot />. */
+  botProps: TelyBotProps;
 }
 
 /**
  * Holds the show/dismiss state so a screen does not have to. The whole public
  * surface — init, show, dismiss, isShowing — and nothing beyond it.
  */
-export function useKeydaBot(clientId: string, baseUrl?: string): KeydaBotController {
+export function useTelyBot(clientId: string, baseUrl?: string): TelyBotController {
   // Validate at init, not at first show: a bot behind a support button would
   // otherwise hide a bad client id until someone actually tapped it.
   useMemo(() => buildChatUrl(clientId, baseUrl), [clientId, baseUrl]);
@@ -1162,7 +1162,7 @@ export function useKeydaBot(clientId: string, baseUrl?: string): KeydaBotControl
     setShowing(true);
   }, []);
   const dismiss = useCallback(() => setShowing(false), []);
-  const botProps = useMemo<KeydaBotProps>(
+  const botProps = useMemo<TelyBotProps>(
     () => ({clientId, baseUrl, visible: isShowing, onClose: dismiss, question, questionKey}),
     [clientId, baseUrl, isShowing, dismiss, question, questionKey],
   );
@@ -1176,7 +1176,7 @@ export function useKeydaBot(clientId: string, baseUrl?: string): KeydaBotControl
  * A customer who asked for a person closes the chat; the owner answers an hour
  * later. The chat shows the answer when it next opens — this tells your app it
  * is there, so you can put a dot on your chat button. `hasUnreadReply` stays
- * true until the chat is on screen — a `<KeydaBotChat focused={false}>` draws
+ * true until the chat is on screen — a `<TelyBotChat focused={false}>` draws
  * the reply out of sight, which does not count; `onReply` is called once per
  * new reply. The SDK asks when your app comes to the foreground (once a minute
  * at most), only for chats in which the customer asked for a person in the
@@ -1185,7 +1185,7 @@ export function useKeydaBot(clientId: string, baseUrl?: string): KeydaBotControl
  * Pass `storage` (AsyncStorage, or anything with its getItem/setItem) to keep
  * watching across app restarts; without it, only while the app runs.
  */
-export function useKeydaBotReplies(clientId: string, options: KeydaBotRepliesOptions = {}): KeydaBotReplies {
+export function useTelyBotReplies(clientId: string, options: TelyBotRepliesOptions = {}): TelyBotReplies {
   const chatUrl = useMemo(() => buildChatUrl(clientId, options.baseUrl), [clientId, options.baseUrl]);
   const store = useMemo(() => repliesFor(clientId, chatUrl), [clientId, chatUrl]);
   return useReplyStore(store, options);
@@ -1228,11 +1228,12 @@ const styles = StyleSheet.create({
   center: {flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24},
   errorTitle: {fontSize: 17, fontWeight: '600', marginBottom: 6},
   errorBody: {fontSize: 15, textAlign: 'center', marginBottom: 18},
+  // The page's own palette, inverted (ink on the mode's background), as the
+  // Flutter shell draws it: no colour of ours inside a customer's chat.
   retry: {
     paddingHorizontal: 20,
     paddingVertical: 11,
     borderRadius: 10,
-    backgroundColor: '#3b4ee0',
   },
-  retryLabel: {color: '#ffffff', fontSize: 15, fontWeight: '600'},
+  retryLabel: {fontSize: 15, fontWeight: '600'},
 });

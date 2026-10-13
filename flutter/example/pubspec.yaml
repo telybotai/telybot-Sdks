@@ -1,4 +1,4 @@
-name: keyda_bot_example
+name: telybot_example
 description: Minimal example of opening a Telybot bot from a Flutter app.
 publish_to: 'none'
 version: 1.0.0
@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  keyda_bot:
+  telybot:
     path: ../
 
 flutter:

@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:keyda_bot/src/chat_page.dart';
-import 'package:keyda_bot/src/visitor.dart';
+import 'package:telybot/src/chat_page.dart';
+import 'package:telybot/src/visitor.dart';
 
 /// `setVisitor`'s cleaning, which must drop exactly what the chat page drops.
 void main() {
@@ -11,8 +11,8 @@ void main() {
   final String softHyphen = String.fromCharCode(0x00AD);
 
   test('keeps well-formed details', () {
-    final KeydaVisitor? v =
-        KeydaVisitor.of(name: '  Asha \n Rao ', phone: '+91 98765 43210', email: 'asha@example.com');
+    final TelyBotVisitor? v =
+        TelyBotVisitor.of(name: '  Asha \n Rao ', phone: '+91 98765 43210', email: 'asha@example.com');
     expect(v?.name, 'Asha Rao');
     expect(v?.phone, '+91 98765 43210');
     expect(v?.email, 'asha@example.com');
@@ -20,41 +20,41 @@ void main() {
   });
 
   test('drops what does not look like what it claims, whole', () {
-    expect(KeydaVisitor.of(name: 'a' * 81, phone: 'call me', email: 'x@y'), isNull);
-    expect(KeydaVisitor.of(), isNull);
-    expect(KeydaVisitor.of(name: ' \t\n '), isNull);
-    expect(KeydaVisitor.of(phone: '12', email: 'a@b.co')?.phone, '');
+    expect(TelyBotVisitor.of(name: 'a' * 81, phone: 'call me', email: 'x@y'), isNull);
+    expect(TelyBotVisitor.of(), isNull);
+    expect(TelyBotVisitor.of(name: ' \t\n '), isNull);
+    expect(TelyBotVisitor.of(phone: '12', email: 'a@b.co')?.phone, '');
   });
 
   test('name: 1 to 80 characters on one line, nothing else taken out', () {
-    expect(KeydaVisitor.cleanName('a' * 80), 'a' * 80);
-    expect(KeydaVisitor.cleanName('a' * 81), '', reason: 'dropped, not cut');
-    expect(KeydaVisitor.cleanName(grin * 80), grin * 80, reason: 'counted in characters');
-    expect(KeydaVisitor.cleanName('Asha${String.fromCharCodes(<int>[0, 1, 9])}Rao'), 'Asha Rao');
-    expect(KeydaVisitor.cleanName('Asha${String.fromCharCode(0x7F)}Rao'), 'Asha Rao');
-    expect(KeydaVisitor.cleanName('Asha$loneHalf Rao'), 'Asha Rao');
-    expect(KeydaVisitor.cleanName('A${joiner}B${softHyphen}C'), 'A${joiner}B${softHyphen}C');
+    expect(TelyBotVisitor.cleanName('a' * 80), 'a' * 80);
+    expect(TelyBotVisitor.cleanName('a' * 81), '', reason: 'dropped, not cut');
+    expect(TelyBotVisitor.cleanName(grin * 80), grin * 80, reason: 'counted in characters');
+    expect(TelyBotVisitor.cleanName('Asha${String.fromCharCodes(<int>[0, 1, 9])}Rao'), 'Asha Rao');
+    expect(TelyBotVisitor.cleanName('Asha${String.fromCharCode(0x7F)}Rao'), 'Asha Rao');
+    expect(TelyBotVisitor.cleanName('Asha$loneHalf Rao'), 'Asha Rao');
+    expect(TelyBotVisitor.cleanName('A${joiner}B${softHyphen}C'), 'A${joiner}B${softHyphen}C');
   });
 
   test('phone: 8 to 15 digits, and no "+0"', () {
-    expect(KeydaVisitor.cleanPhone(' 9876 5432 '), '9876 5432');
-    expect(KeydaVisitor.cleanPhone('987 6543'), '', reason: '7 digits');
-    expect(KeydaVisitor.cleanPhone('+1 (234) 567-8901.234'), '+1 (234) 567-8901.234');
-    expect(KeydaVisitor.cleanPhone('1234567890123456'), '', reason: '16 digits');
-    expect(KeydaVisitor.cleanPhone('+0 98765 43210'), '');
-    expect(KeydaVisitor.cleanPhone('98765 43210 ext 2'), '');
-    expect(KeydaVisitor.cleanPhone('9' * 8 + ' ' * 25), '9' * 8, reason: 'trimmed first');
-    expect(KeydaVisitor.cleanPhone('9  ' * 12), '', reason: '12 digits, but 34 characters');
+    expect(TelyBotVisitor.cleanPhone(' 9876 5432 '), '9876 5432');
+    expect(TelyBotVisitor.cleanPhone('987 6543'), '', reason: '7 digits');
+    expect(TelyBotVisitor.cleanPhone('+1 (234) 567-8901.234'), '+1 (234) 567-8901.234');
+    expect(TelyBotVisitor.cleanPhone('1234567890123456'), '', reason: '16 digits');
+    expect(TelyBotVisitor.cleanPhone('+0 98765 43210'), '');
+    expect(TelyBotVisitor.cleanPhone('98765 43210 ext 2'), '');
+    expect(TelyBotVisitor.cleanPhone('9' * 8 + ' ' * 25), '9' * 8, reason: 'trimmed first');
+    expect(TelyBotVisitor.cleanPhone('9  ' * 12), '', reason: '12 digits, but 34 characters');
   });
 
   test('email: a real-looking address up to 254 characters', () {
-    expect(KeydaVisitor.cleanEmail(' asha@example.co.in '), 'asha@example.co.in');
-    expect(KeydaVisitor.cleanEmail('asha@example.c'), '', reason: 'a one-letter ending');
-    expect(KeydaVisitor.cleanEmail('asha..rao@example.com'), '');
-    expect(KeydaVisitor.cleanEmail('asha@example..com'), '');
-    expect(KeydaVisitor.cleanEmail('asha rao@example.com'), '');
-    expect(KeydaVisitor.cleanEmail('${'a' * 242}@example.com'), '${'a' * 242}@example.com');
-    expect(KeydaVisitor.cleanEmail('${'a' * 243}@example.com'), '', reason: '255 characters');
+    expect(TelyBotVisitor.cleanEmail(' asha@example.co.in '), 'asha@example.co.in');
+    expect(TelyBotVisitor.cleanEmail('asha@example.c'), '', reason: 'a one-letter ending');
+    expect(TelyBotVisitor.cleanEmail('asha..rao@example.com'), '');
+    expect(TelyBotVisitor.cleanEmail('asha@example..com'), '');
+    expect(TelyBotVisitor.cleanEmail('asha rao@example.com'), '');
+    expect(TelyBotVisitor.cleanEmail('${'a' * 242}@example.com'), '${'a' * 242}@example.com');
+    expect(TelyBotVisitor.cleanEmail('${'a' * 243}@example.com'), '', reason: '255 characters');
   });
 
   test('the start question: no lone halves, cut at 500 whole characters', () {

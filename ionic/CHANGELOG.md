@@ -1,5 +1,16 @@
-# Changelog — @keyda/bot-capacitor
+# Changelog — @telybot/capacitor
 
+
+## 1.0.0 — 2026-10-13
+
+* **Renamed to Telybot:** `npm install @telybot/capacitor`; `TelyBot` (also the default
+  export), `TelyBotOptions`, `TelyBotVisitor`. Console messages start `[TelyBot]`.
+* The script `embedWidget()` adds carries `data-telybot-embed`; a tag a 0.x copy added is still
+  recognised, so the widget is never loaded twice.
+* `getEmbeddedWidget()` reads `window.TelyBot`, falling back to `window.KeydaBot` for a server
+  from before October 2026.
+* **`@keyda/bot-capacitor` 0.2.1** depends on this package and re-exports it under the old
+  names, deprecated. It is the last release under that name.
 
 ## 0.2.0 — 2026-10-13
 

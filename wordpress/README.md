@@ -30,8 +30,8 @@ renderer, and a browser does not need the page in the middle.
 ## What is in here
 
 ```
-keyda-bot/
-  keyda-bot.php          plugin header, front-end enqueue, the data-key tag filter
+telybot/
+  telybot.php          plugin header, front-end enqueue, the data-key tag filter
   includes/settings.php  Settings -> Telybot, one validated field
   readme.txt             WordPress.org listing (this file is not the listing)
   uninstall.php          deletes the one option when the plugin is deleted
@@ -42,19 +42,19 @@ is the directory that ships. PHP 7.4+, WordPress 5.6+, zero dependencies.
 
 ## Installing on a site
 
-Any of these; the plugin folder must end up named `keyda-bot`.
+Any of these; the plugin folder must end up named `telybot`.
 
 **From a zip.** Plugins → Add New → Upload Plugin → the built zip → Activate.
 
-**By hand.** Copy the `keyda-bot/` directory into `wp-content/plugins/`, then
+**By hand.** Copy the `telybot/` directory into `wp-content/plugins/`, then
 activate it from the Plugins screen.
 
 **WP-CLI.** `wp plugin install` takes a zip or a slug, not a directory, so
 either build the zip first (below) or copy the folder and activate it:
 
 ```sh
-cp -R keyda-bot /path/to/wp-content/plugins/
-wp plugin activate keyda-bot
+cp -R telybot /path/to/wp-content/plugins/
+wp plugin activate telybot
 ```
 
 Then: **Settings → Telybot**, paste the client id from the Install page of
@@ -72,13 +72,13 @@ The default is `https://telybot.com`. Staging and self-hosted installs
 override it, either in `wp-config.php`:
 
 ```php
-define( 'KEYDA_BOT_BASE_URL', 'https://chat.example.com' );
+define( 'TELYBOT_BASE_URL', 'https://chat.example.com' );
 ```
 
 or from a theme or mu-plugin:
 
 ```php
-add_filter( 'keyda_bot_base_url', function () {
+add_filter( 'telybot_base_url', function () {
 	return 'https://chat.example.com';
 } );
 ```
@@ -89,7 +89,7 @@ URL is ignored and the default is used, because a malformed one becomes a script
 tag pointing at nothing and fails silently in every browser.
 
 Give the override a scheme and a host only — `https://chat.example.com`, never
-`https://example.com/keyda`. The widget builds its API base from the **origin**
+`https://example.com/support`. The widget builds its API base from the **origin**
 of its own `src`, so a subdirectory is kept in the script URL and dropped from
 the API URL. That combination is accepted here and loads a widget that cannot
 reach its own API, which is the one shape of override this function cannot
@@ -104,27 +104,27 @@ type a host into the box that answers their support ticket.
 1. Activate with no id set → no `widget.js` anywhere in the page source, and a
    notice on the Plugins screen saying so.
 2. Save `not-a-key` → inline error under the field, previous value intact.
-3. Save a real id → the footer carries one tag for handle `keyda-bot` with both
+3. Save a real id → the footer carries one tag for handle `telybot` with both
    `data-key="kb_live_…"` and `async` on it, and the launcher appears. The rest
    of the tag varies with the site: a theme without HTML5 script support also
    gets `type='text/javascript'`, and WordPress before 6.3 quotes its own
    attributes with single quotes.
    If you attach a `wp_add_inline_script()` to the handle, check `data-key`
    landed on the tag carrying `src`, not on the inline block beside it.
-4. `wp option get keyda_bot_client_id` returns it; delete the plugin from the
+4. `wp option get telybot_client_id` returns it; delete the plugin from the
    Plugins screen and the same command returns nothing.
-5. Lint every file: `find keyda-bot -name '*.php' -exec php -l {} \;`
+5. Lint every file: `find telybot -name '*.php' -exec php -l {} \;`
 
 If you have the WordPress coding standards installed globally,
-`phpcs --standard=WordPress keyda-bot` is worth a pass before a release; it is
+`phpcs --standard=WordPress telybot` is worth a pass before a release; it is
 not required to work on the plugin and nothing here depends on it.
 
 ## Releasing
 
 Version numbers live in exactly two places and must match:
 
-* `Version:` in `keyda-bot/keyda-bot.php`
-* `Stable tag:` in `keyda-bot/readme.txt`
+* `Version:` in `telybot/telybot.php`
+* `Stable tag:` in `telybot/readme.txt`
 
 Steps:
 
@@ -138,21 +138,21 @@ Steps:
 
    ```sh
    cd wordpress
-   zip -r /tmp/keyda-bot-0.2.0.zip keyda-bot -x '*.DS_Store' -x '__MACOSX/*'
+   zip -r /tmp/telybot-1.0.0.zip telybot -x '*.DS_Store' -x '__MACOSX/*'
    ```
 
-   Unzip it somewhere clean and confirm the top-level folder is `keyda-bot/`.
+   Unzip it somewhere clean and confirm the top-level folder is `telybot/`.
    WordPress names the install directory after it, and a wrong name installs a
    second copy alongside the old one.
-4. Publish to WordPress.org (slug `keyda-bot`, assigned at approval):
+4. Publish to WordPress.org (slug `telybot`, assigned at approval):
 
    ```sh
-   svn co https://plugins.svn.wordpress.org/keyda-bot keyda-bot-svn
-   rsync -a --delete --exclude '.DS_Store' keyda-bot/ keyda-bot-svn/trunk/
-   cd keyda-bot-svn
+   svn co https://plugins.svn.wordpress.org/telybot telybot-svn
+   rsync -a --delete --exclude '.DS_Store' telybot/ telybot-svn/trunk/
+   cd telybot-svn
    svn add --force trunk
-   svn cp trunk "tags/0.2.0"
-   svn ci -m "Release 0.2.0"
+   svn cp trunk "tags/1.0.0"
+   svn ci -m "Release 1.0.0"
    ```
 
    WordPress.org serves whichever tag `Stable tag:` in **trunk's** `readme.txt`
@@ -163,5 +163,5 @@ Steps:
    `== Screenshots ==` section today because there are no screenshot files; add
    the section in the same commit as the files, not before.
 
-GPLv2 or later — the plugin header, `readme.txt` and `keyda-bot/LICENSE` all say so,
+GPLv2 or later — the plugin header, `readme.txt` and `telybot/LICENSE` all say so,
 as the WordPress.org guidelines require. The rest of this repo is MIT.

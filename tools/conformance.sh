@@ -41,12 +41,12 @@ EXPECTED='kb_live_[0-9a-f]{8,48}'
 # iOS validates by hand rather than with NSRegularExpression, so its line is
 # the documented shape in a comment; its real behaviour is covered by the
 # swift tests below.
-for f in android/keyda-bot/src/main/java/in/keyda/bot/KeydaBot.kt \
-         ios/Sources/KeydaBot/KeydaBotConfiguration.swift \
+for f in android/telybot/src/main/java/com/telybot/sdk/TelyBot.kt \
+         ios/Sources/TelyBot/TelyBotConfiguration.swift \
          react-native/src/index.tsx \
          ionic/src/config.ts \
          flutter/lib/src/client_id.dart \
-         wordpress/keyda-bot/keyda-bot.php; do
+         wordpress/telybot/telybot.php; do
   if grep -qF "$EXPECTED" "$f" 2>/dev/null; then ok "$(dirname "$f" | cut -d/ -f1) uses the shared client-id shape"
   else no "$(dirname "$f" | cut -d/ -f1) does NOT use the shared client-id shape"; fi
 done
@@ -88,7 +88,7 @@ if [ -z "${JAVA_HOME:-}" ] || [ -z "${ANDROID_HOME:-}" ]; then
   skip "Android" "set JAVA_HOME (a JDK 17) and ANDROID_HOME"
 elif [ -n "$JDK_MAJOR" ] && [ "$JDK_MAJOR" -gt 21 ] 2>/dev/null; then
   skip "Android" "JAVA_HOME is a JDK $JDK_MAJOR; this build is checked on 17-21 (brew install openjdk@17)"
-elif (cd android && ./gradlew :keyda-bot:assembleRelease --no-daemon -q >/dev/null 2>&1); then
+elif (cd android && ./gradlew :telybot:assembleRelease --no-daemon -q >/dev/null 2>&1); then
   ok "gradle assembleRelease"
 else
   no "gradle assembleRelease"
@@ -101,14 +101,14 @@ else skip "Flutter" "no flutter SDK"; fi
 
 echo "== WordPress =="
 if command -v php >/dev/null 2>&1; then
-  php -l wordpress/keyda-bot/keyda-bot.php >/dev/null 2>&1 && \
-  php -l wordpress/keyda-bot/includes/settings.php >/dev/null 2>&1 && \
-  php -l wordpress/keyda-bot/uninstall.php >/dev/null 2>&1 \
+  php -l wordpress/telybot/telybot.php >/dev/null 2>&1 && \
+  php -l wordpress/telybot/includes/settings.php >/dev/null 2>&1 && \
+  php -l wordpress/telybot/uninstall.php >/dev/null 2>&1 \
     && ok "php -l on every plugin file" || no "php -l"
   # A settings form without a nonce and a capability check is a CSRF hole.
-  grep -q 'check_admin_referer\|wp_verify_nonce\|settings_fields' wordpress/keyda-bot/includes/settings.php \
+  grep -q 'check_admin_referer\|wp_verify_nonce\|settings_fields' wordpress/telybot/includes/settings.php \
     && ok "settings form is nonce-protected" || no "settings form has no nonce"
-  grep -q "current_user_can" wordpress/keyda-bot/includes/settings.php \
+  grep -q "current_user_can" wordpress/telybot/includes/settings.php \
     && ok "settings page checks capability" || no "settings page has no capability check"
 else skip "WordPress" "no php"; fi
 
@@ -135,9 +135,9 @@ echo "== the rule that keeps a conversation alive =="
 # nothing but a session id, so every message on screen is gone.
 #
 # This was live in two packages at once and looked correct in both.
-grep -q "isChatPage" android/keyda-bot/src/main/java/in/keyda/bot/*.kt 2>/dev/null \
+grep -q "isChatPage" android/telybot/src/main/java/com/telybot/sdk/*.kt 2>/dev/null \
   && ok "android compares the chat PATH, not just the origin" || no "android compares origin only"
-grep -q "staysInChat" ios/Sources/KeydaBot/KeydaBotConfiguration.swift 2>/dev/null \
+grep -q "staysInChat" ios/Sources/TelyBot/TelyBotConfiguration.swift 2>/dev/null \
   && ok "ios compares the chat PATH, not just the origin" || no "ios compares origin only"
 grep -q "staysInChat" react-native/src/index.tsx 2>/dev/null \
   && ok "react-native compares the chat PATH, not just the origin" || no "react-native compares origin only"
@@ -149,9 +149,9 @@ grep -q "isSameOrigin" flutter/lib/src/*.dart 2>/dev/null \
 # A link that navigates the chat WebView away replaces the customer's
 # conversation with a marketing page and gives them no way back. Every
 # package must hand other-origin navigation to the system browser.
-grep -q "ACTION_VIEW" android/keyda-bot/src/main/java/in/keyda/bot/*.kt 2>/dev/null \
+grep -q "ACTION_VIEW" android/telybot/src/main/java/com/telybot/sdk/*.kt 2>/dev/null \
   && ok "android escapes navigation to the browser" || no "android does not escape navigation"
-grep -q "UIApplication.shared.open\|open(url" ios/Sources/KeydaBot/*.swift 2>/dev/null \
+grep -q "UIApplication.shared.open\|open(url" ios/Sources/TelyBot/*.swift 2>/dev/null \
   && ok "ios escapes navigation to the browser" || no "ios does not escape navigation"
 grep -q "Linking.openURL" react-native/src/*.tsx 2>/dev/null \
   && ok "react-native escapes navigation to the browser" || no "react-native does not escape navigation"

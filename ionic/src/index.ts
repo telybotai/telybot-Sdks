@@ -1,5 +1,5 @@
 /**
- * @keyda/bot-capacitor — the full-screen surface.
+ * @telybot/capacitor — the full-screen surface.
  *
  * Opens `{baseUrl}/chat/{clientId}`, the same hosted chat page every Telybot
  * SDK loads, as a screen over your app. See CONTRACT.md in this repository
@@ -22,7 +22,7 @@
 // The `.js` on these relative specifiers is deliberate and required. The ESM
 // build is published with `{"type":"module"}` beside it, and Node's ESM loader
 // does no extension guessing: extensionless output throws ERR_MODULE_NOT_FOUND
-// on `import '@keyda/bot-capacitor'` from Node — an Angular Universal or any
+// on `import '@telybot/capacitor'` from Node — an Angular Universal or any
 // other prerender step, which `embedWidget()` explicitly supports. TypeScript
 // resolves `./config.js` to `./config.ts` at build time, so this costs nothing.
 import { assertClientId, chatUrl, normaliseBaseUrl, warn } from './config.js';
@@ -30,7 +30,7 @@ import { assertClientId, chatUrl, normaliseBaseUrl, warn } from './config.js';
 export { DEFAULT_BASE_URL, chatUrl } from './config.js';
 export * from './embed.js';
 
-export interface KeydaBotOptions {
+export interface TelyBotOptions {
   /**
    * From Install in the Telybot dashboard: `kb_live_…`. Optional once
    * `init()` has been called; given here, it replaces that one.
@@ -238,7 +238,7 @@ function init(clientId: string, baseUrl?: string): void {
  * fallback path must run synchronously, or the user gesture is gone by the
  * time we ask for a window and the browser refuses it.
  */
-function open(options?: KeydaBotOptions): Promise<boolean> {
+function open(options?: TelyBotOptions): Promise<boolean> {
   if (options) {
     // Over what init() stored, not instead of it: `open({ question })` after
     // `init(id, stagingUrl)` must still go to staging, not quietly to
@@ -255,8 +255,8 @@ function open(options?: KeydaBotOptions): Promise<boolean> {
   }
   if (!config) {
     throw new Error(
-      '[KeydaBot] no client id yet. Call KeydaBot.init("kb_live_…") once at ' +
-        'startup, or pass it inline: KeydaBot.open({ clientId: "kb_live_…" }).',
+      '[TelyBot] no client id yet. Call TelyBot.init("kb_live_…") once at ' +
+        'startup, or pass it inline: TelyBot.open({ clientId: "kb_live_…" }).',
     );
   }
 
@@ -358,7 +358,7 @@ function openViaWindow(url: string): boolean {
   }
 
   warn(
-    'the browser blocked window.open. Call KeydaBot.open() directly from the ' +
+    'the browser blocked window.open. Call TelyBot.open() directly from the ' +
       'click handler — an await before it spends the user gesture.',
   );
   return false;
@@ -414,10 +414,10 @@ function close(): Promise<boolean> {
  * The public surface. `show`/`dismiss`/`isShowing` are the names CONTRACT.md
  * uses across every Telybot SDK; `open`/`close`/`isOpen` are the same three
  * operations under the names a JavaScript caller expects — and the names
- * `widget.js` already uses on `window.KeydaBot`. They are the same functions,
+ * `widget.js` already uses on `window.TelyBot`. They are the same functions,
  * not variants.
  */
-export const KeydaBot = {
+export const TelyBot = {
   init,
   open,
   show: open,
@@ -431,4 +431,4 @@ export const KeydaBot = {
   },
 };
 
-export default KeydaBot;
+export default TelyBot;

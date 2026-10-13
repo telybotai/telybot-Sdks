@@ -21,15 +21,15 @@ import 'visitor.dart';
 /// then hands [url] to the system browser; supplying a handler REPLACES that,
 /// for a host app that would rather route links itself — into its own in-app
 /// browser, or nowhere at all.
-typedef KeydaExternalLinkHandler = Future<void> Function(Uri url);
+typedef TelyBotExternalLinkHandler = Future<void> Function(Uri url);
 
 /// Full-screen host for the hosted chat page.
 ///
-/// Internal: it is presented through `KeydaBot.show`, which owns the route and
+/// Internal: it is presented through `TelyBot.show`, which owns the route and
 /// the `isShowing` bookkeeping.
-class KeydaChatPage extends StatefulWidget {
+class TelyBotChatPage extends StatefulWidget {
   /// Creates the page for an already-validated [chatUrl].
-  const KeydaChatPage({
+  const TelyBotChatPage({
     required this.chatUrl,
     this.onExternalLink,
     this.question,
@@ -43,13 +43,13 @@ class KeydaChatPage extends StatefulWidget {
   final Uri chatUrl;
 
   /// Optional host handler for links that leave [chatUrl]'s origin.
-  final KeydaExternalLinkHandler? onExternalLink;
+  final TelyBotExternalLinkHandler? onExternalLink;
 
   /// A question for the composer, unsent: in the URL's #fragment at the first
   /// load (never in a server log); a new value later goes into the live chat.
   final String? question;
 
-  /// Embedded in a screen of the host's (`KeydaBotChat`): no close bar, no
+  /// Embedded in a screen of the host's (`TelyBotChat`): no close bar, no
   /// status-bar styling, and Android back closes a sheet the chat has open and
   /// is otherwise the host's.
   final bool embedded;
@@ -64,7 +64,7 @@ class KeydaChatPage extends StatefulWidget {
   final bool focused;
 
   @override
-  State<KeydaChatPage> createState() => KeydaChatPageState();
+  State<TelyBotChatPage> createState() => TelyBotChatPageState();
 }
 
 /// CONTRACT.md rule 7: the two backgrounds a shell paints. They are the hosted
@@ -74,8 +74,8 @@ const Color _darkBackground = Color(0xFF0B1220);
 const Color _lightBackground = Color(0xFFF7F8FC);
 
 /// The JavaScript channel name the hosted page looks for
-/// (`window.KeydaBotFlutter.postMessage`). Renaming it silently breaks rule 7.
-const String _themeChannel = 'KeydaBotFlutter';
+/// (`window.TelyBotFlutter.postMessage`). Renaming it silently breaks rule 7.
+const String _themeChannel = 'TelyBotFlutter';
 
 /// Extensions a page may list instead of MIME types (`accept=".jpg,.png"`),
 /// so an accept list written that way still counts as asking for images.
@@ -94,7 +94,7 @@ const Set<String> _imageExtensions = <String>{
 /// was one. Wrapped so that a page without `back()`, or one that throws,
 /// answers false: the chat closes, as it always did.
 const String _backScript =
-    "(function(){try{return !!(window.KeydaBot&&typeof window.KeydaBot.back==='function'&&window.KeydaBot.back());}catch(e){return false;}})()";
+    "(function(){try{return !!(window.TelyBot&&typeof window.TelyBot.back==='function'&&window.TelyBot.back());}catch(e){return false;}})()";
 
 /// How long back waits for the page's answer before closing the chat anyway.
 const Duration _backAnswerTimeout = Duration(milliseconds: 500);
@@ -113,8 +113,8 @@ String cleanQuestion(String? question) {
 }
 
 /// The chat page's state. Public in name only (the library does not export
-/// it): `KeydaBot` reaches the full-screen one to put a question in its box.
-class KeydaChatPageState extends State<KeydaChatPage> {
+/// it): `TelyBot` reaches the full-screen one to put a question in its box.
+class TelyBotChatPageState extends State<TelyBotChatPage> {
   late final WebViewController _controller;
   bool _isLoading = true;
   bool _failed = false;
@@ -138,7 +138,7 @@ class KeydaChatPageState extends State<KeydaChatPage> {
   bool _startDelivered = false;
   bool _loadAttempted = false;
 
-  /// Counted as on screen by the reply check (KeydaReplies).
+  /// Counted as on screen by the reply check (TelyBotReplies).
   bool _countedOnScreen = false;
 
   /// The scheme the chrome is drawn in. Null until something decides it: the
@@ -155,7 +155,7 @@ class KeydaChatPageState extends State<KeydaChatPage> {
   @override
   void initState() {
     super.initState();
-    keydaVisitor.addListener(_applyVisitor);
+    telyBotVisitor.addListener(_applyVisitor);
     // A chat on screen shows the business's replies itself; the SDK asks only
     // while none is.
     _setOnScreen(!widget.embedded || widget.focused);
@@ -294,9 +294,9 @@ class KeydaChatPageState extends State<KeydaChatPage> {
     ];
   }
 
-  /// Adds `KeydaBot/<version> (Flutter)` to the User-Agent, then loads.
+  /// Adds `TelyBot/<version> (Flutter)` to the User-Agent, then loads.
   ///
-  /// The page can tell it is inside this shell (the `KeydaBotFlutter` channel
+  /// The page can tell it is inside this shell (the `TelyBotFlutter` channel
   /// exists) but not which version, and 0.1.3 could not open a file picker on
   /// Android. The native Android SDK already answers that question with its
   /// User-Agent; this is the same signal, so the page can show its attach
@@ -307,9 +307,9 @@ class KeydaChatPageState extends State<KeydaChatPage> {
   Future<void> _stampVersionThenLoad() async {
     try {
       final String? stock = await _controller.getUserAgent();
-      if (stock != null && stock.isNotEmpty && !stock.contains('KeydaBot/')) {
+      if (stock != null && stock.isNotEmpty && !stock.contains('TelyBot/')) {
         await _controller.setUserAgent(
-          '$stock KeydaBot/$kKeydaSdkVersion (Flutter)',
+          '$stock TelyBot/$kTelyBotSdkVersion (Flutter)',
         );
       }
     } on Object catch (_) {
@@ -331,7 +331,7 @@ class KeydaChatPageState extends State<KeydaChatPage> {
   }
 
   /// The chat URL with its start in the #fragment — the question and
-  /// `KeydaBot.setVisitor`'s details: the page reads it as it loads and takes
+  /// `TelyBot.setVisitor`'s details: the page reads it as it loads and takes
   /// it off the address. A fragment never reaches a server.
   Uri _startUrl() {
     final String q = cleanQuestion(widget.question);
@@ -347,7 +347,7 @@ class KeydaChatPageState extends State<KeydaChatPage> {
     _loadAttempted = true;
     final List<String> items = <String>[
       if (q.isNotEmpty) 'q=${Uri.encodeComponent(q)}',
-      ...?keydaVisitor.value?.fragmentItems(),
+      ...?telyBotVisitor.value?.fragmentItems(),
     ];
     if (items.isEmpty) {
       return widget.chatUrl;
@@ -355,17 +355,17 @@ class KeydaChatPageState extends State<KeydaChatPage> {
     return widget.chatUrl.replace(fragment: items.join('&'));
   }
 
-  /// `KeydaBot.setVisitor` reaching a page that is up — `{}` for none.
+  /// `TelyBot.setVisitor` reaching a page that is up — `{}` for none.
   void _applyVisitor() {
     if (_isLoading || _failed || !_startDelivered) {
       return;
     }
-    final String json = keydaVisitor.value?.toJson() ?? '{}';
+    final String json = telyBotVisitor.value?.toJson() ?? '{}';
     unawaited(
       _controller
           .runJavaScript(
-            '(function(){try{window.KeydaBot&&window.KeydaBot.setVisitor&&'
-            'window.KeydaBot.setVisitor($json);}catch(e){}})()',
+            '(function(){try{window.TelyBot&&window.TelyBot.setVisitor&&'
+            'window.TelyBot.setVisitor($json);}catch(e){}})()',
           )
           .catchError((Object _) {}),
     );
@@ -377,9 +377,9 @@ class KeydaChatPageState extends State<KeydaChatPage> {
     }
     _countedOnScreen = onScreen;
     if (onScreen) {
-      KeydaReplies.instance.chatAppeared();
+      TelyBotReplies.instance.chatAppeared();
     } else {
-      KeydaReplies.instance.chatWentAway();
+      TelyBotReplies.instance.chatWentAway();
     }
   }
 
@@ -398,15 +398,15 @@ class KeydaChatPageState extends State<KeydaChatPage> {
     unawaited(
       _controller
           .runJavaScript(
-            '(function(){try{window.KeydaBot&&window.KeydaBot.prefill&&'
-            'window.KeydaBot.prefill(${jsonEncode(q)});}catch(e){}})()',
+            '(function(){try{window.TelyBot&&window.TelyBot.prefill&&'
+            'window.TelyBot.prefill(${jsonEncode(q)});}catch(e){}})()',
           )
           .catchError((Object _) {}),
     );
   }
 
   @override
-  void didUpdateWidget(KeydaChatPage oldWidget) {
+  void didUpdateWidget(TelyBotChatPage oldWidget) {
     super.didUpdateWidget(oldWidget);
     // Only a CHANGED question: a navigator rebuild hands back the route's
     // original one, which must not land over a newer one or what the customer
@@ -466,7 +466,7 @@ class KeydaChatPageState extends State<KeydaChatPage> {
     if (decoded['type'] == 'keyda:waits') {
       // The chats waiting for the business's reply; validated there. A chat
       // out of sight (focused: false) draws a reply nobody sees.
-      KeydaReplies.instance.onWaits(
+      TelyBotReplies.instance.onWaits(
         decoded['waits'],
         chatUrl: widget.chatUrl,
         fromOnScreen: _countedOnScreen,
@@ -526,7 +526,7 @@ class KeydaChatPageState extends State<KeydaChatPage> {
     if (!_failed) {
       _startDelivered = true;
     }
-    // The widget script has run by now; KeydaBot.prefill keeps the question
+    // The widget script has run by now; TelyBot.prefill keeps the question
     // until the composer exists.
     final String? waiting = _pendingPrefill;
     if (waiting != null && !_failed) {
@@ -609,7 +609,7 @@ class KeydaChatPageState extends State<KeydaChatPage> {
   }
 
   Future<void> _handleExternalLink(Uri url) async {
-    final KeydaExternalLinkHandler? handler = widget.onExternalLink;
+    final TelyBotExternalLinkHandler? handler = widget.onExternalLink;
     if (handler != null) {
       try {
         await handler(url);
@@ -653,7 +653,7 @@ class KeydaChatPageState extends State<KeydaChatPage> {
       FlutterErrorDetails(
         exception: error,
         stack: stack,
-        library: 'keyda_bot',
+        library: 'telybot',
         context: ErrorDescription(doing),
       ),
     );
@@ -688,7 +688,7 @@ class KeydaChatPageState extends State<KeydaChatPage> {
 
   /// Android back over the chat (rule 10). The page can have a sheet open
   /// over the conversation — an item over the menu, the cart, a booking — and
-  /// back is the customer closing THAT. The page's `KeydaBot.back()` takes off
+  /// back is the customer closing THAT. The page's `TelyBot.back()` takes off
   /// the top sheet and answers whether there was one; only "no", a page too
   /// old to answer, or no answer in time closes the chat.
   Future<void> _onBack() async {
@@ -725,7 +725,7 @@ class KeydaChatPageState extends State<KeydaChatPage> {
   @override
   void dispose() {
     _pendingBack?.cancel();
-    keydaVisitor.removeListener(_applyVisitor);
+    telyBotVisitor.removeListener(_applyVisitor);
     _setOnScreen(false);
     super.dispose();
   }
@@ -777,7 +777,7 @@ class KeydaChatPageState extends State<KeydaChatPage> {
             unawaited(
               _controller
                   .runJavaScript(
-                    '(function(){try{window.KeydaBot&&window.KeydaBot.back&&window.KeydaBot.back();}catch(e){}})()',
+                    '(function(){try{window.TelyBot&&window.TelyBot.back&&window.TelyBot.back();}catch(e){}})()',
                   )
                   .catchError((Object _) {}),
             );
@@ -793,7 +793,7 @@ class KeydaChatPageState extends State<KeydaChatPage> {
     // style returns the moment the chat is dismissed.
     //
     // PopScope: system back asks the page first (_onBack). canPop stays false
-    // so the route never pops on its own; KeydaBot.dismiss() and the close
+    // so the route never pops on its own; TelyBot.dismiss() and the close
     // button pop it directly.
     return PopScope<Object?>(
       canPop: false,

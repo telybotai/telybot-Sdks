@@ -1,4 +1,20 @@
-# Changelog — KeydaBot (iOS)
+# Changelog — TelyBot (iOS)
+
+## 1.0.0 — 2026-10-13
+
+* **Renamed to Telybot.** Swift Package Manager: product `TelyBot` (`import TelyBot`) from
+  `https://github.com/telybotai/telybot-Sdks`, package `telybot-sdks`. CocoaPods:
+  `pod 'TelyBot', :podspec => 'https://raw.githubusercontent.com/telybotai/telybot-Sdks/v1.0.0/TelyBot.podspec'`.
+  Types `TelyBot` and `TelyBotView`, and `.telyBot(isPresented:question:)`.
+* **The 0.x names still build**, deprecated: the `KeydaBot` product re-exports `TelyBot`, with
+  `KeydaBot`, `KeydaBotView` and `.keydaBot(isPresented:question:)` as aliases. They go in
+  2.0.0. (The `KeydaBot` pod stays installable from its `v0.2.0` podspec URL.)
+* The script message handler is `telyBot`, and the web view's User-Agent now ends
+  `TelyBot/1.0.0 (iOS)` (0.x set no mark on iOS). Needs a Telybot server from October 2026.
+  The message types (`keyda:theme`, …) are protocol and unchanged.
+* The reply list moves from `Application Support/KeydaBot/` to `Application Support/TelyBot/`
+  on the first start, so a reply the customer was waiting for still counts; the old folder is
+  removed. Log subsystem `com.telybot.sdk`.
 
 ## 0.2.0 — 2026-10-13
 

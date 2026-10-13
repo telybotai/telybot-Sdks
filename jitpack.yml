@@ -7,4 +7,4 @@
 jdk:
   - openjdk17
 install:
-  - cd android && ./gradlew :keyda-bot:publishToMavenLocal
+  - cd android && ./gradlew :telybot:publishToMavenLocal
