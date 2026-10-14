@@ -1,4 +1,7 @@
-<img src="assets/telybot-mark.svg" alt="" width="56" height="56">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/telybot-logo-dark.png">
+  <img src="assets/telybot-logo-light.png" alt="" width="56" height="56">
+</picture>
 
 # Telybot SDKs
 
