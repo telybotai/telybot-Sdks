@@ -27,7 +27,7 @@ skip(){
   else echo "  – $1 (skipped: $2)"; SKIP=$((SKIP+1)); fi
 }
 
-GOOD='kb_live_835686cd7c9bf18b9f70c34f'
+GOOD='tb_live_835686cd7c9bf18b9f70c34f'
 
 echo "== the shape every package must agree on =="
 # Checked by grep on purpose: this is the one line that must be identical in
@@ -37,7 +37,7 @@ echo "== the shape every package must agree on =="
 # every regex dialect here writes it identically. Written as a pattern it was
 # silently reinterpreted as a BRE and matched nothing, reporting all six
 # packages as non-conforming when all six conform.
-EXPECTED='kb_live_[0-9a-f]{8,48}'
+EXPECTED='tb_live_[0-9a-f]{8,48}'
 # iOS validates by hand rather than with NSRegularExpression, so its line is
 # the documented shape in a comment; its real behaviour is covered by the
 # swift tests below.

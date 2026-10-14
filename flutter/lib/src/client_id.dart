@@ -8,12 +8,12 @@ library;
 /// Where the hosted chat lives unless the integrator says otherwise.
 const String kTelyBotDefaultBaseUrl = 'https://telybot.com';
 
-/// `kb_live_` followed by 8-48 lowercase hex characters.
+/// `tb_live_` followed by 8-48 lowercase hex characters.
 ///
 /// Anchored at both ends, and Dart's `$` (ECMAScript semantics, no multiline)
 /// will not forgive a trailing newline — a client id pasted out of a terminal
 /// with a stray newline is a different string and must be reported as one.
-final RegExp _clientIdPattern = RegExp(r'^kb_live_[0-9a-f]{8,48}$');
+final RegExp _clientIdPattern = RegExp(r'^tb_live_[0-9a-f]{8,48}$');
 
 /// Thrown at `TelyBot.init` when the client id or base URL cannot possibly
 /// address a chat.
@@ -45,7 +45,7 @@ String validateClientId(String clientId) {
     return clientId;
   }
   throw TelyBotConfigError(
-    'Not a Telybot client id: "$clientId". Expected kb_live_ followed by 8-48 '
+    'Not a Telybot client id: "$clientId". Expected tb_live_ followed by 8-48 '
     'lowercase hex characters, exactly as shown under Install in the Telybot '
     'dashboard (watch for a copied space, newline or capital letter).',
   );
@@ -84,7 +84,7 @@ Uri normalizeBaseUrl(String baseUrl) {
 ///
 /// A path prefix in [baseUrl] is kept, so a self-hosted install mounted at
 /// `https://acme.example/support` still resolves to
-/// `https://acme.example/support/chat/kb_live_...`.
+/// `https://acme.example/support/chat/tb_live_...`.
 Uri buildChatUrl({
   required String clientId,
   String baseUrl = kTelyBotDefaultBaseUrl,

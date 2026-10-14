@@ -116,7 +116,7 @@ final class TelyBotWaitsTests: XCTestCase {
     // MARK: - A look
 
     func testRedirectsStayOnTheChatsOwnSite() {
-        let origin = URL(string: "https://example.com/api/business/v1/widget/kb_live_3f9a2c81/messages?conversationId=x")
+        let origin = URL(string: "https://example.com/api/business/v1/widget/tb_live_3f9a2c81/messages?conversationId=x")
         let follows = { (to: String) in TelyBotReplyFetch.followsRedirect(from: origin, to: URL(string: to)) }
         XCTAssertTrue(follows("https://example.com/other"))
         XCTAssertTrue(follows("https://www.example.com/api"))

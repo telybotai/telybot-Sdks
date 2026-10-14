@@ -53,7 +53,7 @@ supports it, and nothing in this package has been tested there.
 
 Get your client id from **Install** in the
 [Telybot dashboard](https://telybot.com/app/). It looks like
-`kb_live_` followed by 8–48 lowercase hex characters.
+`tb_live_` followed by 8–48 lowercase hex characters.
 
 ## Use
 
@@ -63,7 +63,7 @@ import 'package:telybot/telybot.dart';
 void main() {
   // Throws immediately if the id is malformed — better here than in front of
   // a customer.
-  TelyBot.init('kb_live_9f2c41ab7d3e');
+  TelyBot.init('tb_live_9f2c41ab7d3e');
   runApp(const MyApp());
 }
 ```
@@ -165,7 +165,7 @@ is missing.
 self-hosted install:
 
 ```dart
-TelyBot.init('kb_live_9f2c41ab7d3e', baseUrl: 'http://10.0.2.2:8080');
+TelyBot.init('tb_live_9f2c41ab7d3e', baseUrl: 'http://10.0.2.2:8080');
 ```
 
 Give an origin, optionally with a path prefix

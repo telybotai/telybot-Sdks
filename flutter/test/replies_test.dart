@@ -51,7 +51,7 @@ void main() {
   }
 
   test('a reply while the chat is closed: unread, told once, cleared by the page', () async {
-    const String clientId = 'kb_live_98379989acbdf20bd9deaa8f';
+    const String clientId = 'tb_live_98379989acbdf20bd9deaa8f';
     final TelyBotReplies replies = TelyBotReplies.instance;
     int told = 0;
     replies.onReply = () => told++;
@@ -105,7 +105,7 @@ void main() {
   });
 
   test("a chat out of sight: only a person's reply lights the dot", () async {
-    const String clientId = 'kb_live_0123456789abcdef01234567';
+    const String clientId = 'tb_live_0123456789abcdef01234567';
     const String order = '2026-10-09T15:30:00.000Z';
     final TelyBotReplies replies = TelyBotReplies.instance;
     int told = 0;
@@ -151,7 +151,7 @@ void main() {
     expect(replies.unread.value, isTrue, reason: 'a chat out of sight does not make it seen');
 
     // A chat still open under another bot must not overwrite this one's list.
-    replies.onWaits(<Object>[], chatUrl: chatUrl('kb_live_ffffffffffffffff'), fromOnScreen: true);
+    replies.onWaits(<Object>[], chatUrl: chatUrl('tb_live_ffffffffffffffff'), fromOnScreen: true);
     await pumpEventQueue();
     expect(replies.unread.value, isTrue, reason: "another bot's list is not this one's");
 
@@ -169,7 +169,7 @@ void main() {
   });
 
   test('a saved reply: unread at start; a chat appearing clears it at once, not after a slow look', () async {
-    const String clientId = 'kb_live_abcdefabcdefabcdefabcdef';
+    const String clientId = 'tb_live_abcdefabcdefabcdefabcdef';
     final TelyBotReplies replies = TelyBotReplies.instance;
     final int now = DateTime.now().millisecondsSinceEpoch;
     // As saved before `page` existed: a reply told about, not yet shown.

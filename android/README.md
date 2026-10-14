@@ -46,14 +46,14 @@ this README will say so until it is.
 ```kotlin
 import com.telybot.sdk.TelyBot
 
-TelyBot.init(this, "kb_live_9f4c2a10")              // once, in Application.onCreate()
+TelyBot.init(this, "tb_live_9f4c2a10")              // once, in Application.onCreate()
 supportButton.setOnClickListener { TelyBot.show(this) }
 ```
 
 From Java, every call is static:
 
 ```java
-TelyBot.init(this, "kb_live_9f4c2a10");
+TelyBot.init(this, "tb_live_9f4c2a10");
 supportButton.setOnClickListener(v -> TelyBot.show(this));
 ```
 
@@ -171,7 +171,7 @@ theme and the retry screen work exactly as in the full-screen chat.
 Self-hosting or staging:
 
 ```kotlin
-TelyBot.init(this, "kb_live_9f4c2a10", "https://chat.mystore.in")
+TelyBot.init(this, "tb_live_9f4c2a10", "https://chat.mystore.in")
 ```
 
 Trailing slashes are trimmed. `http://` is accepted so a local server works; anything else is
@@ -182,7 +182,7 @@ rejected.
 Both are integration mistakes, identical on every device and every launch, so they surface at your
 desk rather than in front of a customer:
 
-* `init()` throws `IllegalArgumentException` if the client id is not `kb_live_` + 8–48 hex
+* `init()` throws `IllegalArgumentException` if the client id is not `tb_live_` + 8–48 hex
   characters, or if the base URL has no `http(s)` scheme and host.
 * `show()` throws `IllegalStateException` if `init()` has not run.
 

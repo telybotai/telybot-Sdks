@@ -11,10 +11,10 @@ import 'package:flutter/material.dart';
 import 'package:telybot/telybot.dart';
 
 void main() {
-  // Shape-valid placeholder (kb_live_ + hex) so the example RUNS as shipped —
+  // Shape-valid placeholder (tb_live_ + hex) so the example RUNS as shipped —
   // init validates the shape and throws otherwise. It opens the "chat link is
   // not valid" page until you replace it with your real id.
-  TelyBot.init('kb_live_0123456789ab');
+  TelyBot.init('tb_live_0123456789ab');
   runApp(const ExampleApp());
 }
 

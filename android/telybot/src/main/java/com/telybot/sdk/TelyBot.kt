@@ -25,7 +25,7 @@ import java.lang.ref.WeakReference
  * shows the exact line. Java callers import the package normally.
  *
  * ```
- * TelyBot.init(this, "kb_live_9f4c2a10")     // once, in Application.onCreate()
+ * TelyBot.init(this, "tb_live_9f4c2a10")     // once, in Application.onCreate()
  * chatButton.setOnClickListener { TelyBot.show(this) }
  * askButton.setOnClickListener { TelyBot.show(this, "Is this in stock?") }
  * ```
@@ -73,11 +73,11 @@ object TelyBot {
     var listener: Listener? = null
 
     /**
-     * `kb_live_` followed by 8-48 hex characters. An id of any other shape is rejected in [init]
+     * `tb_live_` followed by 8-48 hex characters. An id of any other shape is rejected in [init]
      * rather than being pasted into a URL: a typo that reaches production would otherwise show a
      * customer a 404 page inside what looks like the app's own support screen.
      */
-    private val CLIENT_ID_SHAPE = Regex("^kb_live_[0-9a-f]{8,48}\$")
+    private val CLIENT_ID_SHAPE = Regex("^tb_live_[0-9a-f]{8,48}\$")
 
     @Volatile
     private var chatUrl: String? = null
@@ -207,11 +207,11 @@ object TelyBot {
     @JvmOverloads
     fun init(context: Context, clientId: String, baseUrl: String = DEFAULT_BASE_URL) {
         require(CLIENT_ID_SHAPE.matches(clientId)) {
-            "TelyBot: \"$clientId\" is not a Telybot client id. Expected kb_live_ followed by " +
+            "TelyBot: \"$clientId\" is not a Telybot client id. Expected tb_live_ followed by " +
                 "8 to 48 hex characters, copied exactly from Install in the Telybot dashboard."
         }
 
-        // Trailing slashes are the common paste error; "https://host//chat/kb_live_x" 404s.
+        // Trailing slashes are the common paste error; "https://host//chat/tb_live_x" 404s.
         val root = baseUrl.trim().trimEnd('/')
         val parsed = Uri.parse(root)
         val scheme = parsed.scheme?.lowercase()

@@ -41,7 +41,7 @@ const DEFAULT_BASE_URL = 'https://telybot.com';
 const SDK_VERSION = '2.0.0';
 
 /** The shape the platform issues. Kept identical to the server's own check. */
-const CLIENT_ID = /^kb_live_[0-9a-f]{8,48}$/;
+const CLIENT_ID = /^tb_live_[0-9a-f]{8,48}$/;
 
 /**
  * Schemes that belong to another app rather than to this WebView, and the only
@@ -90,7 +90,7 @@ export function buildChatUrl(clientId: string, baseUrl: string = DEFAULT_BASE_UR
     throw new Error(
       '[TelyBot] Invalid clientId ' +
         JSON.stringify(clientId) +
-        '. Expected kb_live_ followed by 8-48 hex characters — copy it from Install in the Telybot dashboard.',
+        '. Expected tb_live_ followed by 8-48 hex characters — copy it from Install in the Telybot dashboard.',
     );
   }
   // Trailing slashes are the common paste artefact; left in place they produce
@@ -98,7 +98,7 @@ export function buildChatUrl(clientId: string, baseUrl: string = DEFAULT_BASE_UR
   const base = String(baseUrl == null ? '' : baseUrl).trim().replace(/\/+$/, '');
   // Anchored at BOTH ends, and a query or fragment is refused rather than
   // tolerated: this function appends `/chat/{id}`, so a baseUrl of
-  // "https://host?x=1" would build "https://host?x=1/chat/kb_live_…" — a URL
+  // "https://host?x=1" would build "https://host?x=1/chat/tb_live_…" — a URL
   // that is not a mistake anyone can see, and that fails as a 404 in front of
   // a customer. A path prefix IS kept, so a self-host mounted at
   // https://acme.example/support resolves to /support/chat/{id}.
@@ -160,7 +160,7 @@ function openExternally(url: string): void {
 }
 
 export interface TelyBotProps {
-  /** From Install in the Telybot dashboard: kb_live_ + 8-48 hex chars. */
+  /** From Install in the Telybot dashboard: tb_live_ + 8-48 hex chars. */
   clientId: string;
   /** Override for self-hosting or staging. Defaults to https://telybot.com */
   baseUrl?: string;
@@ -975,7 +975,7 @@ export function TelyBot({clientId, baseUrl, visible, onClose, question, question
 }
 
 export interface TelyBotChatProps {
-  /** From Install in the Telybot dashboard: kb_live_ + 8-48 hex chars. */
+  /** From Install in the Telybot dashboard: tb_live_ + 8-48 hex chars. */
   clientId: string;
   /** Override for self-hosting or staging. Defaults to https://telybot.com */
   baseUrl?: string;

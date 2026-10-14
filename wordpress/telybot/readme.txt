@@ -102,7 +102,7 @@ Telybot's privacy policy: https://telybot.com/privacy
 1. Install and activate the plugin.
 2. Go to **Settings &rarr; Telybot**.
 3. Paste the client id from the Install page of your Telybot dashboard.
-   It looks like `kb_live_` followed by 8 to 48 characters from 0-9 and a-f.
+   It looks like `tb_live_` followed by 8 to 48 characters from 0-9 and a-f.
 4. Save, then open your site in a new tab. The chat button appears in the corner.
 
 If the field is empty, the plugin adds nothing at all to your pages.
@@ -124,7 +124,7 @@ Install page. Copy the id itself, not the whole script tag.
 
 = It says my client id was not saved. =
 
-The id must be `kb_live_` followed by 8 to 48 hexadecimal characters (0-9 and
+The id must be `tb_live_` followed by 8 to 48 hexadecimal characters (0-9 and
 a-f). The most common cause is pasting the entire `<script ...>` tag from the
 dashboard instead of just the id. A rejected value never replaces the id you
 already had saved, so a live bot stays live while you fix the typo.
@@ -209,9 +209,11 @@ are removed, on every site of a network install. Nothing else is stored.
 == Changelog ==
 
 = 2.0.0 =
+* Client ids start with `tb_live_`. Every key was renamed on the server (its random part
+  kept), and a `kb_live_` id is now refused: paste the new key from Install in the
+  dashboard into Settings > Telybot.
 * Removes what was kept for sites coming from the plugin's earlier name: its settings are
   no longer read, and only TELYBOT_BASE_URL and the telybot_base_url filter set the host.
-  A site already on 1.0.0 changes nothing.
 
 = 1.0.0 =
 * First release as `telybot` (folder `telybot/`, file `telybot.php`): one field for your
@@ -228,7 +230,7 @@ Versions before 1.0.0 were released under an earlier name.
 == Upgrade Notice ==
 
 = 2.0.0 =
-Nothing to do on a site already running 1.0.0.
+Your client id now starts with tb_live_. Copy it from Install in your dashboard and paste it into Settings > Telybot.
 
 = 1.0.0 =
 First release under this name.

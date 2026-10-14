@@ -56,7 +56,7 @@ release tag, as above: the podspec on `main` can name a version whose tag does n
 ```swift
 import TelyBot
 
-TelyBot.initialize(clientId: "kb_live_3f9a2c81")   // once, at launch
+TelyBot.initialize(clientId: "tb_live_3f9a2c81")   // once, at launch
 TelyBot.show()                                      // from your support button
 ```
 
@@ -157,11 +157,11 @@ it or the screen under it.
 ### A different host
 
 ```swift
-TelyBot.initialize(clientId: "kb_live_3f9a2c81", baseUrl: "https://chat.yourcompany.in")
+TelyBot.initialize(clientId: "tb_live_3f9a2c81", baseUrl: "https://chat.yourcompany.in")
 ```
 
 For self-hosting and staging. A path is kept, so `https://yourcompany.in/support`
-becomes `https://yourcompany.in/support/chat/kb_live_…`. A plain `http://` base is
+becomes `https://yourcompany.in/support/chat/tb_live_…`. A plain `http://` base is
 accepted for a machine on your desk, but App Transport Security will block the load
 unless your app's `Info.plist` allows that host.
 
@@ -183,7 +183,7 @@ host app cannot override what the owner chose.
 
 ### A bad client id fails loudly
 
-The id must match `kb_live_` followed by 8–48 lowercase hex characters. Anything else
+The id must match `tb_live_` followed by 8–48 lowercase hex characters. Anything else
 trips an assertion in debug and CI, logs at fault level in release (subsystem
 `com.telybot.sdk`, visible in Console.app), and leaves the bot switched off. It never
 throws into your code and never crashes your shipped app — but it will not open a 404

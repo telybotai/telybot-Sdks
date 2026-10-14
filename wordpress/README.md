@@ -59,7 +59,7 @@ wp plugin activate telybot
 
 Then: **Settings → Telybot**, paste the client id from the Install page of
 your dashboard at <https://telybot.com/app/>, save, and open the site in
-a new tab. An id must match `kb_live_` followed by 8–48 hex characters; anything
+a new tab. An id must match `tb_live_` followed by 8–48 hex characters; anything
 else is rejected inline and never overwrites the id already saved, so a typo
 cannot take a live bot off a live site.
 
@@ -105,7 +105,7 @@ type a host into the box that answers their support ticket.
    notice on the Plugins screen saying so.
 2. Save `not-a-key` → inline error under the field, previous value intact.
 3. Save a real id → the footer carries one tag for handle `telybot` with both
-   `data-key="kb_live_…"` and `async` on it, and the launcher appears. The rest
+   `data-key="tb_live_…"` and `async` on it, and the launcher appears. The rest
    of the tag varies with the site: a theme without HTML5 script support also
    gets `type='text/javascript'`, and WordPress before 6.3 quotes its own
    attributes with single quotes.

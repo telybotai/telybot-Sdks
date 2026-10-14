@@ -28,7 +28,7 @@ import {Button, View} from 'react-native';
 import {TelyBot, useTelyBot} from '@telybot/react-native';
 
 export default function SupportScreen() {
-  const bot = useTelyBot('kb_live_2f9c81ba77d04e6a');
+  const bot = useTelyBot('tb_live_2f9c81ba77d04e6a');
 
   return (
     <View>
@@ -43,7 +43,7 @@ export default function SupportScreen() {
 
 ```tsx
 <TelyBot
-  clientId="kb_live_2f9c81ba77d04e6a"
+  clientId="tb_live_2f9c81ba77d04e6a"
   visible={open}
   onClose={() => setOpen(false)}
 />
@@ -73,7 +73,7 @@ Returns `{ isShowing, show(question?), dismiss(), botProps }`. Spread `botProps`
 For a Help tab or a support screen, instead of the full-screen modal:
 
 ```tsx
-<TelyBotChat clientId="kb_live_2f9c81ba77d04e6a" question="Is this in stock?" style={{flex: 1}} />
+<TelyBotChat clientId="tb_live_2f9c81ba77d04e6a" question="Is this in stock?" style={{flex: 1}} />
 ```
 
 | Prop | Type | |
@@ -123,16 +123,16 @@ The URL the WebView loads: `{baseUrl}/chat/{clientId}`. Useful if you would rath
 
 ### `isValidClientId(clientId)`
 
-`true` for `kb_live_` followed by 8–48 hex characters.
+`true` for `tb_live_` followed by 8–48 hex characters.
 
 ## Your client id
 
-Copy it from **Install** in the Telybot dashboard. It looks like `kb_live_2f9c81ba77d04e6a`, and it is the same id your website widget uses.
+Copy it from **Install** in the Telybot dashboard. It looks like `tb_live_2f9c81ba77d04e6a`, and it is the same id your website widget uses.
 
 An id of any other shape **throws** as soon as the component or the hook renders:
 
 ```
-[TelyBot] Invalid clientId "kb_live_YOUR_ID_HERE". Expected kb_live_ followed by
+[TelyBot] Invalid clientId "tb_live_YOUR_ID_HERE". Expected tb_live_ followed by
 8-48 hex characters — copy it from Install in the Telybot dashboard.
 ```
 
@@ -141,10 +141,10 @@ That is on purpose, and it is the one place this SDK raises. A wrong id can only
 ## Self-hosting and staging
 
 ```tsx
-<TelyBot clientId="kb_live_…" baseUrl="https://chat.mycompany.in" visible={open} onClose={close} />
+<TelyBot clientId="tb_live_…" baseUrl="https://chat.mycompany.in" visible={open} onClose={close} />
 ```
 
-`baseUrl` must be an absolute `http(s)` origin. A **path prefix is kept**, so a self-host mounted under one works — `https://acme.example/support` loads `https://acme.example/support/chat/{clientId}`. A query string or a `#fragment` **throws**, because the SDK appends `/chat/{clientId}` and `https://host?x=1` would otherwise build the unusable `https://host?x=1/chat/kb_live_…`.
+`baseUrl` must be an absolute `http(s)` origin. A **path prefix is kept**, so a self-host mounted under one works — `https://acme.example/support` loads `https://acme.example/support/chat/{clientId}`. A query string or a `#fragment` **throws**, because the SDK appends `/chat/{clientId}` and `https://host?x=1` would otherwise build the unusable `https://host?x=1/chat/tb_live_…`.
 
 Point it at a host that redirects somewhere else and the redirect is treated as a link off the chat page (see below), which means it opens in the browser instead of loading.
 

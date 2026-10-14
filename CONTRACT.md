@@ -22,7 +22,7 @@ WebView" after shipping has been misled; one who is told up front can decide.
 
 * `baseUrl` defaults to `https://telybot.com`
 * it is overridable — self-hosting and staging both need it
-* `clientId` looks like `kb_live_` followed by 8–48 hex characters
+* `clientId` looks like `tb_live_` followed by 8–48 hex characters
 * an id that does not match that shape must fail loudly at init, not open a
   404 page in front of a customer
 

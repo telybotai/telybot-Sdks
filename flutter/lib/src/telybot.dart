@@ -11,7 +11,7 @@ import 'visitor.dart';
 /// Configure once, present when the customer asks for help, close it again:
 ///
 /// ```dart
-/// TelyBot.init('kb_live_9f2c41ab');            // once, e.g. in main()
+/// TelyBot.init('tb_live_9f2c41ab');            // once, e.g. in main()
 /// TelyBot.show(context);                       // on a "Chat with us" tap
 /// ```
 ///
@@ -40,7 +40,7 @@ class TelyBot {
 
   /// Stores the configuration and validates it immediately.
   ///
-  /// [clientId] is the `kb_live_...` id from **Install** in the Telybot
+  /// [clientId] is the `tb_live_...` id from **Install** in the Telybot
   /// dashboard. [baseUrl] only changes for staging or a self-hosted install —
   /// give it as an origin (`https://staging.example.com`), optionally with a
   /// path prefix.
@@ -127,7 +127,7 @@ class TelyBot {
     if (chatUrl == null) {
       throw StateError(
         'TelyBot.show() was called before TelyBot.init(). Call '
-        "TelyBot.init('kb_live_...') once at startup.",
+        "TelyBot.init('tb_live_...') once at startup.",
       );
     }
     if (_isShowing) {
@@ -242,7 +242,7 @@ class TelyBotChat extends StatelessWidget {
     if (chatUrl == null) {
       throw StateError(
         'TelyBotChat was built before TelyBot.init(). Call '
-        "TelyBot.init('kb_live_...') once at startup.",
+        "TelyBot.init('tb_live_...') once at startup.",
       );
     }
     return TelyBotChatPage(

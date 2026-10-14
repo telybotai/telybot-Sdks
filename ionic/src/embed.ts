@@ -11,7 +11,7 @@
 import { assertClientId, warn, widgetScriptUrl } from './config.js';
 
 export interface EmbedOptions {
-  /** From Install in the Telybot dashboard: `kb_live_…`. */
+  /** From Install in the Telybot dashboard: `tb_live_…`. */
   clientId: string;
   /** Defaults to `https://telybot.com`. Set it for staging or a self-host. */
   baseUrl?: string;

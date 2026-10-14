@@ -11,14 +11,14 @@
 export const DEFAULT_BASE_URL = 'https://telybot.com';
 
 /**
- * `kb_live_` followed by 8-48 hex characters, per CONTRACT.md.
+ * `tb_live_` followed by 8-48 hex characters, per CONTRACT.md.
  *
  * Anchored at both ends because the realistic failure is a copy-paste that
  * brought a trailing newline or a stray quote with it. An unanchored test
  * accepts that, and the id then goes into a URL that 404s — in front of a
  * customer, on a screen nobody on the team is looking at.
  */
-const CLIENT_ID_PATTERN = /^kb_live_[0-9a-f]{8,48}$/;
+const CLIENT_ID_PATTERN = /^tb_live_[0-9a-f]{8,48}$/;
 
 /**
  * Returns the id, or throws.
@@ -34,7 +34,7 @@ export function assertClientId(clientId: string): string {
   if (typeof clientId !== 'string' || !CLIENT_ID_PATTERN.test(clientId)) {
     throw new Error(
       `[TelyBot] "${String(clientId)}" is not a Telybot client id. Expected ` +
-        `kb_live_ followed by 8-48 hex characters. Copy it from Install in ` +
+        `tb_live_ followed by 8-48 hex characters. Copy it from Install in ` +
         `the Telybot dashboard: https://telybot.com/app/`,
     );
   }
@@ -68,7 +68,7 @@ export function normaliseBaseUrl(baseUrl?: string): string {
   }
   // A query or a #fragment is refused rather than tolerated: both callers
   // append a path (`/chat/{id}`, `/widget.js`), so "https://host?x=1" would
-  // build "https://host?x=1/chat/kb_live_…" — a URL nobody can see is wrong
+  // build "https://host?x=1/chat/tb_live_…" — a URL nobody can see is wrong
   // until it 404s in front of a customer. CONTRACT.md: bad configuration
   // fails at init. The React Native SDK applies the same rule.
   if (parsed.search || parsed.hash || raw.endsWith('?') || raw.endsWith('#')) {

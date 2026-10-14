@@ -49,7 +49,7 @@ define( 'TELYBOT_DEFAULT_BASE_URL', 'https://telybot.com' );
 /**
  * Is this string a client id we would be willing to put on a live page?
  *
- * Shape is `kb_live_` plus 8 to 48 hexadecimal characters. Anything else is a
+ * Shape is `tb_live_` plus 8 to 48 hexadecimal characters. Anything else is a
  * typo or a half-pasted key, and loading it would show a visitor a chat that
  * can never answer.
  *
@@ -58,10 +58,10 @@ define( 'TELYBOT_DEFAULT_BASE_URL', 'https://telybot.com' );
  */
 function telybot_is_valid_client_id( $client_id ) {
 	// \z, not $: in PCRE, $ also matches just before a trailing newline, so
-	// "kb_live_abc12345\n" would pass here and go straight into a data-key
+	// "tb_live_abc12345\n" would pass here and go straight into a data-key
 	// attribute. \z is end-of-subject and nothing else, which is what the
 	// same pattern means in the JavaScript and Kotlin SDKs.
-	return 1 === preg_match( '/^kb_live_[0-9a-f]{8,48}\z/', (string) $client_id );
+	return 1 === preg_match( '/^tb_live_[0-9a-f]{8,48}\z/', (string) $client_id );
 }
 
 /**

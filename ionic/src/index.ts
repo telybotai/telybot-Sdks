@@ -32,7 +32,7 @@ export * from './embed.js';
 
 export interface TelyBotOptions {
   /**
-   * From Install in the Telybot dashboard: `kb_live_…`. Optional once
+   * From Install in the Telybot dashboard: `tb_live_…`. Optional once
    * `init()` has been called; given here, it replaces that one.
    */
   clientId?: string;
@@ -255,8 +255,8 @@ function open(options?: TelyBotOptions): Promise<boolean> {
   }
   if (!config) {
     throw new Error(
-      '[TelyBot] no client id yet. Call TelyBot.init("kb_live_…") once at ' +
-        'startup, or pass it inline: TelyBot.open({ clientId: "kb_live_…" }).',
+      '[TelyBot] no client id yet. Call TelyBot.init("tb_live_…") once at ' +
+        'startup, or pass it inline: TelyBot.open({ clientId: "tb_live_…" }).',
     );
   }
 

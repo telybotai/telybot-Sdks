@@ -23,7 +23,7 @@ const TSC = process.argv[2] || 'tsc';
 // module — reporting "chatUrl is not a function" for code that exports it.
 const outRn = mkdtempSync(join(tmpdir(), 'telybot-conf-rn-'));
 const outIon = mkdtempSync(join(tmpdir(), 'telybot-conf-ion-'));
-const GOOD = 'kb_live_835686cd7c9bf18b9f70c34f';
+const GOOD = 'tb_live_835686cd7c9bf18b9f70c34f';
 let pass = 0; let fail = 0;
 const ok = (m) => { console.log(`  ✓ ${m}`); pass++; };
 const no = (m) => { console.log(`  ✗ ${m}`); fail++; };
@@ -53,9 +53,11 @@ Module._load = function (req, ...rest) {
 };
 
 const ID_CASES = [
-  [GOOD, true], [`kb_live_${'a'.repeat(8)}`, true], [`kb_live_${'a'.repeat(48)}`, true],
-  [`kb_live_${'a'.repeat(7)}`, false], [`kb_live_${'a'.repeat(49)}`, false],
-  ['kb_live_ABCDEF12', false], ['kb_test_abcdef12', false], ['', false],
+  [GOOD, true], [`tb_live_${'a'.repeat(8)}`, true], [`tb_live_${'a'.repeat(48)}`, true],
+  [`tb_live_${'a'.repeat(7)}`, false], [`tb_live_${'a'.repeat(49)}`, false],
+  ['tb_live_ABCDEF12', false], ['kb_test_abcdef12', false], ['', false],
+  // The old prefix: every key was renamed to tb_live_ (owner, 2026-10-14).
+  ['kb_live_abcdef12', false],
   [`${GOOD}\n`, false], [` ${GOOD}`, false], [null, false], [undefined, false],
 ];
 const URL_CASES = [

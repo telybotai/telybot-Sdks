@@ -36,7 +36,7 @@ public enum TelyBot {
     /// because the alternative is a 404 page wearing your support button.
     ///
     /// - Parameters:
-    ///   - clientId: from **Install** in the Telybot dashboard. `kb_live_`
+    ///   - clientId: from **Install** in the Telybot dashboard. `tb_live_`
     ///     followed by 8–48 lowercase hex characters.
     ///   - baseUrl: override only for self-hosting or staging. Must match
     ///     `TelyBotConfiguration.defaultBaseUrl` when omitted; the literal is repeated

@@ -7,7 +7,7 @@ package, no plugin, no native build step:
 ```html
 <!-- src/index.html, before </body> -->
 <script src="https://telybot.com/widget.js"
-        data-key="kb_live_YOUR_CLIENT_ID" async></script>
+        data-key="tb_live_YOUR_CLIENT_ID" async></script>
 ```
 
 Rebuild, run, and the launcher is there. That is the whole integration, and for
@@ -71,7 +71,7 @@ client id in code than in `index.html`:
 import { embedWidget } from '@telybot/capacitor';
 
 // Once, at app bootstrap.
-await embedWidget({ clientId: 'kb_live_YOUR_CLIENT_ID' });
+await embedWidget({ clientId: 'tb_live_YOUR_CLIENT_ID' });
 ```
 
 It resolves `true` when the script loaded, `false` if it could not be fetched.
@@ -100,7 +100,7 @@ Two things about the embedded widget that are easy to trip over:
 ```ts
 import { TelyBot } from '@telybot/capacitor';
 
-TelyBot.init('kb_live_YOUR_CLIENT_ID');        // once, at bootstrap
+TelyBot.init('tb_live_YOUR_CLIENT_ID');        // once, at bootstrap
 
 // From a button:
 const opened = await TelyBot.open();
@@ -113,7 +113,7 @@ if (!opened) {
 `open()` also takes the config inline, so `init()` is optional:
 
 ```ts
-await TelyBot.open({ clientId: 'kb_live_…', baseUrl: 'https://staging.telybot.com' });
+await TelyBot.open({ clientId: 'tb_live_…', baseUrl: 'https://staging.telybot.com' });
 ```
 
 After `init()`, what `open()` is given is laid over it: `open({ question })`
@@ -184,7 +184,7 @@ path, when the panel opens. A method that does not work end to end is worse
 than a missing one.
 
 An invalid `clientId` throws immediately — it must match
-`kb_live_` + 8-48 hex characters — and so does `open()` called before any
+`tb_live_` + 8-48 hex characters — and so does `open()` called before any
 client id has been given. Those two are the only things in this package that
 throw, and it is deliberate: both are mistakes in your own source that fail
 identically on every run, so they surface on your first launch rather than in

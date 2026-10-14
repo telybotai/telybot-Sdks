@@ -39,9 +39,9 @@ struct TelyBotConfiguration: Equatable {
 
     // MARK: - Client id
 
-    private static let clientIdPrefix = "kb_live_"
+    private static let clientIdPrefix = "tb_live_"
 
-    /// `^kb_live_[0-9a-f]{8,48}$`, checked by hand rather than with
+    /// `^tb_live_[0-9a-f]{8,48}$`, checked by hand rather than with
     /// `NSRegularExpression`.
     ///
     /// Two reasons, both of which have shipped as bugs elsewhere: `$` in
@@ -67,7 +67,7 @@ struct TelyBotConfiguration: Equatable {
     /// Builds `{baseUrl}/chat/{clientId}`.
     ///
     /// A base URL that carries a path is kept (`https://example.in/support` becomes
-    /// `https://example.in/support/chat/kb_live_…`), which is what self-hosting
+    /// `https://example.in/support/chat/tb_live_…`), which is what self-hosting
     /// behind a path prefix needs. The client id is validated before it gets here,
     /// so it is already URL-safe and needs no percent-encoding.
     static func chatURL(baseUrl: String, clientId: String) -> URL? {
@@ -148,8 +148,8 @@ enum TelyBotConfigurationError: Error, CustomStringConvertible {
     var description: String {
         switch self {
         case .invalidClientId(let value):
-            return "\"\(value)\" is not a Telybot client id. Expected kb_live_ followed by 8 to 48 "
-                + "lowercase hex characters, for example kb_live_3f9a2c81. Copy it from Install in "
+            return "\"\(value)\" is not a Telybot client id. Expected tb_live_ followed by 8 to 48 "
+                + "lowercase hex characters, for example tb_live_3f9a2c81. Copy it from Install in "
                 + "the Telybot dashboard (https://telybot.com/app/)."
         case .invalidBaseUrl(let value):
             return "\"\(value)\" is not a usable baseUrl. It must be an absolute http or https URL "

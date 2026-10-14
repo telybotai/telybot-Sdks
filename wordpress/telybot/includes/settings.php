@@ -171,7 +171,7 @@ function telybot_sanitize_client_id( $value ) {
 	// tag from the dashboard is the mistake owners actually make. The result
 	// would be indistinguishable from clearing the field, so a fat-fingered
 	// paste would switch a working bot off and report success. The pattern
-	// below is the sanitiser instead — nothing but kb_live_ and hex can
+	// below is the sanitiser instead — nothing but tb_live_ and hex can
 	// survive it, so whatever comes out is safe to store and to print.
 	if ( '' === $value ) {
 		// Emptying the field is how an owner switches the bot off without
@@ -183,7 +183,7 @@ function telybot_sanitize_client_id( $value ) {
 		add_settings_error(
 			TELYBOT_NOTICES,
 			'telybot_client_id_invalid',
-			esc_html__( 'That does not look like a Telybot client id, so it was not saved. A client id starts with kb_live_ and is followed by 8 to 48 characters from 0-9 and a-f.', 'telybot' ),
+			esc_html__( 'That does not look like a Telybot client id, so it was not saved. A client id starts with tb_live_ and is followed by 8 to 48 characters from 0-9 and a-f.', 'telybot' ),
 			'error'
 		);
 
@@ -235,7 +235,7 @@ function telybot_render_client_id_field() {
 	}
 
 	printf(
-		'<input type="text" id="%1$s" name="%1$s" value="%2$s" class="regular-text code" placeholder="kb_live_0000000000000000" autocomplete="off" spellcheck="false"%3$s />',
+		'<input type="text" id="%1$s" name="%1$s" value="%2$s" class="regular-text code" placeholder="tb_live_0000000000000000" autocomplete="off" spellcheck="false"%3$s />',
 		esc_attr( TELYBOT_OPTION ),
 		esc_attr( $value ),
 		$rejected ? ' aria-invalid="true" aria-describedby="telybot-client-id-error"' : ''
