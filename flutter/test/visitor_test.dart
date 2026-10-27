@@ -4,6 +4,17 @@ import 'package:telybot/src/visitor.dart';
 
 /// `setVisitor`'s cleaning, which must drop exactly what the chat page drops.
 void main() {
+  test('a user token must look like a JWT, and is never cut', () {
+    const String ok = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1MSJ9.abc_-123';
+    expect(cleanUserToken(ok), ok);
+    expect(cleanUserToken('  $ok  '), ok);
+    expect(cleanUserToken('not a token'), isNull);
+    expect(cleanUserToken('a.b'), isNull);
+    expect(cleanUserToken('a.b.c!'), isNull);
+    expect(cleanUserToken('x' * 2001), isNull);
+    expect(cleanUserToken(null), isNull);
+  });
+
   // Built from code points: a lone half cannot be written in a source file.
   final String loneHalf = String.fromCharCode(0xD83D);
   final String grin = String.fromCharCodes(<int>[0x1F600]);

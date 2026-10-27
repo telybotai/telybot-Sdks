@@ -156,6 +156,38 @@ object TelyBot {
         setVisitor(null, null, null)
     }
 
+    /**
+     * Your signed-in customer, PROVEN: a token your own server signed with the bot's identity
+     * secret (Business → Connections → Verified visitors in the dashboard). The chat then knows who
+     * it is talking to without asking, and an action can look up their own order. Unlike
+     * [setVisitor], this is asserted to the server, which verifies it; a token that does not
+     * verify is ignored there and the chat goes on as a visitor's. The token travels in the URL's
+     * #fragment (no server log) and is kept in memory only. Sign it with HS256, `sub` = the
+     * customer's id in your system, `exp` within thirty days; pass a fresh one when it is about
+     * to expire. Null or anything that is not a JWT forgets it — call [clearUser] on sign-out.
+     */
+    @JvmStatic
+    fun setUser(token: String?) {
+        val next = TelyBotUser.of(token)
+        synchronized(visitorLock) {
+            if (next == userToken) return
+            userToken = next
+            visitorVersion++
+        }
+        runOnMain { liveViews.keys.toList().forEach { it.applyVisitor() } }
+    }
+
+    /** Forgets [setUser]'s token — call it when the customer signs out. */
+    @JvmStatic
+    fun clearUser() {
+        setUser(null)
+    }
+
+    /** The token from [setUser], or null; see [TelyBotUser]. */
+    @Volatile
+    internal var userToken: String? = null
+        private set
+
     private val visitorLock = Any()
 
     @Volatile

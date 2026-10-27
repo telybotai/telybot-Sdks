@@ -442,6 +442,7 @@ open class TelyBotView @JvmOverloads constructor(
         val start = buildString {
             if (q.isNotEmpty()) append("&q=").append(Uri.encode(cut(q, QUESTION_MAX)))
             TelyBot.visitor?.let { append(it.fragment()) }
+            append(TelyBotUser.fragment(TelyBot.userToken))
         }
         return if (start.isEmpty()) chatUrl else chatUrl + "#" + start.substring(1)
     }
@@ -462,9 +463,11 @@ open class TelyBotView @JvmOverloads constructor(
         // racing this one is at worst sent twice, never missed.
         visitorSent = TelyBot.visitorVersion
         val json = TelyBot.visitor?.json() ?: "{}"
+        val user = TelyBotUser.json(TelyBot.userToken)
         web.evaluateJavascript(
             "(function(){try{window.TelyBot&&window.TelyBot.setVisitor&&" +
-                "window.TelyBot.setVisitor($json);}catch(e){}})()",
+                "window.TelyBot.setVisitor($json);" +
+                "window.TelyBot&&window.TelyBot.identify&&window.TelyBot.identify($user);}catch(e){}})()",
             null
         )
     }
@@ -810,7 +813,7 @@ open class TelyBotView @JvmOverloads constructor(
         ) {
             // An avatar or a font that failed must not replace a working conversation.
             if (!request.isForMainFrame) return
-            Log.w(TelyBot.TAG, "Chat load failed: ${error.errorCode} ${error.description} (${request.url})")
+            Log.w(TelyBot.TAG, "Chat load failed: ${error.errorCode} ${error.description} (${loggable(request.url.toString())})")
             showError(MSG_OFFLINE)
         }
 
@@ -825,7 +828,7 @@ open class TelyBotView @JvmOverloads constructor(
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) return
             val mainFrame = failingUrl == null || failingUrl == chatUrl || failingUrl == view.url
             if (!mainFrame) return
-            Log.w(TelyBot.TAG, "Chat load failed: $errorCode $description ($failingUrl)")
+            Log.w(TelyBot.TAG, "Chat load failed: $errorCode $description (${loggable(failingUrl)})")
             showError(MSG_OFFLINE)
         }
 
@@ -837,7 +840,7 @@ open class TelyBotView @JvmOverloads constructor(
             if (!request.isForMainFrame) return
             Log.e(
                 TelyBot.TAG,
-                "Chat page returned HTTP ${errorResponse.statusCode} for ${request.url}. " +
+                "Chat page returned HTTP ${errorResponse.statusCode} for ${loggable(request.url.toString())}. " +
                     "A 404 here usually means the client id is wrong, disabled, or from another " +
                     "environment than the base URL."
             )
@@ -847,7 +850,7 @@ open class TelyBotView @JvmOverloads constructor(
         override fun onReceivedSslError(view: WebView, handler: SslErrorHandler, error: SslError) {
             // Never proceed(): a support chat carries order numbers, phones and addresses.
             handler.cancel()
-            Log.e(TelyBot.TAG, "SSL error ${error.primaryError} on ${error.url}")
+            Log.e(TelyBot.TAG, "SSL error ${error.primaryError} on ${loggable(error.url)}")
             showError(MSG_INSECURE)
         }
 
@@ -983,3 +986,8 @@ open class TelyBotView @JvmOverloads constructor(
         private const val LABEL_RETRY = "Try again"
     }
 }
+
+/// A URL as it may be logged: without its #fragment, which carries the
+/// signed-in customer's token and their details (CONTRACT rule 3) and must
+/// never reach logcat.
+internal fun loggable(url: String?): String = url?.substringBefore('#') ?: "?"

@@ -179,6 +179,32 @@ public enum TelyBot {
         setVisitor(name: nil, phone: nil, email: nil)
     }
 
+    /// Your signed-in customer, PROVEN: a token your own server signed with the bot's
+    /// identity secret (Business → Connections → Verified visitors in the dashboard).
+    /// The chat then knows who it is talking to without asking, and an action can look
+    /// up their own order. Unlike `setVisitor`, this is asserted to the server, which
+    /// verifies it; a token that does not verify is ignored there and the chat goes on
+    /// as a visitor's. It travels in the URL's #fragment (no server log) and is kept in
+    /// memory only. Sign it with HS256, `sub` = the customer's id in your system, `exp`
+    /// within thirty days; pass a fresh one when it is about to expire. `nil` or
+    /// anything that is not a JWT forgets it — call `clearUser()` on sign-out.
+    public static func setUser(_ token: String?) {
+        state.userToken = TelyBotUser.clean(token)
+        onMain {
+            NotificationCenter.default.post(name: TelyBotViewController.visitorChanged, object: nil)
+        }
+    }
+
+    /// Forgets `setUser`'s token — call it when the customer signs out.
+    public static func clearUser() {
+        setUser(nil)
+    }
+
+    /// The token from `setUser`, cleaned; `nil` for none.
+    static var userToken: String? {
+        state.userToken
+    }
+
     /// The details from `setVisitor`, cleaned; `nil` for none.
     static var visitor: TelyBotVisitor? {
         state.visitor
@@ -304,6 +330,12 @@ private final class TelyBotState: @unchecked Sendable {
         set { lock.lock(); storedOnReply = newValue; lock.unlock() }
     }
 
+    private var storedUserToken: String?
+
+    var userToken: String? {
+        get { lock.lock(); defer { lock.unlock() }; return storedUserToken }
+        set { lock.lock(); storedUserToken = newValue; lock.unlock() }
+    }
     var visitor: TelyBotVisitor? {
         get { lock.lock(); defer { lock.unlock() }; return storedVisitor }
         set { lock.lock(); storedVisitor = newValue; lock.unlock() }

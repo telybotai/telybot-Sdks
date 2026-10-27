@@ -1,5 +1,12 @@
 # Changelog — TelyBot (iOS)
 
+## Unreleased — 2.1.0
+
+* **`setUser(_:)` / `clearUser()`.** Your signed-in customer, proven: a JWT your server signed
+  with the bot's identity secret (Business → Connections → Verified visitors). Needs a Telybot
+  server from 2026-10-25. `clearUser()` on sign-out starts the next customer on a chat of their
+  own. The token is held under the same lock as the SDK's other state.
+
 ## 2.0.0 — 2026-10-14
 
 * **Client ids start with `tb_live_`.** Every key was renamed on the server (its random

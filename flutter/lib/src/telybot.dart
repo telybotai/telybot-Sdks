@@ -101,6 +101,25 @@ class TelyBot {
     telyBotVisitor.value = null;
   }
 
+  /// Your signed-in customer, PROVEN: a token your own server signed with the
+  /// bot's identity secret (Business → Connections → Verified visitors in the
+  /// dashboard). The chat then knows who it is talking to without asking, and
+  /// an action can look up their own order. Unlike [setVisitor], this is
+  /// asserted to the server, which verifies it; a token that does not verify
+  /// is ignored there and the chat goes on as a visitor's. It travels in the
+  /// URL's #fragment (no server log) and is kept in memory only. Sign it with
+  /// HS256, `sub` = the customer's id in your system, `exp` within thirty
+  /// days; pass a fresh one when it is about to expire. Null or anything that
+  /// is not a JWT forgets it — call [clearUser] on sign-out.
+  static void setUser(String? token) {
+    telyBotUserToken.value = cleanUserToken(token);
+  }
+
+  /// Forgets [setUser]'s token — call it when the customer signs out.
+  static void clearUser() {
+    telyBotUserToken.value = null;
+  }
+
   /// Presents the chat full-screen over the host app.
   ///
   /// The returned future completes when the chat is closed — by [dismiss], by

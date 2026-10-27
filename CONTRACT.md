@@ -45,6 +45,7 @@ new conversation.
 | embed | the chat as a view of the host's own screen: Android `TelyBotView`, iOS `makeChatViewController` / SwiftUI `TelyBotView`, React Native `<TelyBotChat />`, Flutter `TelyBotChat`, Ionic `embedWidget()` (0.2.0) |
 | show / dismiss callbacks | where the platform has no way to tell otherwise: Android `TelyBot.listener`, iOS `onShow` / `onDismiss` (0.2.0) |
 | visitor | the host's signed-in customer, offered — never sent — in the chat's forms: `setVisitor(name?, phone?, email?)` / `clearVisitor()` on Android, iOS and Flutter; React Native's `visitor` prop; Ionic's embedded widget's `setVisitor` — not its full screen, which is the system browser (0.2.0) |
+| user | the host's signed-in customer, PROVEN: a JWT the host's server signed with the bot's identity secret (Business → Connections → Verified visitors): `setUser(token)` / `clearUser()` on Android, iOS and Flutter; React Native's `userToken` prop; Ionic's embedded widget's `identify` — not its full screen (2.1.0) |
 | replies | a person's reply the chat has not shown yet (rule 11): `hasUnreadReply`, `onReply`, `checkForReplies()` on Android, iOS and Flutter; React Native's `useTelyBotReplies` (0.2.0) |
 
 A question is never sent for the customer: it is put in the composer and
@@ -81,11 +82,25 @@ An embedded chat has no close control of its own (the host's screen is the
 way out) and pads for nothing but what the platform needs it to — the host
 lays it out clear of the system bars.
 
+The user token rides the same fragment — `&user=<jwt>` — only inside an app,
+like the visitor, and `window.TelyBot.identify(token)` hands it to a chat
+that is up (`''` forgets it). The page sends it with every turn; the SERVER
+verifies it against the bot's identity secret, turn by turn, and attaches the
+customer's id, email and name to the conversation. A turn whose token does
+not verify, or that has none, is a visitor's, whoever the chat was verified
+as before. A token for a different customer than the chat's never continues
+it: the server opens a new conversation. The page drops the stored chat when
+the customer signs out (`''`, or a chat screen opened with no `user=` after a
+signed-in one) or a different one signs in, so the next person never sees
+the last one's thread. A shell checks only the
+shape (three base64url parts, at most 2000 characters) and keeps it in
+memory. This is the one thing a shell asserts to the server, and only because
+the host's own server signed it (2.1.0; before that the contract forbade an
+identity call, because the server did not accept one).
+
 Nothing else. No message APIs, no unread counts we cannot honestly source
-(the one unread signal, rule 11, is sourced from the server), no
-user-identity call — the visitor above is offered to the customer, never
-asserted to the server. An SDK method that does not work end-to-end is worse
-than a missing one.
+(the one unread signal, rule 11, is sourced from the server). An SDK method
+that does not work end-to-end is worse than a missing one.
 
 ## Names
 

@@ -3,6 +3,19 @@ import XCTest
 
 /// `setVisitor`'s cleaning, which must drop exactly what the chat page would drop.
 final class TelyBotVisitorTests: XCTestCase {
+    func testUserTokenShape() {
+        let ok = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1MSJ9.abc_-123"
+        XCTAssertEqual(TelyBotUser.clean(ok), ok)
+        XCTAssertEqual(TelyBotUser.clean("  \(ok)  "), ok)
+        XCTAssertNil(TelyBotUser.clean("not a token"))
+        XCTAssertNil(TelyBotUser.clean("a.b"))
+        XCTAssertNil(TelyBotUser.clean("a.b.c!"))
+        XCTAssertNil(TelyBotUser.clean(String(repeating: "x", count: 2001)))
+        XCTAssertNil(TelyBotUser.clean(nil))
+        XCTAssertEqual(TelyBotUser.json("a.b.c"), "\"a.b.c\"")
+        XCTAssertEqual(TelyBotUser.fragmentItems(ok, encode: { $0 }), ["user=" + ok])
+    }
+
 
     /// Text from code points, so that invisible characters are visible in the test.
     private func text(_ values: UInt32...) -> String {

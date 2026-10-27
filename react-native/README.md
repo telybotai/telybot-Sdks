@@ -113,6 +113,11 @@ There is no push: a reply is noticed when the app is opened.
 
 ```tsx
 <TelyBot {...bot.botProps} visitor={user ? {name: user.name, phone: user.phone, email: user.email} : undefined} />
+
+<!-- proven, not just offered: a JWT your server signed with the bot's identity secret (Business → Connections → Verified visitors) -->
+```tsx
+<TelyBot clientId="tb_live_…" visible={open} onClose={() => setOpen(false)} userToken={tokenFromYourServer} />
+```
 ```
 
 The chat then does not ask what your app already knows. The details are **offered, never sent**: they appear in "talk to a person", an order, a booking, and a welcome question for a name, a phone number or an email, and the customer submits them. Until then nothing leaves the phone — they travel in the URL's #fragment, and a change reaches a chat already open. They are your app's word, not a verified identity. A value that does not look like what it claims is dropped whole, never cut: a name of 1–80 characters on one line, a phone number with 8–15 digits (and only spaces and `+ - ( ) .` besides), an email address up to 254 characters. Pass `undefined` when the customer signs out.

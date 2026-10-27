@@ -1,5 +1,11 @@
 # Changelog — @telybot/capacitor
 
+## Unreleased — 2.1.0
+
+* **`identify(token)`** on the embedded widget's controls (`getEmbeddedWidget()`). Your
+  signed-in customer, proven: a JWT your server signed with the bot's identity secret
+  (Business → Connections → Verified visitors). Needs a Telybot server from 2026-10-25.
+
 ## 2.0.0 — 2026-10-14
 
 * **Client ids start with `tb_live_`.** Every key was renamed on the server (its random

@@ -332,8 +332,10 @@ final class TelyBotViewController: UIViewController {
     private func applyVisitor() {
         guard hasRenderedChat else { return }
         let json = TelyBot.visitor?.json ?? "{}"
+        let user = TelyBotUser.json(TelyBot.userToken)
         webView.evaluateJavaScript(
-            "(function(){try{window.TelyBot&&window.TelyBot.setVisitor&&window.TelyBot.setVisitor(\(json));}catch(e){}})()"
+            "(function(){try{window.TelyBot&&window.TelyBot.setVisitor&&window.TelyBot.setVisitor(\(json));"
+                + "window.TelyBot&&window.TelyBot.identify&&window.TelyBot.identify(\(user));}catch(e){}})()"
         )
     }
 
@@ -362,6 +364,7 @@ final class TelyBotViewController: UIViewController {
         var items: [String] = []
         if let question = question { items.append("q=" + encode(question)) }
         if let visitor = TelyBot.visitor { items += visitor.fragmentItems(encode: encode) }
+        items += TelyBotUser.fragmentItems(TelyBot.userToken, encode: encode)
         guard !items.isEmpty,
               var parts = URLComponents(url: botConfiguration.chatURL, resolvingAgainstBaseURL: false) else {
             return botConfiguration.chatURL

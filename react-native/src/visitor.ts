@@ -25,6 +25,17 @@ export interface TelyBotVisitor {
 }
 
 const NAME_MAX = 80;
+const JWT = /^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/;
+
+/**
+ * The `userToken` prop: a JWT as the page itself checks its shape (three
+ * base64url parts, at most 2000 characters) before it is sent; anything else is
+ * dropped whole. The server does the real verification.
+ */
+export function cleanUserToken(token: unknown): string | null {
+  const t = typeof token === 'string' ? token.trim() : '';
+  return t && t.length <= 2000 && JWT.test(t) ? t : null;
+}
 const PHONE = /^\+?[0-9() .-]{8,32}$/;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@.]{2,}$/;
 

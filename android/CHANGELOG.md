@@ -1,5 +1,13 @@
 # Changelog — com.telybot:telybot
 
+## Unreleased — 2.1.0
+
+* **`setUser(token)` / `clearUser()`.** Your signed-in customer, proven: a JWT your server
+  signed with the bot's identity secret (Business → Connections → Verified visitors). Needs a
+  Telybot server from 2026-10-25. `clearUser()` on sign-out starts the next customer on a chat
+  of their own.
+* Log lines name the chat page without its `#` part, which can carry the customer's token.
+
 ## 2.0.0 — 2026-10-14
 
 * **Client ids start with `tb_live_`.** Every key was renamed on the server (its random

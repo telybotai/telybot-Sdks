@@ -156,6 +156,7 @@ class TelyBotChatPageState extends State<TelyBotChatPage> {
   void initState() {
     super.initState();
     telyBotVisitor.addListener(_applyVisitor);
+    telyBotUserToken.addListener(_applyVisitor);
     // A chat on screen shows the business's replies itself; the SDK asks only
     // while none is.
     _setOnScreen(!widget.embedded || widget.focused);
@@ -348,6 +349,8 @@ class TelyBotChatPageState extends State<TelyBotChatPage> {
     final List<String> items = <String>[
       if (q.isNotEmpty) 'q=${Uri.encodeComponent(q)}',
       ...?telyBotVisitor.value?.fragmentItems(),
+      if (telyBotUserToken.value != null)
+        'user=${Uri.encodeComponent(telyBotUserToken.value!)}',
     ];
     if (items.isEmpty) {
       return widget.chatUrl;
@@ -361,11 +364,13 @@ class TelyBotChatPageState extends State<TelyBotChatPage> {
       return;
     }
     final String json = telyBotVisitor.value?.toJson() ?? '{}';
+    final String user = jsonEncode(telyBotUserToken.value ?? '');
     unawaited(
       _controller
           .runJavaScript(
             '(function(){try{window.TelyBot&&window.TelyBot.setVisitor&&'
-            'window.TelyBot.setVisitor($json);}catch(e){}})()',
+            'window.TelyBot.setVisitor($json);'
+            'window.TelyBot&&window.TelyBot.identify&&window.TelyBot.identify($user);}catch(e){}})()',
           )
           .catchError((Object _) {}),
     );
@@ -735,6 +740,7 @@ class TelyBotChatPageState extends State<TelyBotChatPage> {
   void dispose() {
     _pendingBack?.cancel();
     telyBotVisitor.removeListener(_applyVisitor);
+    telyBotUserToken.removeListener(_applyVisitor);
     _setOnScreen(false);
     super.dispose();
   }

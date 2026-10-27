@@ -61,6 +61,15 @@ export interface EmbeddedWidget {
    * take them, as its link would keep them in the browser's history.
    */
   setVisitor?(details: TelyBotVisitor | null): boolean;
+  /**
+   * Your signed-in customer, PROVEN: a JWT your own server signed with the
+   * bot's identity secret (Business → Connections → Verified visitors), `sub`
+   * = their id in your system, `exp` within thirty days; true when it was
+   * taken. `''` or null forgets it. Absent on a widget older than October
+   * 2026. Embedded widget only: the full-screen `TelyBot.open()` would keep
+   * it in the browser's history.
+   */
+  identify?(token: string | null): boolean;
 }
 
 /**

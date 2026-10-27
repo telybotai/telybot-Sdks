@@ -104,3 +104,19 @@ bool _isSurrogate(int rune) => rune >= 0xD800 && rune <= 0xDFFF;
 
 /// The current visitor; every chat on screen listens.
 final ValueNotifier<TelyBotVisitor?> telyBotVisitor = ValueNotifier<TelyBotVisitor?>(null);
+
+/// [TelyBot.setUser]'s token, or null; see [cleanUserToken].
+final ValueNotifier<String?> telyBotUserToken = ValueNotifier<String?>(null);
+
+final RegExp _jwt = RegExp(r'^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$');
+
+/// A JWT as the page itself checks its shape (three base64url parts, at most
+/// 2000 characters) before it is sent; anything else is dropped whole. The
+/// server does the real verification.
+String? cleanUserToken(String? token) {
+  final String t = (token ?? '').trim();
+  if (t.isEmpty || t.length > 2000 || !_jwt.hasMatch(t)) {
+    return null;
+  }
+  return t;
+}

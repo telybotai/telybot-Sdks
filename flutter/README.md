@@ -87,6 +87,7 @@ That is the whole API:
 | `TelyBot.isShowing` | Whether it is on screen — including after the customer left with the back gesture. |
 | `TelyBotChat(question: ..., focused: ...)` | The chat as a widget of your own screen (below). |
 | `TelyBot.setVisitor(name: ..., phone: ..., email: ...)` / `clearVisitor()` | Your signed-in customer, offered in the chat's forms (below). |
+| `TelyBot.setUser(token)` / `clearUser()` | Your signed-in customer, proven: a JWT your server signed with the bot's identity secret. |
 | `TelyBot.hasUnreadReply` / `onReply` / `checkForReplies()` | A reply from the business the customer has not seen (below). |
 
 `question` travels in the URL's #fragment, so it never reaches a server log;
@@ -118,6 +119,11 @@ can see, and the chat then counts as off screen for `hasUnreadReply`.
 
 ```dart
 TelyBot.setVisitor(name: user.name, phone: user.phone, email: user.email); // any of them
+
+// Proven, not just offered: a JWT your server signed with the bot's identity secret
+// (Business → Connections → Verified visitors), sub = the customer's id, exp within thirty days.
+TelyBot.setUser(tokenFromYourServer);
+TelyBot.clearUser(); // on sign-out
 TelyBot.clearVisitor();                                                     // on sign-out
 ```
 

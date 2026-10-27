@@ -196,7 +196,17 @@ reported by return value.
 ```ts
 getEmbeddedWidget()?.setVisitor?.({ name: user.name, phone: user.phone, email: user.email });
 getEmbeddedWidget()?.setVisitor?.({});   // on sign-out
+
+// Proven, not just offered: a JWT your server signed with the bot's identity secret
+// (Business → Connections → Verified visitors), sub = the customer's id, exp within thirty days.
+getEmbeddedWidget()?.identify?.(tokenFromYourServer);
+getEmbeddedWidget()?.identify?.('');   // on sign-out
 ```
+
+Call `identify('')` when the customer signs out: the embedded widget lives in
+your app's own page, so it cannot tell a sign-out from a screen that simply
+did not say who is there. That call drops the signed-in customer's chat, their
+held orders and their cart on the device, so the next person starts fresh.
 
 The details are **offered, never sent**, in the forms that ask for them ("talk
 to a person", an order, a booking, a welcome question for a name, phone or

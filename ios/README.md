@@ -90,6 +90,11 @@ as one line: the chat joins lines and collapses runs of spaces.
 
 ```swift
 TelyBot.setVisitor(name: user.name, phone: user.phone, email: user.email)  // any of them
+
+// Proven, not just offered: a JWT your server signed with the bot's identity secret
+// (Business → Connections → Verified visitors), sub = the customer's id, exp within thirty days.
+TelyBot.setUser(tokenFromYourServer)
+TelyBot.clearUser()   // on sign-out
 TelyBot.clearVisitor()                                                      // on sign-out
 ```
 

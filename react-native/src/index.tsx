@@ -30,7 +30,7 @@ import type {LayoutChangeEvent, StyleProp, ViewStyle} from 'react-native';
 import {WebView} from 'react-native-webview';
 import {repliesFor, useReplyStore} from './replies';
 import type {TelyBotReplies, TelyBotRepliesOptions, TelyBotStorage} from './replies';
-import {cleanVisitor, isLoneSurrogate} from './visitor';
+import {cleanUserToken, cleanVisitor, isLoneSurrogate} from './visitor';
 import type {TelyBotVisitor} from './visitor';
 
 export type {TelyBotReplies, TelyBotRepliesOptions, TelyBotStorage, TelyBotVisitor};
@@ -183,6 +183,15 @@ export interface TelyBotProps {
   questionKey?: number;
   /** Optional: your signed-in customer; see `TelyBotVisitor`. */
   visitor?: TelyBotVisitor;
+  /**
+   * Optional: your signed-in customer, PROVEN — a JWT your own server signed
+   * with the bot's identity secret (Business → Connections → Verified
+   * visitors), `sub` = their id in your system, `exp` within thirty days. The
+   * chat then knows who it is talking to without asking, and an action can
+   * look up their own order. A token that does not verify is ignored by the
+   * server; pass `undefined` on sign-out.
+   */
+  userToken?: string;
 }
 
 type Status = 'loading' | 'ready' | 'failed';
@@ -297,7 +306,7 @@ function encodePart(value: string): string {
  * visitor's details: the page reads it as it loads and takes it off the
  * address. A fragment is never sent to a server.
  */
-function withStart(chatUrl: string, question: string, visitor: Required<TelyBotVisitor> | null): string {
+function withStart(chatUrl: string, question: string, visitor: Required<TelyBotVisitor> | null, userToken: string | null = null): string {
   const parts: string[] = [];
   const q = question ? encodePart(question) : '';
   if (q) parts.push('q=' + q);
@@ -306,14 +315,17 @@ function withStart(chatUrl: string, question: string, visitor: Required<TelyBotV
     if (visitor.phone) parts.push('phone=' + encodePart(visitor.phone));
     if (visitor.email) parts.push('email=' + encodePart(visitor.email));
   }
+  if (userToken) parts.push('user=' + encodePart(userToken));
   return parts.length ? chatUrl + '#' + parts.join('&') : chatUrl;
 }
 
-/** Hands the page a changed visitor (TelyBot.setVisitor on the page). */
-function visitorScript(visitor: Required<TelyBotVisitor> | null): string {
+/** Hands the page a changed visitor and user token (TelyBot.setVisitor / identify on the page). */
+function visitorScript(visitor: Required<TelyBotVisitor> | null, userToken: string | null = null): string {
   return (
     '(function(){try{window.TelyBot&&window.TelyBot.setVisitor&&window.TelyBot.setVisitor(' +
     JSON.stringify(visitor ?? {}) +
+    ');window.TelyBot&&window.TelyBot.identify&&window.TelyBot.identify(' +
+    JSON.stringify(userToken ?? '') +
     ');}catch(e){}})();true;'
   );
 }
@@ -678,13 +690,14 @@ function useStartUrl(
   live: boolean,
   attempt: number,
   delivered: React.MutableRefObject<boolean>,
+  userToken: string | null = null,
 ): {startUrl: string; asked: React.MutableRefObject<string>} {
   const state = useRef<{live: boolean; attempt: number; url: string}>({live: false, attempt: -1, url: chatUrl});
   const asked = useRef('');
   if (live && (!state.current.live || state.current.attempt !== attempt || !state.current.url.startsWith(chatUrl))) {
     if (!state.current.live) delivered.current = false;
     const q = delivered.current ? '' : cleanQuestion(question);
-    state.current = {live: true, attempt, url: withStart(chatUrl, q, visitor)};
+    state.current = {live: true, attempt, url: withStart(chatUrl, q, visitor, userToken)};
     asked.current = askedAs(cleanQuestion(question), questionKey);
   } else if (!live && state.current.live) {
     state.current = {...state.current, live: false};
@@ -722,18 +735,19 @@ function useVisitorUpdates(
   visitor: Required<TelyBotVisitor> | null,
   ready: boolean,
   webRef: React.MutableRefObject<WebHandle | null>,
+  userToken: string | null = null,
 ): () => void {
-  const latest = useRef(visitor);
-  latest.current = visitor;
-  const key = JSON.stringify(visitor);
+  const latest = useRef({visitor, userToken});
+  latest.current = {visitor, userToken};
+  const key = JSON.stringify([visitor, userToken]);
   useEffect(() => {
     // Only a change: the page finish below has already handed over the one
     // the page loaded with.
-    if (ready && webRef.current) webRef.current.injectJavaScript(visitorScript(visitor));
+    if (ready && webRef.current) webRef.current.injectJavaScript(visitorScript(visitor, userToken));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key]);
   return useCallback(() => {
-    if (webRef.current) webRef.current.injectJavaScript(visitorScript(latest.current));
+    if (webRef.current) webRef.current.injectJavaScript(visitorScript(latest.current.visitor, latest.current.userToken));
   }, [webRef]);
 }
 
@@ -752,7 +766,7 @@ function useOnScreen(chatUrl: string, clientId: string, onScreen: boolean): void
  * and drive `visible` yourself, or let `useTelyBot` hold that state for you.
  * To put the chat inside one of your own screens instead, see `TelyBotChat`.
  */
-export function TelyBot({clientId, baseUrl, visible, onClose, question, questionKey, visitor}: TelyBotProps): React.ReactElement {
+export function TelyBot({clientId, baseUrl, visible, onClose, question, questionKey, visitor, userToken}: TelyBotProps): React.ReactElement {
   // Built on every render, not lazily on first show: a typo in the id then
   // throws while the developer is looking at the screen, instead of the first
   // time a customer taps the button.
@@ -782,13 +796,14 @@ export function TelyBot({clientId, baseUrl, visible, onClose, question, question
   const [attempt, setAttempt] = useState(0);
   const delivered = useRef(false);
   const cleanVisitorValue = useMemo(() => cleanVisitor(visitor), [visitor?.name, visitor?.phone, visitor?.email]);
-  const {startUrl, asked} = useStartUrl(chatUrl, question, questionKey, cleanVisitorValue, visible, attempt, delivered);
+  const cleanToken = useMemo(() => cleanUserToken(userToken), [userToken]);
+  const {startUrl, asked} = useStartUrl(chatUrl, question, questionKey, cleanVisitorValue, visible, attempt, delivered, cleanToken);
   // A page that loaded in THIS open. `status` alone cannot say: on the render
   // that opens the chat again it still reads 'ready' from the last open, and a
   // start marked delivered then was lost to a failed first load and a Retry.
   const ready = visible && status === 'ready' && delivered.current;
   usePrefill(question, questionKey, ready, asked, webRef);
-  const pushVisitor = useVisitorUpdates(cleanVisitorValue, ready, webRef);
+  const pushVisitor = useVisitorUpdates(cleanVisitorValue, ready, webRef, cleanToken);
   useOnScreen(chatUrl, clientId, visible);
   const handleLoaded = useCallback(() => {
     delivered.current = true;
@@ -983,6 +998,8 @@ export interface TelyBotChatProps {
   question?: string;
   /** Optional: your signed-in customer, as on `<TelyBot />`. */
   visitor?: TelyBotVisitor;
+  /** See `TelyBotProps.userToken`. */
+  userToken?: string;
   /**
    * Is this screen the one in front? Pass React Navigation's `useIsFocused()`
    * (or your tab's selected state) when the chat sits in a tab or under other
@@ -1012,7 +1029,7 @@ export interface TelyBotChatProps {
  * bars as you would any view. On Android, back closes a sheet the chat has
  * open (an item, the cart) before your app's own back handling sees it.
  */
-export function TelyBotChat({clientId, baseUrl, question, visitor, focused = true, style, onCanGoBackChange}: TelyBotChatProps): React.ReactElement {
+export function TelyBotChat({clientId, baseUrl, question, visitor, userToken, focused = true, style, onCanGoBackChange}: TelyBotChatProps): React.ReactElement {
   const chatUrl = useMemo(() => buildChatUrl(clientId, baseUrl), [clientId, baseUrl]);
   const deviceScheme: Scheme = useColorScheme() === 'dark' ? 'dark' : 'light';
   const [pageScheme, setPageScheme] = useState<Scheme | null>(null);
@@ -1023,9 +1040,10 @@ export function TelyBotChat({clientId, baseUrl, question, visitor, focused = tru
   const webRef = useRef<WebHandle | null>(null);
   const delivered = useRef(false);
   const cleanVisitorValue = useMemo(() => cleanVisitor(visitor), [visitor?.name, visitor?.phone, visitor?.email]);
-  const {startUrl, asked} = useStartUrl(chatUrl, question, undefined, cleanVisitorValue, true, attempt, delivered);
+  const cleanToken = useMemo(() => cleanUserToken(userToken), [userToken]);
+  const {startUrl, asked} = useStartUrl(chatUrl, question, undefined, cleanVisitorValue, true, attempt, delivered, cleanToken);
   usePrefill(question, undefined, status === 'ready', asked, webRef);
-  const pushVisitor = useVisitorUpdates(cleanVisitorValue, status === 'ready', webRef);
+  const pushVisitor = useVisitorUpdates(cleanVisitorValue, status === 'ready', webRef, cleanToken);
   useOnScreen(chatUrl, clientId, focused);
   const handleLoaded = useCallback(() => {
     delivered.current = true;
