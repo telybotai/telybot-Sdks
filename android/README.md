@@ -202,7 +202,7 @@ throw at your users.
 * **minSdk 21** (Android 5.0), **compileSdk 36** (Android 16). Your app can compile against any
   SDK version: the AAR asks for no minimum.
 * **JVM target 17** for Java and Kotlin (AGP 9 itself requires JDK 17)
-* Built with AGP 9.4.1, Kotlin 2.4.21, Gradle 9.8.1 (the wrapper in this directory)
+* Built with AGP 9.4.1, Kotlin 2.4.21, Gradle 9.9.2 (the wrapper in this directory)
 * Kotlin is not required in your app
 * **No dependencies beyond `kotlin-stdlib`.** Not AndroidX, not appcompat, nothing else — the
   published POM declares only `org.jetbrains.kotlin:kotlin-stdlib`, which a Kotlin app already

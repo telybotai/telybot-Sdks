@@ -7,6 +7,9 @@
   Telybot server from 2026-10-25. `clearUser()` on sign-out starts the next customer on a chat
   of their own.
 * Log lines name the chat page without its `#` part, which can carry the customer's token.
+* Built with Gradle 9.9.2 (was 9.8.1), which fixes Gradle's November 2026 security advisories,
+  and the wrapper now checks the download against Gradle's published checksum. The library
+  is unchanged.
 
 ## 2.0.0 — 2026-10-14
 
